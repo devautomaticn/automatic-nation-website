@@ -332,7 +332,7 @@ const base = import.meta.env.BASE_URL;
   </div>
 
   <div class="hero-right">
-    <div class="dot-card">
+    <div class="dot-card" data-base={base}>
       <canvas id="dotCanvas" width="608" height="608"></canvas>
     </div>
   </div>
@@ -607,13 +607,14 @@ const base = import.meta.env.BASE_URL;
 <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 
 <!-- Hero logo physics -->
-<script is:inline define:vars={{ base }}>
+<script is:inline>
 /* ── Hero logo physics ── */
 (function () {
   const { Engine, Runner, Events, Bodies, World, Body, Mouse, MouseConstraint } = Matter;
 
   const CW = 608, CH = 608, SZ = 76, R = 15;
-  const B = base.endsWith('/') ? base.slice(0, -1) : base;
+  const raw = document.querySelector('.dot-card').dataset.base || '';
+  const B = raw.endsWith('/') ? raw.slice(0, -1) : raw;
 
   const logoDefs = [
     { src: B+'/logos/Symbol.svg.svg',             cx:  50, av: -0.10, delay:    0 },

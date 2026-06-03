@@ -1,3 +1,6 @@
+---
+const base = import.meta.env.BASE_URL;
+---
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -604,29 +607,30 @@
 <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 
 <!-- Hero logo physics -->
-<script is:inline>
+<script is:inline define:vars={{ base }}>
 /* ── Hero logo physics ── */
 (function () {
   const { Engine, Runner, Events, Bodies, World, Body, Mouse, MouseConstraint } = Matter;
 
   const CW = 608, CH = 608, SZ = 76, R = 15;
+  const B = base.endsWith('/') ? base.slice(0, -1) : base;
 
   const logoDefs = [
-    { src: 'logos/Symbol.svg.svg',             cx:  50, av: -0.10, delay:    0 },
-    { src: 'logos/make_symbol.svg.svg',        cx: 150, av:  0.12, delay:  150 },
-    { src: 'logos/mondaycom_symbol.svg.svg',   cx: 260, av: -0.08, delay:  300 },
-    { src: 'logos/zapier_logo.svg.svg',        cx: 370, av:  0.09, delay:  450 },
-    { src: 'logos/airtable_symbol.svg.svg',    cx: 470, av: -0.11, delay:  600 },
-    { src: 'logos/calude.svg',                 cx: 100, av:  0.10, delay:  750 },
-    { src: 'logos/n8n.svg',                    cx: 200, av: -0.09, delay:  900 },
-    { src: 'logos/notion.svg',                 cx: 310, av:  0.08, delay: 1050 },
-    { src: 'logos/open.svg',                   cx: 420, av: -0.07, delay: 1200 },
-    { src: 'logos/vercel.svg',                 cx: 530, av:  0.11, delay: 1350 },
-    { src: 'logos/Google Gemini.svg.svg',      cx:  70, av: -0.08, delay: 1500 },
-    { src: 'logos/Google Mail.svg.svg',        cx: 180, av:  0.09, delay: 1650 },
-    { src: 'logos/git.svg',                    cx: 560, av: -0.10, delay: 1800 },
-    { src: 'image.png',                        profile: true, cx: 460, av:  0.06, delay: 1950 },
-    { src: 'T024D9G3RV4-U05ENL69F37-458b1cdf045b-512.jpg', profile: true, cx: 220, av: -0.07, delay: 2100 },
+    { src: B+'/logos/Symbol.svg.svg',             cx:  50, av: -0.10, delay:    0 },
+    { src: B+'/logos/make_symbol.svg.svg',        cx: 150, av:  0.12, delay:  150 },
+    { src: B+'/logos/mondaycom_symbol.svg.svg',   cx: 260, av: -0.08, delay:  300 },
+    { src: B+'/logos/zapier_logo.svg.svg',        cx: 370, av:  0.09, delay:  450 },
+    { src: B+'/logos/airtable_symbol.svg.svg',    cx: 470, av: -0.11, delay:  600 },
+    { src: B+'/logos/calude.svg',                 cx: 100, av:  0.10, delay:  750 },
+    { src: B+'/logos/n8n.svg',                    cx: 200, av: -0.09, delay:  900 },
+    { src: B+'/logos/notion.svg',                 cx: 310, av:  0.08, delay: 1050 },
+    { src: B+'/logos/open.svg',                   cx: 420, av: -0.07, delay: 1200 },
+    { src: B+'/logos/vercel.svg',                 cx: 530, av:  0.11, delay: 1350 },
+    { src: B+'/logos/Google Gemini.svg.svg',      cx:  70, av: -0.08, delay: 1500 },
+    { src: B+'/logos/Google Mail.svg.svg',        cx: 180, av:  0.09, delay: 1650 },
+    { src: B+'/logos/git.svg',                    cx: 560, av: -0.10, delay: 1800 },
+    { src: B+'/image.png',                        profile: true, cx: 460, av:  0.06, delay: 1950 },
+    { src: B+'/T024D9G3RV4-U05ENL69F37-458b1cdf045b-512.jpg', profile: true, cx: 220, av: -0.07, delay: 2100 },
   ];
 
   const sphereDefs = [

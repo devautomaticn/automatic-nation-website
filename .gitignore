@@ -1,0 +1,33 @@
+# Astro build output
+dist/
+
+# Astro cache
+.astro/
+
+# Node
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env files (never commit secrets)
+.env
+.env.local
+.env.*
+
+# Claude Code config
+.claude/
+
+# Draft / prototype HTML files (not part of the Astro project)
+index.html
+automatic-nation-landing.html
+automatic-nation-final.html
+
+# Root-level asset duplicates (originals live in public/)
+logos/
+image.png
+T024D9G3RV4-U05ENL69F37-458b1cdf045b-512.jpg
+
+# Generated reports
+competitor-analysis-report.md

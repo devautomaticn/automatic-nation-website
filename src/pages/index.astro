@@ -1,5 +1,31 @@
 ---
 const base = import.meta.env.BASE_URL;
+// Normalised base with no trailing slash — matches how the physics script
+// builds each src (B + '/logos/...'), so the preload URL is identical and the
+// browser reuses the same fetch instead of requesting the icon twice.
+const basePrefix = base.endsWith('/') ? base.slice(0, -1) : base;
+
+// Hero-canvas icons. Preloaded in <head> so they're fetched during initial
+// parse (in parallel) and decoded before the physics drop runs — otherwise
+// cards fall as blank squares and the icon pops in after they've landed.
+// Keep this list in sync with logoDefs/the profile images in the script below.
+const heroAssets = [
+  'logos/Symbol.svg.svg',
+  'logos/make_symbol.svg.svg',
+  'logos/mondaycom_symbol.svg.svg',
+  'logos/zapier_logo.svg.svg',
+  'logos/airtable_symbol.svg.svg',
+  'logos/calude.svg',
+  'logos/n8n.svg',
+  'logos/notion.svg',
+  'logos/open.svg',
+  'logos/vercel.svg',
+  'logos/Google Gemini.svg.svg',
+  'logos/Google Mail.svg.svg',
+  'logos/git.svg',
+  'image.png',
+  'T024D9G3RV4-U05ENL69F37-458b1cdf045b-512.jpg',
+];
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -11,6 +37,9 @@ const base = import.meta.env.BASE_URL;
 
   <!-- Fonts: hero set + JetBrains Mono for section eyebrows -->
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Montserrat:wght@400;500;600;700&family=Poppins:wght@700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Preload hero-canvas icons so they're decoded before the physics drop -->
+  {heroAssets.map(a => <link rel="preload" as="image" href={`${basePrefix}/${a}`} />)}
 
   <!-- Tailwind CDN — only powers the imported sections below the hero -->
   <!-- is:inline keeps Astro from hoisting/bundling these CDN tags -->
@@ -743,7 +772,24 @@ const base = import.meta.env.BASE_URL;
     });
   }
 
-  start();
+  // Decode every icon before dropping anything, so each card already shows its
+  // logo on the first frame instead of popping in after it has landed. The
+  // <head> preloads mean these usually resolve from cache almost instantly; the
+  // 4 s fail-safe guarantees the scene never freezes on one slow asset.
+  (function preloadThenStart() {
+    let pending = logoDefs.length;
+    let started = false;
+    const go = () => { if (!started) { started = true; start(); } };
+    if (!pending) return go();
+    const tick = () => { if (--pending <= 0) go(); };
+    logoDefs.forEach(d => {
+      const im = new Image();
+      im.onload = tick;
+      im.onerror = tick;   // a missing icon shouldn't block the rest
+      im.src = d.src;
+    });
+    setTimeout(go, 4000);
+  })();
 })();
 </script>
 

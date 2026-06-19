@@ -25,9 +25,11 @@ automatic-nation-landing.html
 automatic-nation-final.html
 
 # Root-level asset duplicates (originals live in public/)
-logos/
-image.png
-T024D9G3RV4-U05ENL69F37-458b1cdf045b-512.jpg
+# Leading slash anchors these to the repo root so they do NOT also match the
+# originals under public/ — those must be committed or the live build 404s.
+/logos/
+/image.png
+/T024D9G3RV4-U05ENL69F37-458b1cdf045b-512.jpg
 
 # Generated reports
 competitor-analysis-report.md

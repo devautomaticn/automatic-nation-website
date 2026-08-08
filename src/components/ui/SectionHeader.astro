@@ -1,0 +1,74 @@
+---
+import Eyebrow from './Eyebrow.astro';
+import type { Tone, DisplayScale } from '../../lib/design';
+
+/**
+ * Eyebrow + display heading + optional lead. Five copies of this pattern
+ * existed, differing only in wrapper width and eyebrow colour.
+ *
+ * `scale` picks a named display step; it carries size, leading, tracking and
+ * weight together, so nothing else needs setting alongside it.
+ */
+interface Props {
+  eyebrow?: string;
+  /** Plain text. For headings with markup (<br/>, <strong>) use the "title" slot. */
+  title?: string;
+  lead?: string;
+  level?: 2 | 3;
+  scale?: DisplayScale;
+  align?: 'start' | 'center';
+  width?: 'narrow' | 'prose' | 'full';
+  tone?: Tone;
+  reveal?: boolean;
+  class?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  lead,
+  level = 2,
+  scale = 'display-md',
+  align = 'start',
+  width = 'narrow',
+  tone = 'paper',
+  reveal = true,
+  class: className,
+}: Props = Astro.props;
+
+// Literal, not `h${level}`: a template string widens to `string`, and a
+// dynamic tag typed as `string` loses every HTML attribute in the process.
+const Heading = level === 3 ? 'h3' : 'h2';
+const SCALE = {
+  'display-sm': 'text-display-sm',
+  'display-md': 'text-display-md',
+  'display-xl': 'text-display-xl',
+} as const;
+const WIDTH = { narrow: 'max-w-narrow', prose: 'max-w-prose', full: '' } as const;
+---
+<div
+  class:list={[
+    WIDTH[width],
+    align === 'center' && 'mx-auto text-center',
+    reveal && 'reveal',
+    className,
+  ]}
+>
+  {eyebrow && <Eyebrow tone={tone === 'ink' ? 'dim' : 'mute'} class="mb-4">{eyebrow}</Eyebrow>}
+
+  <Heading class={SCALE[scale]}>
+    {title}<slot name="title" />
+  </Heading>
+
+  {lead && (
+    <p
+      class:list={[
+        'mt-8 text-lg leading-relaxed max-w-prose',
+        tone === 'ink' ? 'text-dim' : 'text-mute',
+        align === 'center' && 'mx-auto',
+      ]}
+    >
+      {lead}
+    </p>
+  )}
+</div>

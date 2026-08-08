@@ -3,23 +3,12 @@
 // then the board re-deals. No physics engine — pure grid collision, so a piece
 // never drifts out of its column.
 
-export const LOGOS = [
-  'logos/Symbol.svg.svg','logos/make_symbol.svg.svg','logos/mondaycom_symbol.svg.svg',
-  'logos/zapier_logo.svg.svg','logos/airtable_symbol.svg.svg','logos/calude.svg',
-  'logos/n8n.svg','logos/notion.svg','logos/open.svg','logos/vercel.svg',
-  'logos/Google Gemini.svg.svg','logos/Google Mail.svg.svg','logos/git.svg'
-];
-export const PHOTOS = ['image.png','T024D9G3RV4-U05ENL69F37-458b1cdf045b-512.jpg'];
-const PALETTE = ['#F7DB55','#8699F7','#E3662E','#EEAF79','#7BB784'];
-const SHAPES = [
-  [[0,0],[1,0],[2,0],[3,0]],
-  [[0,0],[1,0],[0,1],[1,1]],
-  [[0,0],[1,0],[2,0],[1,1]],
-  [[1,0],[2,0],[0,1],[1,1]],
-  [[0,0],[1,0],[1,1],[2,1]],
-  [[0,0],[0,1],[1,1],[2,1]],
-  [[2,0],[0,1],[1,1],[2,1]]
-];
+// Geometry, palette and the tile list are shared with the static decorations
+// in the closing CTA — see src/lib/. They used to be duplicated here and in the
+// page, which is how the decorations drifted out of sync with the well.
+import { PALETTE, SHAPE_LIST as SHAPES, radii } from '../lib/tetromino';
+import { LOGOS, PHOTOS } from '../lib/hero-assets';
+export { LOGOS, PHOTOS };
 function rotate(cells) {
   const maxY = Math.max.apply(null, cells.map(c => c[1]));
   const r = cells.map(c => [maxY - c[1], c[0]]);
@@ -175,13 +164,7 @@ export class Tetris {
   // A corner rounds only where both of its edges face outward, so cells inside
   // a piece fuse and an I-piece reads as one bar.
   radii(cells, i) {
-    const R = this.o.radius;
-    const has = (x, y) => cells.some(c => c[0] === x && c[1] === y);
-    const x = cells[i][0], y = cells[i][1];
-    return [(!has(x, y-1) && !has(x-1, y)) ? R : 0,
-            (!has(x, y-1) && !has(x+1, y)) ? R : 0,
-            (!has(x, y+1) && !has(x+1, y)) ? R : 0,
-            (!has(x, y+1) && !has(x-1, y)) ? R : 0].map(v => v + 'px').join(' ');
+    return radii(cells, i, this.o.radius);
   }
 
   cellEl(spec, i) {

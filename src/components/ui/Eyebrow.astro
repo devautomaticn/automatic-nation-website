@@ -1,0 +1,22 @@
+---
+/**
+ * The small uppercase mono label above a heading.
+ *
+ * The colour is baked in per tone on purpose. The bare .eyebrow class carried
+ * no colour, so all ten uses had to remember a `text-mute` / `text-dim` /
+ * `style="opacity:.7"` alongside it — and three of them picked differently.
+ */
+import type { TextTone } from '../../lib/design';
+
+interface Props {
+  /** mute = on paper · dim = on ink · faint = tertiary on ink */
+  tone?: TextTone;
+  as?: string;
+  class?: string;
+}
+
+const { tone = 'mute', as: Tag = 'p', class: className }: Props = Astro.props;
+
+const TONE = { mute: 'text-mute', dim: 'text-dim', faint: 'text-faint' } as const;
+---
+<Tag class:list={['eyebrow', TONE[tone], className]}><slot /></Tag>

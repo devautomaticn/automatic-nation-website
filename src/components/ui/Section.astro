@@ -1,0 +1,68 @@
+---
+import Container from './Container.astro';
+import type { Tone, Width, SectionSize } from '../../lib/design';
+
+/**
+ * A page section: full-bleed background and borders, contents on the page
+ * measure. Vertical rhythm comes from --spacing-section, so a landing can't
+ * quietly invent a sixth value the way the markup used to (py-12/16/20/24/32
+ * all appeared for the same relationship).
+ */
+interface Props {
+  id?: string;
+  /** paper = light, ink = dark. Sets the text colour to match. */
+  tone?: Tone;
+  /** lg = major section · sm = strip/footer · xs = legal bar */
+  size?: SectionSize;
+  border?: 'none' | 'top' | 'bottom' | 'y';
+  /** The 56px line grid. Only legible on ink. */
+  grid?: boolean;
+  /** false renders the slot full-bleed — for sections that place their own container. */
+  container?: Width | false;
+  class?: string;
+  /** Extra classes for the inner container. */
+  innerClass?: string;
+}
+
+const {
+  id,
+  tone = 'paper',
+  size = 'lg',
+  border = 'none',
+  grid = false,
+  container = 'page',
+  class: className,
+  innerClass,
+}: Props = Astro.props;
+
+const TONE = {
+  paper: 'bg-paper text-ink',
+  ink: 'bg-ink text-paper',
+} as const;
+
+const PAD = {
+  lg: 'py-section',
+  sm: 'py-section-sm',
+  xs: 'py-section-xs',
+  none: '',
+} as const;
+
+// Border colour has to follow the tone: a --color-line hairline is invisible
+// on ink, and --color-line-dk is invisible on paper.
+const line = tone === 'ink' ? 'border-line-dk' : 'border-line';
+const BORDER = {
+  none: '',
+  top: `border-t ${line}`,
+  bottom: `border-b ${line}`,
+  y: `border-y ${line}`,
+} as const;
+---
+<section id={id} class:list={[TONE[tone], BORDER[border], grid && 'dot-grid', className]}>
+  {container === false ? (
+    <slot />
+  ) : (
+    <Container width={container} class:list={[PAD[size], innerClass]}>
+      <slot />
+    </Container>
+  )}
+</section>

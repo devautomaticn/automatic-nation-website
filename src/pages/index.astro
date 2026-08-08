@@ -1,74 +1,87 @@
 ---
-import '../styles/global.css';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/ui/Section.astro';
+import SectionHeader from '../components/ui/SectionHeader.astro';
+import Eyebrow from '../components/ui/Eyebrow.astro';
+import Button from '../components/ui/Button.astro';
+import Card from '../components/ui/Card.astro';
+import Chip from '../components/ui/Chip.astro';
+import Metric from '../components/ui/Metric.astro';
 
-const base = import.meta.env.BASE_URL;
-// Normalised base with no trailing slash — matches how the physics script
-// builds each src (B + '/logos/...'), so the preload URL is identical and the
-// browser reuses the same fetch instead of requesting the icon twice.
-const basePrefix = base.endsWith('/') ? base.slice(0, -1) : base;
-
-// Well icons. Preloaded in <head> so they're fetched during initial parse (in
-// parallel) and decoded before the first piece falls — otherwise cells land as
-// blank tiles and the icon pops in afterwards.
-// Manually mirrors LOGOS + PHOTOS in src/scripts/tetris.js — edit both.
-const heroAssets = [
-  'logos/Symbol.svg.svg',
-  'logos/make_symbol.svg.svg',
-  'logos/mondaycom_symbol.svg.svg',
-  'logos/zapier_logo.svg.svg',
-  'logos/airtable_symbol.svg.svg',
-  'logos/calude.svg',
-  'logos/n8n.svg',
-  'logos/notion.svg',
-  'logos/open.svg',
-  'logos/vercel.svg',
-  'logos/Google Gemini.svg.svg',
-  'logos/Google Mail.svg.svg',
-  'logos/git.svg',
-  'image.png',
-  'T024D9G3RV4-U05ENL69F37-458b1cdf045b-512.jpg',
-];
+import { BASE } from '../lib/url';
+import { BOOKING } from '../lib/site';
+import { HERO_ASSETS } from '../lib/hero-assets';
+import { SHAPES, radii, DECO_CELL, CELL_RADIUS, PALETTE } from '../lib/tetromino';
+import { organization, webSite, faqPage } from '../lib/jsonld';
 
 // ── Static tetromino decorations for the closing CTA ──
-// Same seven shapes, same 12px fused-corner rule and same hairline as the
-// well, but no logos and no motion. Positions are multiples of the 56px cell
-// so the pieces land on the section's background grid; the negative offsets
-// are exactly one cell, so even the bleed stays on a grid line.
-const TT_CELL = 56, TT_RADIUS = 12;
-const TT_SHAPES = {
-  I: [[0,0],[1,0],[2,0],[3,0]],
-  O: [[0,0],[1,0],[0,1],[1,1]],
-  T: [[0,0],[1,0],[2,0],[1,1]],
-  S: [[1,0],[2,0],[0,1],[1,1]],
-  J: [[0,0],[0,1],[1,1],[2,1]],
-};
-// A corner rounds only where both of its edges face outward, so cells inside a
-// piece fuse — identical to Tetris.prototype.radii in src/scripts/tetris.js.
-function ttRadii(cells: number[][], i: number) {
-  const has = (x: number, y: number) => cells.some(c => c[0] === x && c[1] === y);
-  const [x, y] = cells[i];
-  return [
-    (!has(x, y - 1) && !has(x - 1, y)) ? TT_RADIUS : 0,
-    (!has(x, y - 1) && !has(x + 1, y)) ? TT_RADIUS : 0,
-    (!has(x, y + 1) && !has(x + 1, y)) ? TT_RADIUS : 0,
-    (!has(x, y + 1) && !has(x - 1, y)) ? TT_RADIUS : 0,
-  ].map(v => v + 'px').join(' ');
-}
+// Same shapes, same fused-corner rule and same hairline as the well, but no
+// logos and no motion. Positions are multiples of the 56px cell so the pieces
+// land on the section's background grid; the negative offsets are exactly one
+// cell, so even the bleed stays on a grid line.
+const [YELLOW, BLUE, RED, ORANGE, GREEN] = PALETTE;
 const TT_LEFT = [
-  { s: 'O', c: '#8699F7', x: -56, y:   0 },
-  { s: 'J', c: '#7BB784', x:  56, y: 168 },
-  { s: 'S', c: '#EEAF79', x: -56, y: 336 },
+  { s: 'O', c: BLUE,   x: -DECO_CELL, y: 0 },
+  { s: 'J', c: GREEN,  x:  DECO_CELL, y: 168 },
+  { s: 'S', c: ORANGE, x: -DECO_CELL, y: 336 },
 ];
 const TT_RIGHT = [
-  { s: 'T', c: '#E3662E', x:  56, y:  56 },
-  { s: 'I', c: '#F7DB55', x:  56, y: 224 },
-  { s: 'O', c: '#8699F7', x: 112, y: 504 },
+  { s: 'T', c: RED,    x:  DECO_CELL,     y: DECO_CELL },
+  { s: 'I', c: YELLOW, x:  DECO_CELL,     y: 224 },
+  { s: 'O', c: BLUE,   x:  DECO_CELL * 2, y: 504 },
+];
+
+// ── Who it's for ──
+const AUDIENCE = [
+  {
+    eyebrow: 'Ops teams',
+    title: 'Copy-pasting between 5+ tools every day',
+    body: "Your team knows the bottleneck. You just haven't had time to fix it. We scope it in a single call and build it in weeks — not quarters.",
+  },
+  {
+    eyebrow: 'Founders',
+    title: 'Team burning >10 hours/week on manual work',
+    body: "That's a part-time hire you're already paying for in wasted time. We give it back — on a fixed budget, without adding headcount.",
+  },
+  {
+    eyebrow: 'Power users',
+    title: 'Outgrown Zapier or your DIY Airtable setup',
+    body: "You know the tools. You just don't have time to build the right system from scratch. We pick up where your DIY left off.",
+  },
+];
+
+// ── Use cases ──
+const USE_CASES = [
+  {
+    stack: ['HUBSPOT', 'CLEARBIT', 'SLACK'],
+    title: 'Lead enrichment & routing',
+    body: 'Every new lead is auto-enriched with company data, scored, and routed to the right rep in Slack. No more "who\'s taking this?"',
+    metric: 'Leads routed in <60 seconds',
+  },
+  {
+    stack: ['AIRTABLE', 'STRIPE', 'POSTGRES'],
+    title: 'Operations dashboard in Airtable',
+    body: 'Live revenue, pipeline, and ops metrics in one Airtable view — synced from your billing system, CRM, and product database.',
+    metric: 'Revenue + pipeline: one view, always live',
+  },
+  {
+    stack: ['N8N', 'OPENAI', 'GMAIL'],
+    title: 'AI-drafted client updates',
+    body: 'Project status pulled from your PM tool, summarized by an LLM, drafted as a client-ready email — sent every Friday with one click.',
+    metric: 'Friday updates drafted in 30 seconds, not 3 hours',
+  },
+  {
+    stack: ['SHOPIFY', 'AIRTABLE', 'QUICKBOOKS'],
+    title: 'Inventory sync across channels',
+    body: 'Stock, orders, and accounting kept in sync across three systems — no nightly CSV exports, no manual reconciliations.',
+    metric: 'Reconciliation: 4 hours/month → 0',
+  },
 ];
 
 // ── Process timeline (Gantt) ──
-// One source for both renderings: the Gantt on lg+ and the stacked cards
-// below it. Duplicating this prose in two markup blocks is how the two drift
-// apart, so both are generated from here.
+// One source for both renderings: the Gantt on lg+ and the stacked cards below
+// it. Duplicating this prose in two markup blocks is how the two drift apart,
+// so both are generated from here.
 // Everything is measured in weeks: `w` is the starting week (0-indexed) and
 // `ws` how many weeks it lasts. Lanes, pills and task lists are all derived
 // from those two numbers with the same formula, so a pill lines up with its
@@ -98,250 +111,151 @@ const PROCESS = [
 ];
 // One rounded lane per week, and one axis label centred under each. Both are
 // driven off the same index so a label can never drift off its lane.
-// `buffer` marks contingency weeks: the work is scoped to finish before them,
-// and they exist only in case it doesn't. They're hatched and labelled rather
-// than just greyed — an unexplained different-looking lane reads as a styling
-// slip, not as a schedule fact.
 const GANTT_TICKS = [
   { t: 'Week 0' },
   { t: 'Week 1' },
-  { t: 'Week 2', buffer: true },
-  { t: 'Week 3', buffer: true },
+  { t: 'Week 2' },
+  { t: 'Week 3' },
   { t: 'Week 4' },
-  { t: 'Ongoing' },
+  { t: 'Ongoing', buffer: true },
 ];
 
-// ── FILL IN BEFORE LAUNCH ───────────────────────────────────────────────
-// Scheduling link used by every "Book a call" CTA (Calendly, Cal.com, …).
-// While empty, the CTAs fall back to jumping to the #book section.
-const BOOKING_URL = '';
-// ────────────────────────────────────────────────────────────────────────
-
-const bookHref = BOOKING_URL || '#book';
-const bookAttrs = BOOKING_URL ? { target: '_blank', rel: 'noopener' } : {};
+// ── FAQ ──
+const FAQ = [
+  {
+    q: 'What does a project typically cost?',
+    a: 'Pricing is fixed and scoped up front — no hourly billing, no surprises. Most first systems land in the [FILL IN RANGE] range depending on the number of integrations. You get the number before any work starts.',
+  },
+  {
+    q: 'What if we already have something half-built?',
+    a: "That's the common case. We audit what exists, keep what works, and rebuild only what's holding you back. You're not paying us to redo your own work.",
+  },
+  {
+    q: 'What happens after launch?',
+    a: 'You own everything — the accounts, the workflows, the documentation. A retainer for changes and monitoring is optional, not a lock-in.',
+  },
+];
 
 const title = 'Automatic Nation — Automation & Integrations Agency';
 const description =
   'We build custom integrations and automated workflows across Airtable, n8n, and 900+ apps. 50+ workflows shipped. Book a discovery call.';
-// Absolute URLs for canonical/OG — Astro.site comes from `site` in
-// astro.config.mjs, so pointing that at a custom domain updates both.
-const canonical = new URL(Astro.url.pathname, Astro.site).href;
-const ogImage = new URL(`${basePrefix}/og-image.png`, Astro.site).href;
+const origin = new URL(`${BASE}/`, Astro.site).href;
 ---
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{title}</title>
-  <meta name="description" content={description} />
-  <link rel="canonical" href={canonical} />
+<BaseLayout
+  {title}
+  {description}
+  preloadImages={HERO_ASSETS}
+  jsonLd={[organization(origin), webSite(origin), faqPage(FAQ)]}
+>
 
-  <link rel="icon" type="image/svg+xml" href={`${basePrefix}/favicon.svg`} />
-  <link rel="alternate icon" href={`${basePrefix}/favicon.ico`} />
-
-  <!-- Social cards -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content={canonical} />
-  <meta property="og:title" content={title} />
-  <meta property="og:description" content={description} />
-  <meta property="og:image" content={ogImage} />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={title} />
-  <meta name="twitter:description" content={description} />
-  <meta name="twitter:image" content={ogImage} />
-
-  <!-- Fonts: hero set + JetBrains Mono for section eyebrows.
-       preconnect saves a round trip — the stylesheet alone can't start the
-       font fetch until it has resolved and parsed. -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Montserrat:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-
-  <!-- Preload hero-canvas icons so they're decoded before the physics drop -->
-  {heroAssets.map(a => <link rel="preload" as="image" href={`${basePrefix}/${a}`} />)}
-
-</head>
-<body>
-
-<!-- ══════════════════════════════════════════ -->
-<!--  NAVBAR                                    -->
-<!-- ══════════════════════════════════════════ -->
-<header class="navbar">
-  {/* Inner container so the bottom rule stays full-bleed (like every section
-      border on the page) while the contents sit on the same 1280px column as
-      the hero and the sections. */}
-  <div class="navbar-inner">
-  <a href={base} class="logo">
-    <svg width="32" height="31" viewBox="0 0 32 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M11.6217 0C11.7142 0.000353627 11.7891 0.0752685 11.7895 0.167763V21.8947H13.4737V12.125L20.2105 0H21.8947V21.8947H23.5789V12.125L30.3158 0H32V15.1579H30.3158L21.8947 30.3158H20.2105V15.1579L11.7895 30.3158H10.1053V15.8076C10.105 15.6342 9.87405 15.5741 9.78947 15.7253L1.73191 30.2286C1.70227 30.282 1.64653 30.3156 1.58553 30.3158H0.167763C0.0752688 30.3154 0.000354051 30.2405 0 30.148V15.3257C0.000354057 15.2332 0.0752688 15.1582 0.167763 15.1579H1.58553C1.64653 15.1577 1.70227 15.1241 1.73191 15.0707L10.0576 0.087171C10.0872 0.0338245 10.1429 0.00014998 10.2039 0H11.6217Z" fill="#2C2C2C"/>
-    </svg>
-    <span class="logo-text">Automatic Nation</span>
-  </a>
-  <nav class="nav-links" aria-label="Main">
-    <a href="#templates">Use cases</a>
-    <a href="#process">Process</a>
-    <a href="#faq">FAQ</a>
-  </nav>
-  <a href={bookHref} {...bookAttrs} class="btn-cta">Book a call</a>
-  </div>
-</header>
-
-<!-- ══════════════════════════════════════════ -->
-<!--  HERO                                      -->
-<!-- ══════════════════════════════════════════ -->
-<section class="hero">
-  <div class="hero-left">
-    <h1 class="headline">
-      We build systems that save your team <strong>22 hours</strong> a week.
-    </h1>
-    <p class="hero-sub">
-      We build custom integrations and automated workflows across 900+ popular platforms.
-    </p>
-    <p class="hero-sub2">
-      First system live in under 4 weeks, fixed scope, fixed price.
-    </p>
-    <a href={bookHref} {...bookAttrs} class="btn-hero">
-      Book a free consultation <span aria-hidden="true">→</span>
-    </a>
-  </div>
-
-  <div class="hero-right">
-    {/* Empty on purpose: tetris.js builds the 608×608 stage, the cell guides,
-        the HUD and the NEXT preview inside this box at runtime. */}
-    <div class="dot-card" data-base={base}></div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════ -->
-<!--  WHO IT'S FOR                              -->
-<!-- ══════════════════════════════════════════ -->
-<section id="who-its-for" class="bg-paper border-t border-line">
-  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-20">
-    <div class="max-w-2xl reveal">
-      <p class="eyebrow text-mute mb-4">Who this is for</p>
-      <h2 class="text-[clamp(32px,5vw,56px)] font-bold tracking-[-0.035em] leading-[0.95]">This pays off fastest if you're…</h2>
+  <!-- ══════════════════════════════════════════ -->
+  <!--  HERO                                      -->
+  <!-- ══════════════════════════════════════════ -->
+  <section class="hero">
+    <div class="hero-left">
+      <h1 class="headline">
+        We build systems that save your team <strong>22 hours</strong> a week.
+      </h1>
+      <p class="hero-sub">
+        We build custom integrations and automated workflows across 900+ popular platforms.
+      </p>
+      <p class="hero-sub2">
+        First system live in under 4 weeks, fixed scope, fixed price.
+      </p>
+      <Button href={BOOKING.href} external={BOOKING.external} size="lg" arrow>
+        Book a free consultation
+      </Button>
     </div>
 
-    <div class="mt-14 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-line border border-line reveal">
-      <div class="p-8 lg:p-10">
-        <p class="eyebrow text-mute mb-4">Ops teams</p>
-        <h3 class="text-[18px] font-semibold tracking-[-0.02em]">Copy-pasting between 5+ tools every day</h3>
-        <p class="mt-3 text-[14px] text-mute leading-relaxed">Your team knows the bottleneck. You just haven't had time to fix it. We scope it in a single call and build it in weeks — not quarters.</p>
-      </div>
-      <div class="p-8 lg:p-10">
-        <p class="eyebrow text-mute mb-4">Founders</p>
-        <h3 class="text-[18px] font-semibold tracking-[-0.02em]">Team burning &gt;10 hours/week on manual work</h3>
-        <p class="mt-3 text-[14px] text-mute leading-relaxed">That's a part-time hire you're already paying for in wasted time. We give it back — on a fixed budget, without adding headcount.</p>
-      </div>
-      <div class="p-8 lg:p-10">
-        <p class="eyebrow text-mute mb-4">Power users</p>
-        <h3 class="text-[18px] font-semibold tracking-[-0.02em]">Outgrown Zapier or your DIY Airtable setup</h3>
-        <p class="mt-3 text-[14px] text-mute leading-relaxed">You know the tools. You just don't have time to build the right system from scratch. We pick up where your DIY left off.</p>
-      </div>
+    <div class="hero-right">
+      {/* Empty on purpose: tetris.js builds the 608×608 stage, the cell guides,
+          the HUD and the NEXT preview inside this box at runtime. */}
+      <div class="dot-card" data-base={BASE}></div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ══════════════════════════════════════════ -->
-<!--  USE CASES (dark)                          -->
-<!-- ══════════════════════════════════════════ -->
-<section id="templates" class="bg-ink text-white dot-grid">
-  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-24">
-    <div class="max-w-3xl reveal">
-      <p class="eyebrow text-dim mb-4">What it looks like in practice</p>
-      <h2 class="text-[clamp(32px,5vw,56px)] font-bold tracking-[-0.035em] leading-[0.95]">Real workflows we've built — adapt one or bring your own.</h2>
+  <!-- ══════════════════════════════════════════ -->
+  <!--  WHO IT'S FOR                              -->
+  <!-- ══════════════════════════════════════════ -->
+  <Section id="who-its-for" border="top">
+    <SectionHeader eyebrow="Who this is for" title="This pays off fastest if you're…" />
+
+    <div class="mt-block grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-line border border-line reveal">
+      {AUDIENCE.map(item => (
+        <Card tone="transparent" pad="lg">
+          <Eyebrow class="mb-4">{item.eyebrow}</Eyebrow>
+          <h3 class="text-lg font-semibold tracking-[-0.02em]">{item.title}</h3>
+          <p class="mt-3 text-sm text-mute leading-relaxed">{item.body}</p>
+        </Card>
+      ))}
     </div>
+  </Section>
 
-    {/* The row bleeds to both edges (-mx-6) but the cards must line up with the
-        heading, so the 24px inset lives on the flex row, not on the scroll
+  <!-- ══════════════════════════════════════════ -->
+  <!--  USE CASES (dark)                          -->
+  <!-- ══════════════════════════════════════════ -->
+  <Section id="templates" tone="ink" grid>
+    <SectionHeader
+      tone="ink"
+      eyebrow="What it looks like in practice"
+      title="Real workflows we've built — adapt one or bring your own."
+      width="prose"
+    />
+
+    {/* The row bleeds to both edges but the cards must line up with the
+        heading, so the inset lives on the flex row, not on the scroll
         container: a scroller's padding-left doesn't offset a child carrying
         min-width:max-content (the card landed at 0 while the h2 sat at 24),
         and its padding-right is dropped outright, killing the trailing gap. */}
-    <div class="mt-16 -mx-6 lg:mx-0 overflow-x-auto h-snap no-scrollbar">
-      <div class="flex lg:grid lg:grid-cols-4 gap-5 min-w-max lg:min-w-0 px-6 lg:px-0">
-
-        <article class="w-[78vw] sm:w-[60vw] lg:w-auto border border-line-dk rounded-2xl p-7 bg-ink">
-          <div class="flex items-center gap-2">
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">HUBSPOT</span>
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">CLEARBIT</span>
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">SLACK</span>
-          </div>
-          <h3 class="mt-6 text-[20px] font-semibold tracking-[-0.02em]">Lead enrichment &amp; routing</h3>
-          <p class="mt-3 text-[14px] text-dim leading-relaxed">Every new lead is auto-enriched with company data, scored, and routed to the right rep in Slack. No more "who's taking this?"</p>
-          <p class="mt-8 font-mono text-[11px] text-accent">Leads routed in &lt;60 seconds</p>
-        </article>
-
-        <article class="w-[78vw] sm:w-[60vw] lg:w-auto border border-line-dk rounded-2xl p-7 bg-ink">
-          <div class="flex items-center gap-2">
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">AIRTABLE</span>
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">STRIPE</span>
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">POSTGRES</span>
-          </div>
-          <h3 class="mt-6 text-[20px] font-semibold tracking-[-0.02em]">Operations dashboard in Airtable</h3>
-          <p class="mt-3 text-[14px] text-dim leading-relaxed">Live revenue, pipeline, and ops metrics in one Airtable view — synced from your billing system, CRM, and product database.</p>
-          <p class="mt-8 font-mono text-[11px] text-accent">Revenue + pipeline: one view, always live</p>
-        </article>
-
-        <article class="w-[78vw] sm:w-[60vw] lg:w-auto border border-line-dk rounded-2xl p-7 bg-ink">
-          <div class="flex items-center gap-2">
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">N8N</span>
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">OPENAI</span>
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">GMAIL</span>
-          </div>
-          <h3 class="mt-6 text-[20px] font-semibold tracking-[-0.02em]">AI-drafted client updates</h3>
-          <p class="mt-3 text-[14px] text-dim leading-relaxed">Project status pulled from your PM tool, summarized by an LLM, drafted as a client-ready email — sent every Friday with one click.</p>
-          <p class="mt-8 font-mono text-[11px] text-accent">Friday updates drafted in 30 seconds, not 3 hours</p>
-        </article>
-
-        <article class="w-[78vw] sm:w-[60vw] lg:w-auto border border-line-dk rounded-2xl p-7 bg-ink">
-          <div class="flex items-center gap-2">
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">SHOPIFY</span>
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">AIRTABLE</span>
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">QUICKBOOKS</span>
-          </div>
-          <h3 class="mt-6 text-[20px] font-semibold tracking-[-0.02em]">Inventory sync across channels</h3>
-          <p class="mt-3 text-[14px] text-dim leading-relaxed">Stock, orders, and accounting kept in sync across three systems — no nightly CSV exports, no manual reconciliations.</p>
-          <p class="mt-8 font-mono text-[11px] text-accent">Reconciliation: 4 hours/month → 0</p>
-        </article>
-
+    <div class="mt-block -mx-gutter lg:mx-0 overflow-x-auto h-snap no-scrollbar">
+      <div class="flex lg:grid lg:grid-cols-4 gap-5 min-w-max lg:min-w-0 px-gutter lg:px-0">
+        {USE_CASES.map(item => (
+          <Card as="article" tone="ink" pad="sm" border radius class="w-[78vw] sm:w-[60vw] lg:w-auto">
+            <div class="flex items-center gap-2">
+              {item.stack.map(tech => <Chip>{tech}</Chip>)}
+            </div>
+            <h3 class="mt-6 text-xl font-semibold tracking-[-0.02em]">{item.title}</h3>
+            <p class="mt-3 text-sm text-dim leading-relaxed">{item.body}</p>
+            <Metric class="mt-8" value={item.metric} />
+          </Card>
+        ))}
       </div>
     </div>
 
-    <!-- Client pull-quote placeholder -->
     {/* bg-ink is load-bearing, not decoration: without a fill the section's
         line grid shows straight through the card. Same reason the use-case
         articles above carry it. */}
-    <div class="mt-14 reveal border border-line-dk rounded-2xl p-8 lg:p-10 max-w-3xl bg-ink">
-      <p class="text-[18px] lg:text-[20px] font-medium leading-relaxed text-white">
+    <Card tone="ink" pad="lg" border radius class="mt-block reveal max-w-prose">
+      <p class="text-lg lg:text-xl font-medium leading-relaxed text-paper">
         "[CLIENT QUOTE — to be filled in: one sentence on the time or money saved.]"
       </p>
-      <p class="mt-5 font-mono text-[11px] text-dim">— [Name], [Role] · [Company]</p>
+      <p class="mt-5 font-mono text-2xs text-dim">— [Name], [Role] · [Company]</p>
+    </Card>
+
+    <div class="mt-block-sm reveal">
+      <a
+        href={BOOKING.href}
+        {...(BOOKING.external ? { target: '_blank', rel: 'noopener' } : {})}
+        class="link-u text-sm text-dim hover:text-paper"
+      >See how we'd build yours →</a>
     </div>
+  </Section>
 
-    <div class="mt-10 reveal">
-      <a href={bookHref} {...bookAttrs} class="link-u text-[14px] text-dim hover:text-white">See how we'd build yours →</a>
-    </div>
-  </div>
-</section>
+  <!-- ══════════════════════════════════════════ -->
+  <!--  PROCESS                                   -->
+  <!-- ══════════════════════════════════════════ -->
+  <Section id="process">
+    <p class="font-mono text-xs text-dim tracking-wide reveal">
+      50+ workflows shipped · ~22 hrs saved/week · &lt;4 wks first delivery
+    </p>
 
-<!-- ══════════════════════════════════════════ -->
-<!--  PROCESS                                   -->
-<!-- ══════════════════════════════════════════ -->
-<section id="process" class="bg-paper">
-  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-24">
+    <SectionHeader
+      class="mt-block-sm"
+      eyebrow="How it works"
+      title="Four weeks from first call to live system."
+    />
 
-    <p class="font-mono text-[12px] text-dim tracking-wide reveal">50+ workflows shipped · ~22 hrs saved/week · &lt;4 wks first delivery</p>
-
-    <div class="mt-8 max-w-3xl reveal">
-      <p class="eyebrow text-mute mb-4">How we work</p>
-      <h2 class="text-[clamp(32px,5vw,56px)] font-bold tracking-[-0.035em] leading-[0.95]">From first call to live system in under 4 weeks.</h2>
-    </div>
-
-    {/* Gantt, lg+ only. Below that it's replaced by the stacked cards below —
-        a 24-column chart at phone width is unreadable, and only one of the two
-        is ever in the accessibility tree since the other is display:none. */}
-    <div class="gantt hidden lg:block mt-16 reveal">
+    <div class="gantt mt-block hidden lg:block reveal" style={`--gantt-lanes:${GANTT_TICKS.length}`}>
       <div class="gantt-plot">
         <div class="gantt-lanes" aria-hidden="true">
           {GANTT_TICKS.map((k, i) => (
@@ -352,176 +266,121 @@ const ogImage = new URL(`${basePrefix}/og-image.png`, Astro.site).href;
         <ol class="gantt-bars">
           {PROCESS.map(p => (
             <li style={`--w:${p.w};--ws:${p.ws}`}>
-              <span class={`gantt-pill${p.hl ? ' gantt-pill--hl' : ''}`}>
-                <b class="gantt-badge">{p.n}</b>
+              <div class:list={['gantt-pill', p.hl && 'gantt-pill--hl']}>
+                <span class="gantt-badge">{p.n}</span>
                 <span class="gantt-pill-txt">
                   <strong>{p.name}</strong>
                   <em>{p.when}</em>
                 </span>
-              </span>
+              </div>
             </li>
           ))}
         </ol>
 
-        <ol class="gantt-tasks">
+        <ul class="gantt-tasks">
           {PROCESS.map(p => (
             <li style={`--w:${p.w}`}>
-              <span class="sr-only">{p.name} ({p.when})</span>
               <ul>{p.tasks.map(t => <li>{t}</li>)}</ul>
             </li>
           ))}
-        </ol>
+        </ul>
+      </div>
 
-        <div class="gantt-axis" aria-hidden="true">
-          {GANTT_TICKS.map((k, i) => (
-            <span class={k.buffer ? 'is-buffer' : undefined} style={`--i:${i}`}>
-              {k.t}{k.buffer && <b>buffer</b>}
-            </span>
-          ))}
-        </div>
+      <div class="gantt-axis" aria-hidden="true">
+        {GANTT_TICKS.map((k, i) => (
+          <span class={k.buffer ? 'is-buffer' : undefined} style={`--i:${i}`}>
+            {k.t}{k.buffer && <b>buffer</b>}
+          </span>
+        ))}
       </div>
     </div>
 
-    <ol class="lg:hidden mt-16 grid grid-cols-1 gap-px bg-line border border-line reveal">
+    <ol class="lg:hidden mt-block grid grid-cols-1 gap-px bg-line border border-line reveal">
       {PROCESS.map(p => (
-        <li class="bg-paper p-8">
-          <div class="font-mono text-[24px] font-bold text-ink">{p.n}</div>
-          <h3 class="mt-4 text-[18px] font-semibold tracking-[-0.02em]">{p.name} ({p.when})</h3>
-          <p class="mt-3 text-[14px] text-mute leading-relaxed">{p.body}</p>
+        <Card as="li">
+          <div class="font-mono text-2xl font-bold text-ink">{p.n}</div>
+          <h3 class="mt-4 text-lg font-semibold tracking-[-0.02em]">{p.name} ({p.when})</h3>
+          <p class="mt-3 text-sm text-mute leading-relaxed">{p.body}</p>
           <ul class="mt-4 flex flex-wrap gap-2">
-            {p.tasks.map(t => (
-              <li class="font-mono text-[11px] text-mute border border-line rounded-lg px-2 py-1">{t}</li>
-            ))}
+            {p.tasks.map(t => <li><Chip tone="paper" font="mono">{t}</Chip></li>)}
           </ul>
-        </li>
+        </Card>
       ))}
     </ol>
-  </div>
-</section>
+  </Section>
 
-<!-- ══════════════════════════════════════════ -->
-<!--  MID-PAGE CTA STRIP                        -->
-<!-- ══════════════════════════════════════════ -->
-<section class="bg-paper border-t border-b border-line">
-  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 reveal">
-    <p class="text-[18px] font-semibold tracking-[-0.02em] max-w-lg">
-      Most teams already know which workflow they'd automate first. Tell us yours.
+  <!-- ══════════════════════════════════════════ -->
+  <!--  MID-PAGE CTA STRIP                        -->
+  <!-- ══════════════════════════════════════════ -->
+  <Section size="sm" border="y" innerClass="flex flex-col sm:flex-row items-center justify-between gap-6 reveal">
+    <p class="text-lg font-medium max-w-lg">
+      Not sure what's worth automating? That's the first call.
     </p>
-    <a href={bookHref} {...bookAttrs} class="cta inline-flex items-center gap-2 bg-accent hover:bg-white text-ink text-[14px] font-medium px-6 py-2.5 rounded-[14px] whitespace-nowrap">
-      Book a call <span aria-hidden="true">→</span>
-    </a>
-  </div>
-</section>
+    <Button href={BOOKING.href} external={BOOKING.external} size="sm" arrow>
+      Book a call
+    </Button>
+  </Section>
 
-<!-- ══════════════════════════════════════════ -->
-<!--  FAQ                                       -->
-<!-- ══════════════════════════════════════════ -->
-<section id="faq" class="bg-paper border-t border-line">
-  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-24">
-    <div class="max-w-3xl reveal">
-      <p class="eyebrow text-mute mb-4">Common questions</p>
-      <h2 class="text-[clamp(32px,5vw,56px)] font-bold tracking-[-0.035em] leading-[0.95]">What teams ask before booking.</h2>
-    </div>
+  <!-- ══════════════════════════════════════════ -->
+  <!--  FAQ                                       -->
+  <!-- ══════════════════════════════════════════ -->
+  <Section id="faq">
+    <SectionHeader eyebrow="Questions" title="The things people ask before saying yes." />
 
-    <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-px bg-line border border-line reveal">
-      <div class="bg-paper p-8 lg:p-10">
-        <h3 class="text-[18px] font-semibold tracking-[-0.02em]">What does a project typically cost?</h3>
-        <p class="mt-3 text-[14px] text-mute leading-relaxed">Pricing is fixed and scoped after the discovery call. Most projects land between <strong>[FILL IN RANGE]</strong>. No hourly billing, no scope creep, no surprises — you hear the exact number on the call.</p>
-      </div>
-      <div class="bg-paper p-8 lg:p-10">
-        <h3 class="text-[18px] font-semibold tracking-[-0.02em]">What happens if something breaks?</h3>
-        <p class="mt-3 text-[14px] text-mute leading-relaxed">Every system ships with monitoring and error handling — most clients never see a failure surface to users. Retainer clients get same-business-day response on incidents.</p>
-      </div>
-      <div class="bg-paper p-8 lg:p-10">
-        <h3 class="text-[18px] font-semibold tracking-[-0.02em]">Who owns the system after launch?</h3>
-        <p class="mt-3 text-[14px] text-mute leading-relaxed">You do. Everything runs in your accounts — your Airtable, your n8n, your databases. We hand over docs written for humans and train your team. The retainer is optional, not a lock-in.</p>
-      </div>
+    <div class="mt-block grid grid-cols-1 md:grid-cols-3 gap-px bg-line border border-line reveal">
+      {FAQ.map(item => (
+        <Card pad="lg">
+          <h3 class="text-lg font-semibold tracking-[-0.02em]">{item.q}</h3>
+          <p class="mt-3 text-sm text-mute leading-relaxed">{item.a}</p>
+        </Card>
+      ))}
     </div>
-  </div>
-</section>
+  </Section>
 
-<!-- ══════════════════════════════════════════ -->
-<!--  CLOSING CTA (dark)                        -->
-<!-- ══════════════════════════════════════════ -->
-<section id="book" class="bg-ink text-white dot-grid relative overflow-hidden">
-  {/* Decorative pieces, hidden below lg: at 224px wide they'd sit on top of
-      the copy on narrow screens, and the 280px content padding they clear
-      only applies from lg up. */}
-  <div class="tt-deco tt-deco--l hidden lg:block" aria-hidden="true">
-    {TT_LEFT.map(p => TT_SHAPES[p.s].map((cell, i) => (
-      <i style={`left:${p.x + cell[0] * TT_CELL}px;top:${p.y + cell[1] * TT_CELL}px;background:${p.c};border-radius:${ttRadii(TT_SHAPES[p.s], i)}`}></i>
-    )))}
-  </div>
-  <div class="tt-deco tt-deco--r hidden lg:block" aria-hidden="true">
-    {TT_RIGHT.map(p => TT_SHAPES[p.s].map((cell, i) => (
-      <i style={`left:${p.x + cell[0] * TT_CELL}px;top:${p.y + cell[1] * TT_CELL}px;background:${p.c};border-radius:${ttRadii(TT_SHAPES[p.s], i)}`}></i>
-    )))}
-  </div>
-  {/* 1456 = the design's 896px text column + 2×280px of padding to clear the
-      224px decorations. The handoff's prototype is content-box (no reset), so
-      it writes this as max-width:896px + padding:0 280px; under Tailwind's
-      border-box preflight that same pair would squeeze the copy to 336px. */}
-  <div class="relative z-10 max-w-4xl lg:max-w-[1456px] mx-auto px-6 lg:px-[280px] py-32 text-center">
-    <p class="eyebrow text-dim reveal">Ready when you are</p>
-    <h2 class="mt-6 text-[clamp(40px,6vw,80px)] font-bold tracking-[-0.035em] leading-[0.95] reveal">
-      Another quarter of manual work.<br/>Or one 30-minute call.
-    </h2>
-    <p class="mt-8 text-[18px] text-dim max-w-2xl mx-auto leading-relaxed reveal">
-      Walk us through your stack. We'll tell you what we'd automate first, what it costs, and how long it takes. No pitch deck — just a fixed-scope proposal you can say yes or no to.
-    </p>
-    <div class="mt-12 reveal">
-      <a href={bookHref} {...bookAttrs} class="cta inline-flex items-center gap-2 bg-accent hover:bg-white text-ink text-[16px] font-medium px-8 py-3 rounded-[14px]">
-        Book your discovery call <span aria-hidden="true">→</span>
-      </a>
-    </div>
-    <p class="mt-6 font-mono text-[12px] text-dim reveal">No obligation · Same-week availability</p>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════ -->
-<!--  FOOTER                                    -->
-<!-- ══════════════════════════════════════════ -->
-<footer class="bg-ink text-dim border-t border-line-dk">
-  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-16 grid grid-cols-1 md:grid-cols-3 gap-10">
-    <div>
-      <div class="font-bold tracking-[-0.02em] text-[18px]" style="color:#fff;font-family:'Space Grotesk',sans-serif;">
-        Automatic Nation
+  <!-- ══════════════════════════════════════════ -->
+  <!--  CLOSING CTA (dark)                        -->
+  <!-- ══════════════════════════════════════════ -->
+  <Section id="book" tone="ink" grid container={false} class="relative overflow-hidden">
+    {/* Decorative pieces, hidden below lg: at 224px wide they'd sit on top of
+        the copy on narrow screens, and the content padding they clear only
+        applies from lg up. */}
+    {[
+      { cls: 'tt-deco--l', pieces: TT_LEFT },
+      { cls: 'tt-deco--r', pieces: TT_RIGHT },
+    ].map(group => (
+      <div class:list={['tt-deco', group.cls, 'hidden lg:block']} aria-hidden="true">
+        {group.pieces.map(p => SHAPES[p.s].map((cell, i) => (
+          <i style={`left:${p.x + cell[0] * DECO_CELL}px;top:${p.y + cell[1] * DECO_CELL}px;background:${p.c};border-radius:${radii(SHAPES[p.s], i, CELL_RADIUS)}`}></i>
+        )))}
       </div>
-      <p class="mt-3 text-[13px]">Custom integrations &amp; automated workflows for teams that want to ship.</p>
-      <p class="mt-6 font-mono text-[11px]" style="opacity:0.7;">est. 2021</p>
-    </div>
-    <div class="md:justify-self-center">
-      <p class="eyebrow mb-4" style="opacity:0.7;">Sitemap</p>
-      <ul class="space-y-2 text-[13px]">
-        <li><a href="#templates" class="link-u hover:text-white">Use cases</a></li>
-        <li><a href="#process"   class="link-u hover:text-white">Process</a></li>
-        <li><a href="#faq"       class="link-u hover:text-white">FAQ</a></li>
-        <li><a href="#book"      class="link-u hover:text-white">Contact</a></li>
-      </ul>
-    </div>
-    <div class="md:justify-self-end">
-      <p class="eyebrow mb-4" style="opacity:0.7;">Get in touch</p>
-      <a href="mailto:hello@automaticnation.com" class="link-u text-[14px]" style="color:#fff;">hello@automaticnation.com</a>
-      <div class="mt-4 flex items-center gap-3">
-        <a href="#" aria-label="LinkedIn" class="border border-line-dk rounded-lg p-2 hover:text-white transition-colors">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/>
-            <rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
-          </svg>
-        </a>
-      </div>
-    </div>
-  </div>
-  <div class="border-t border-line-dk">
-    <p class="max-w-7xl mx-auto px-6 lg:px-10 py-6 font-mono text-[11px]" style="opacity:0.7;">
-      &copy; 2026 Automatic Nation — Made with too much coffee in [CITY].
-    </p>
-  </div>
-</footer>
+    ))}
 
-<!-- ══════════════════════════════════════════ -->
-<!--  SCRIPTS                                   -->
-<!-- ══════════════════════════════════════════ -->
+    {/* The text column clears the 224px decorations from lg up. The handoff's
+        prototype is content-box (no reset), so it writes this as a max-width
+        plus symmetric padding; under Tailwind's border-box preflight that same
+        pair would squeeze the copy to a third of its width. */}
+    <div class="relative z-10 max-w-narrow lg:max-w-[1456px] mx-auto px-gutter lg:px-[280px] py-section text-center">
+      <SectionHeader
+        tone="ink"
+        align="center"
+        width="full"
+        scale="display-xl"
+        eyebrow="Ready when you are"
+        lead="Walk us through your stack. We'll tell you what we'd automate first, what it costs, and how long it takes. No pitch deck — just a fixed-scope proposal you can say yes or no to."
+      >
+        <Fragment slot="title">Another quarter of manual work.<br />Or one 30-minute call.</Fragment>
+      </SectionHeader>
+
+      <div class="mt-12 reveal">
+        <Button href={BOOKING.href} external={BOOKING.external} size="lg" arrow>
+          Book your discovery call
+        </Button>
+      </div>
+      <p class="mt-6 font-mono text-xs text-dim reveal">No obligation · Same-week availability</p>
+    </div>
+  </Section>
+
+</BaseLayout>
 
 <!-- Hero tetromino well.
      NOT is:inline: it needs Astro's bundling to resolve the import. That is
@@ -529,17 +388,13 @@ const ogImage = new URL(`${basePrefix}/og-image.png`, Astro.site).href;
      execution order against the Matter.js CDN tag, and that tag is gone. -->
 <script>
   import { Tetris } from '../scripts/tetris.js';
-  import { initSmoothScroll } from '../scripts/smooth-scroll.js';
 
-  initSmoothScroll();
-
-  const card = document.querySelector('.dot-card');
+  const card = document.querySelector<HTMLElement>('.dot-card');
   if (card) {
-    // Same BASE_URL dance as before: the module can't see import.meta.env at
-    // runtime, so the base arrives via data-base and is normalised to match
-    // the <link rel="preload"> URLs character for character.
-    const raw = card.dataset.base || '';
-    const B = raw.endsWith('/') ? raw.slice(0, -1) : raw;
+    // The module can't see import.meta.env at runtime, so the base arrives via
+    // data-base. It is already normalised (no trailing slash), which is what
+    // makes assetBase produce URLs identical to the <link rel="preload"> ones.
+    const B = card.dataset.base || '';
     new Tetris(card, {
       // Fall speed cut 25% from the engine's 2000 default. minMs scales the
       // other way (220 / 0.75 = 293): it's a hard floor on a fall's duration,
@@ -552,19 +407,3 @@ const ogImage = new URL(`${basePrefix}/og-image.png`, Astro.site).href;
     });
   }
 </script>
-
-<!-- Reveal-on-scroll -->
-<script is:inline>
-  const _revealObserver = new IntersectionObserver((entries) => {
-    for (const e of entries) {
-      if (e.isIntersecting) {
-        e.target.classList.add('in');
-        _revealObserver.unobserve(e.target);
-      }
-    }
-  }, { threshold: 0.12 });
-  document.querySelectorAll('.reveal').forEach(el => _revealObserver.observe(el));
-</script>
-
-</body>
-</html>

@@ -1,0 +1,46 @@
+---
+/**
+ * A content card. Covers the use-case articles, the pull-quote, the FAQ cells
+ * and the who-it's-for cells — eleven instances of three near-identical
+ * class strings.
+ */
+import type { Tone, Pad } from '../../lib/design';
+
+interface Props {
+  as?: string;
+  /**
+   * ink is load-bearing on dark sections, not decoration: without a fill the
+   * section's line grid shows straight through the card.
+   */
+  tone?: Tone | 'transparent';
+  /** sm = 28px · md = 32px · lg = 32px, 40px from lg up */
+  pad?: Pad;
+  border?: boolean;
+  radius?: boolean;
+  class?: string;
+}
+
+const {
+  as: Tag = 'div',
+  tone = 'paper',
+  pad = 'md',
+  border = false,
+  radius = false,
+  class: className,
+}: Props = Astro.props;
+
+const TONE = { paper: 'bg-paper', ink: 'bg-ink', transparent: '' } as const;
+const PAD = { sm: 'p-7', md: 'p-8', lg: 'p-8 lg:p-10', none: '' } as const;
+const line = tone === 'ink' ? 'border border-line-dk' : 'border border-line';
+---
+<Tag
+  class:list={[
+    TONE[tone],
+    PAD[pad],
+    border && line,
+    radius && 'rounded-card',
+    className,
+  ]}
+>
+  <slot />
+</Tag>

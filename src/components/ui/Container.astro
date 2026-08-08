@@ -1,0 +1,28 @@
+---
+/**
+ * The page measure. One definition, replacing seven copies of
+ * `max-w-7xl mx-auto px-6 lg:px-10` in the markup plus two hand-written
+ * `max-width: 1280px` blocks in the CSS that a comment had to keep in sync.
+ */
+import type { Width } from '../../lib/design';
+
+interface Props {
+  as?: string;
+  /** page = 1280 (default) · narrow = 896 · prose = 704 */
+  width?: Width;
+  /** Horizontal inset. Off for containers nested inside another one. */
+  gutter?: boolean;
+  class?: string;
+}
+
+const { as: Tag = 'div', width = 'page', gutter = true, class: className }: Props = Astro.props;
+
+const WIDTH = {
+  page: 'max-w-page',
+  narrow: 'max-w-narrow',
+  prose: 'max-w-prose',
+} as const;
+---
+<Tag class:list={[WIDTH[width], 'mx-auto', gutter && 'px-gutter', className]}>
+  <slot />
+</Tag>

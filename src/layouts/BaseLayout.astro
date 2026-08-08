@@ -1,0 +1,95 @@
+---
+import '../styles/global.css';
+import Seo from '../components/seo/Seo.astro';
+import Nav from '../components/chrome/Nav.astro';
+import Footer from '../components/chrome/Footer.astro';
+import { asset } from '../lib/url';
+
+interface Props {
+  title: string;
+  description: string;
+  lang?: string;
+  /** Path with no leading slash and no base — feeds canonical and OG. */
+  path?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
+  article?: { published: Date; modified?: Date; author?: string; tags?: string[] };
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  /**
+   * Paths under public/ to emit as <link rel="preload" as="image">.
+   *
+   * This is a layout prop rather than something the hero emits itself because
+   * Astro does not hoist <head> content out of a nested component, and a
+   * preload discovered down in <body> has already lost the race it exists to
+   * win. The one line in a page's frontmatter is the honest cost, and it keeps
+   * "this page pays for the well" visible at the call site.
+   */
+  preloadImages?: readonly string[];
+  nav?: boolean;
+  footer?: boolean;
+  class?: string;
+}
+
+const {
+  title,
+  description,
+  lang = 'en',
+  path = '',
+  ogImage,
+  ogType,
+  noindex,
+  article,
+  jsonLd,
+  preloadImages = [],
+  nav = true,
+  footer = true,
+  class: className,
+}: Props = Astro.props;
+---
+<!DOCTYPE html>
+<html lang={lang}>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <Seo {title} {description} {path} {ogImage} {ogType} {noindex} {article} {jsonLd} />
+
+  <!-- Fonts: display + body + JetBrains Mono for eyebrows and captions.
+       preconnect saves a round trip — the stylesheet alone can't start the
+       font fetch until it has resolved and parsed. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Montserrat:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  {preloadImages.map(src => <link rel="preload" as="image" href={asset(src)} />)}
+</head>
+<body class={className}>
+  {nav && <Nav />}
+  <slot />
+  {footer && <Footer />}
+
+  <!-- Smooth scrolling. Site-wide and deliberately separate from any hero
+       script: bundling them together would make every page that has no well
+       still pull the well's module graph. -->
+  <script>
+    import { initSmoothScroll } from '../scripts/smooth-scroll.js';
+    initSmoothScroll();
+  </script>
+
+  <!-- Reveal-on-scroll. Inline because it is nine lines with no imports, and
+       inlining keeps it ahead of the bundled modules. The reduced-motion case
+       is handled in CSS, which unsets .reveal's initial opacity. -->
+  <script is:inline>
+    const _revealObserver = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          _revealObserver.unobserve(e.target);
+        }
+      }
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => _revealObserver.observe(el));
+  </script>
+</body>
+</html>

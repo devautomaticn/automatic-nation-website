@@ -1,0 +1,25 @@
+---
+/**
+ * The mono payoff line under a card — "Leads routed in <60 seconds".
+ * Also the renderer for case-study results once that collection exists.
+ */
+import type { TextTone } from '../../lib/design';
+
+interface Props {
+  value: string;
+  label?: string;
+  tone?: 'accent' | Extract<TextTone, 'dim' | 'mute'>;
+  class?: string;
+}
+
+// `as`, not a `: Props` annotation, because this frontmatter has no *value*
+// import — a type-only import is erased, so Astro falls back to typing
+// Astro.props as Record<string, any>, which can't satisfy a required prop.
+// Callers are still fully checked against Props; only this side needs the hint.
+const { value, label, tone = 'accent', class: className } = Astro.props as Props;
+
+const TONE = { accent: 'text-accent', dim: 'text-dim', mute: 'text-mute' } as const;
+---
+<p class:list={['font-mono text-2xs', TONE[tone], className]}>
+  {value}{label && <span class="text-dim"> · {label}</span>}
+</p>

@@ -1,0 +1,28 @@
+---
+/**
+ * A small bordered tag. The single most-duplicated string on the old page —
+ * the tech chips alone repeated it twelve times.
+ */
+import type { Tone } from '../../lib/design';
+
+interface Props {
+  tone?: Tone;
+  font?: 'sans' | 'mono';
+  class?: string;
+}
+
+const { tone = 'ink', font = 'sans', class: className }: Props = Astro.props;
+
+const TONE = {
+  ink: 'border-line-dk text-dim',
+  paper: 'border-line text-mute',
+} as const;
+
+const FONT = {
+  sans: 'text-2xs font-semibold tracking-wider',
+  mono: 'font-mono text-2xs',
+} as const;
+---
+<span class:list={['inline-block px-2.5 py-1 border rounded-chip', TONE[tone], FONT[font], className]}>
+  <slot />
+</span>

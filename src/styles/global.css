@@ -230,24 +230,57 @@
 }
 .nav-links a:hover { opacity: 0.6; }
 
-.btn-cta {
-  background: var(--color-accent);
-  border: 2px solid var(--accent-edge);
-  border-radius: var(--radius-control);
-  padding: 8px 22px;      /* → 44px tall (24px line box + 2×2px border) */
+/* ── Button ──
+   One component at three sizes. The page previously ran four implementations
+   of this — .btn-cta, .btn-hero, and two stacks of Tailwind utilities — which
+   is why the CTAs below the hero read as a different component from the one
+   above them, despite being the same action.
+
+   Both the base fill AND the hover fill live here. That is what makes the
+   hover work at all: while the fill was a `bg-accent` utility in the markup, a
+   `:hover { background }` rule in this layer could never beat it — v4 emits
+   utilities in a cascade layer that wins regardless of specificity. Now
+   they're in the same layer and source order decides. Don't put bg-* back on
+   the element. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   font-family: 'Montserrat', sans-serif;
-  font-size: var(--text-base);
   font-weight: 500;
-  color: var(--color-ink);
-  cursor: pointer;
-  text-transform: capitalize;
   white-space: nowrap;
-  flex-shrink: 0;
-  transition: background-color 0.22s ease, border-color 0.22s ease;
   text-decoration: none;
-  display: inline-block;
+  cursor: pointer;
+  flex-shrink: 0;
+  border: 2px solid transparent;
+  border-radius: var(--radius-control);
+  transition: background-color 0.22s ease, border-color 0.22s ease, color 0.22s ease;
 }
-.btn-cta:hover { background: var(--color-paper); border-color: var(--accent-edge-hi); }
+
+.btn--sm { font-size: var(--text-sm);   padding: 8px 18px; }
+.btn--md { font-size: var(--text-base); padding: 8px 22px; }   /* → 44px tall */
+.btn--lg { font-size: var(--text-lg);   padding: 11px 28px; }  /* → 52px tall */
+
+.btn--accent {
+  background: var(--color-accent);
+  border-color: var(--accent-edge);
+  color: var(--color-ink);
+}
+.btn--accent:hover {
+  background: var(--color-paper);
+  border-color: var(--accent-edge-hi);
+}
+
+/* Secondary, for landings that need a second action next to the accent one. */
+.btn--ghost {
+  background: transparent;
+  border-color: currentColor;
+  color: inherit;
+}
+.btn--ghost:hover { background: color-mix(in srgb, currentColor 8%, transparent); }
+
+.btn--block { display: flex; width: 100%; }
 
 /* ── Hero ──
    Same container tokens as every section below (--container-page +
@@ -313,28 +346,10 @@
   margin-bottom: 48px;
 }
 
-/* Hero CTA. Same accent + 2px --accent-edge + 14px radius as .btn-cta and
-   .cta — one button component at three sizes, not three components. Bigger
-   than the navbar's because it's the page's primary action. */
-.btn-hero {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  align-self: flex-start;
-  background: var(--color-accent);
-  border: 2px solid var(--accent-edge);
-  border-radius: var(--radius-control);
-  padding: 11px 28px;     /* → 52px tall (26px line box + 2×2px border) */
-  font-family: 'Montserrat', sans-serif;
-  font-size: var(--text-lg);
-  font-weight: 500;
-  color: var(--color-ink);
-  text-decoration: none;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: background-color 0.22s ease, border-color 0.22s ease;
-}
-.btn-hero:hover { background: var(--color-paper); border-color: var(--accent-edge-hi); }
+/* .hero-left is a flex column, so a button would stretch to the column's full
+   width without this. It deliberately does stretch on phones — see the @640
+   rule at the bottom of the file. */
+.hero-left .btn { align-self: flex-start; }
 
 /* ── Hero right: the tetromino well ──
    .dot-card is an empty, fluid, square box; tetris.js builds its own 608px
@@ -380,19 +395,6 @@
   transition: transform .25s ease;
 }
 .link-u:hover::after { transform: scaleX(1); }
-
-/* The section CTAs. Same 2px --accent-edge as .btn-cta and .btn-hero —
-   those two had it and this one didn't, which is why the "Book a call" buttons
-   below the hero read as a different component. The edge derives from
-   --color-accent via color-mix, so all three stay in sync with the token. */
-/* The hover fill can't live here: .bg-accent is a Tailwind utility, and v4
-   emits utilities in a layer that beats @layer components no matter the
-   specificity — a `.cta:hover { background }` rule would simply never apply.
-   The markup carries `hover:bg-white` instead, which is in the same layer. */
-.cta {
-  border: 2px solid var(--accent-edge);
-  transition: background-color 0.22s ease;
-}
 
 /* Line grid for dark sections — same vocabulary as the well's cell guides,
    but a 56px pitch (the decoration cell size) rather than the well's 61px. */
@@ -656,9 +658,11 @@
   .hero-sub2 { margin-bottom: 32px; }
   /* Full-bleed CTA on phones: a 32px-padded pill floating in a narrow column
      reads as an afterthought next to a full-width headline. */
-  .btn-hero { align-self: stretch; justify-content: center; }
+  .hero-left .btn { align-self: stretch; }
   .logo { font-size: var(--text-xl); }
-  .btn-cta { padding: 12px 18px; font-size: var(--text-sm); }
+  /* The navbar CTA is the one button that has to survive a 375px viewport
+     next to the wordmark, so it drops a size rather than wrapping. */
+  .navbar .btn { padding: 12px 18px; font-size: var(--text-sm); }
 }
 
 /* Below ~430px the wordmark and the CTA collide. Drop the wordmark and keep
@@ -677,7 +681,7 @@
   }
   /* Reveals must not stay stuck at opacity 0 once transitions are killed. */
   .reveal { opacity: 1; transform: none; }
-  .cta:hover { transform: none; }
+  .btn:hover { transform: none; }
 }
 
 } /* end @layer components */

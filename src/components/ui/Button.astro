@@ -1,0 +1,58 @@
+---
+import { href as resolveHref } from '../../lib/url';
+import type { ControlSize } from '../../lib/design';
+
+/**
+ * The site's only button. Renders an <a> when given an href, a <button>
+ * otherwise. Visual styling lives in @layer components (.btn / .btn--*), not
+ * in utilities here — see the comment on .btn in global.css for why the fill
+ * and hover cannot be utility classes.
+ */
+interface Props {
+  href?: string;
+  /** sm = strips · md = navbar · lg = hero and closing CTA */
+  size?: ControlSize;
+  variant?: 'accent' | 'ghost';
+  /** Opens in a new tab with rel=noopener. */
+  external?: boolean;
+  /** Trailing → glyph. Decorative, so it's hidden from assistive tech. */
+  arrow?: boolean;
+  /** Full width of its container. */
+  block?: boolean;
+  type?: 'button' | 'submit';
+  class?: string;
+}
+
+const {
+  href,
+  size = 'md',
+  variant = 'accent',
+  external = false,
+  arrow = false,
+  block = false,
+  type = 'button',
+  class: className,
+  ...rest
+}: Props = Astro.props;
+
+const classes = [
+  'btn',
+  `btn--${size}`,
+  `btn--${variant}`,
+  block && 'btn--block',
+  className,
+];
+
+// Anchors and fragments pass straight through; internal paths get the base.
+const url = href ? resolveHref(href) : undefined;
+const target = external ? { target: '_blank', rel: 'noopener' } : {};
+---
+{url ? (
+  <a href={url} class:list={classes} {...target} {...rest}>
+    <slot />{arrow && <span aria-hidden="true">→</span>}
+  </a>
+) : (
+  <button type={type} class:list={classes} {...rest}>
+    <slot />{arrow && <span aria-hidden="true">→</span>}
+  </button>
+)}

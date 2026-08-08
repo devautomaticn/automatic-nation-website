@@ -1,52 +1,129 @@
 @import "tailwindcss";
 
 /* ── Design tokens ──────────────────────────────────────────────────────
-   Ported from the old inline `tailwind.config` that the CDN build used.
    Tailwind v4 derives utility names from these custom-property names, so
    `--color-line-dk` is what generates `border-line-dk`. Keys must be
    kebab-case — the old camelCase `lineDk` has no v4 equivalent.
+
+   Prefer adding a token here over adding a class in @layer components.
+   Theme keys emit as *utilities*, so they can never lose the layer fight
+   described at the bottom of this comment block.
    ──────────────────────────────────────────────────────────────────── */
 @theme {
+  /* ── Colour ──
+     The five piece colours are the brand palette. They used to be a literal
+     array duplicated in three files; this is the single declaration, mirrored
+     by src/lib/tetromino.ts for the JS side (CSS can't be imported from JS at
+     build time, so the two are kept in sync by hand — change both). */
+  --color-piece-yellow: #F7DB55;
+  --color-piece-blue:   #8699F7;
+  --color-piece-red:    #E3662E;
+  --color-piece-orange: #EEAF79;
+  --color-piece-green:  #7BB784;
+
   --color-ink:     #2c2c2c;
   --color-paper:   #FFFBF9;
-  --color-mute:    #525252;
-  --color-dim:     #a3a3a3;
-  --color-line:    #e5e5e5;
-  --color-line-dk: #484848;
-  /* Matches the tetromino palette's yellow, so the CTAs and the well's
-     line-clear flash are the same colour. --accent-edge recomputes itself. */
-  --color-accent:  #F7DB55;
+  --color-mute:    #525252;   /* secondary text on paper */
+  --color-dim:     #a3a3a3;   /* secondary text on ink */
+  --color-faint:   #818181;   /* tertiary on ink — replaces text-dim + opacity:.7 */
+  --color-line:    #e5e5e5;   /* hairlines on paper */
+  --color-line-hi: #d4d4d4;   /* the one heavier rule: navbar → hero boundary */
+  --color-line-dk: #484848;   /* hairlines on ink */
+
+  /* The accent IS the palette's yellow, so the CTAs and the well's line-clear
+     flash are the same colour by construction. --accent-edge recomputes. */
+  --color-accent: var(--color-piece-yellow);
 
   --font-sans: 'Space Grotesk', 'Montserrat', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* ── Type ──
+     v4's stock steps are already 12/14/16/18/20/24px, which is what the page
+     was writing by hand as text-[12px] … text-[24px]. Those are deliberately
+     NOT redefined here — only 11px is missing from the bottom of the scale.
+
+     The display steps carry line-height, tracking and weight as paired
+     sub-tokens, so `text-display-md` on an <h2> is the whole declaration:
+     no font-bold, no tracking-[-0.035em], no leading-[0.95] alongside it. */
+  --text-2xs: 0.6875rem;              /* 11px — eyebrows, mono captions, chips */
+  --text-2xs--line-height: 1.35;
+
+  --text-display-sm: clamp(1.625rem, 1.2rem + 1.8vw, 2.25rem);    /* 26 → 36 */
+  --text-display-sm--line-height: 1.05;
+  --text-display-sm--letter-spacing: -0.03em;
+  --text-display-sm--font-weight: 700;
+
+  --text-display-md: clamp(2rem, 1.2rem + 3.4vw, 3.25rem);        /* 32 → 52 */
+  --text-display-md--line-height: 0.95;
+  --text-display-md--letter-spacing: -0.035em;
+  --text-display-md--font-weight: 700;
+
+  /* The hero voice: lighter and roomier than the section voice, on purpose.
+     The page ran two display scales that disagreed on every axis (size, vw
+     rate, weight, tracking, leading) because the hero and the sections were
+     authored independently. This is the deliberate resolution: they still
+     differ, but now they differ as two named steps rather than by accident. */
+  --text-display-lg: clamp(2.25rem, 1.4rem + 3.6vw, 3.625rem);    /* 36 → 58 */
+  --text-display-lg--line-height: 1.1;
+  --text-display-lg--letter-spacing: -0.033em;
+  --text-display-lg--font-weight: 400;
+
+  --text-display-xl: clamp(2.5rem, 1.2rem + 5.6vw, 5rem);         /* 40 → 80 */
+  --text-display-xl--line-height: 0.95;
+  --text-display-xl--letter-spacing: -0.035em;
+  --text-display-xl--font-weight: 700;
+
+  /* ── Spacing rhythm ──
+     Named keys only. Do NOT redefine --spacing itself: that is v4's 0.25rem
+     multiplier driving every p-1 … p-96, and overriding it rescales the whole
+     site silently. These generate px-gutter, py-section, mt-block, etc.
+     The page previously ran py-12/16/20/24/32 for the same relationship. */
+  --spacing-gutter:     clamp(1.5rem, 3vw, 2.5rem);   /* 24 → 40, the page inset */
+  --spacing-section:    clamp(4rem, 8vw, 7rem);       /* 64 → 112, major sections */
+  --spacing-section-sm: clamp(2.5rem, 5vw, 4rem);     /* 40 → 64, strips + footer */
+  --spacing-section-xs: 1.5rem;                       /* 24, the legal bar */
+  --spacing-block:      4rem;                         /* section header → content */
+  --spacing-block-sm:   2rem;
+
+  /* ── Radius ──
+     One language, applied everywhere. The page previously ran five competing
+     radii (4px badges, 6px cards, 32px hero card, 70px pills), which is what
+     read as unfinished next to a site using a single consistent value. */
+  --radius-chip:    0.5rem;    /* 8  — tags, small controls */
+  --radius-cell:    0.75rem;   /* 12 — tetromino cells (mirrored in tetris.js) */
+  --radius-control: 0.875rem;  /* 14 — buttons, inputs, focus ring */
+  --radius-card:    1rem;      /* 16 — content cards and articles */
+  --radius-panel:   1.5rem;    /* 24 — hero card, gantt lanes */
+  --radius-pill:    999px;
+
+  /* ── Containers ──
+     max-w-page is the single definition of the page's measure. It replaces
+     max-w-7xl in the markup AND the two hand-written `max-width: 1280px`
+     copies that had to be kept in sync by a comment. */
+  --container-page:   80rem;   /* 1280 */
+  --container-narrow: 56rem;   /* 896  — wide text columns */
+  --container-prose:  44rem;   /* 704  — article body measure */
 }
 
-/* Borde de los botones: el propio acento oscurecido al 55% de luminosidad,
-   a 40% de opacidad. Derivado con color-mix en lugar de un rgba() fijo para
-   que siga al token — cambiar --color-accent reajusta el borde solo, sin
-   dejar un borde huérfano del color anterior.
-   Va fuera de @theme: Tailwind genera utilidades desde las claves de @theme,
-   y esto es un valor interno, no una utilidad que alguien deba escribir. */
+/* Derivados internos, fuera de @theme a propósito: Tailwind genera utilidades
+   desde las claves de @theme, y esto son valores internos, no utilidades que
+   alguien deba escribir en el markup.
+
+   --accent-edge: el propio acento oscurecido al 55% de luminosidad, a 40% de
+   opacidad. Derivado con color-mix en lugar de un rgba() fijo para que siga al
+   token — cambiar --color-accent reajusta el borde solo, sin dejar un borde
+   huérfano del color anterior. */
 :root {
   --accent-edge: color-mix(in srgb,
                    color-mix(in srgb, #000 45%, var(--color-accent)) 40%,
                    transparent);
+  --accent-edge-hi: color-mix(in srgb, var(--color-ink) 35%, transparent);
+  --grid-line-dark: color-mix(in srgb, #fff 5.5%, transparent);
+  --tt-hairline:    color-mix(in srgb, #000 10%, transparent);
 }
 
 /* Hero + navbar are hand-written CSS (not Tailwind). Everything below the
    hero uses Tailwind utilities against the tokens above.
-
-   ── RADIUS SCALE ──
-   One language, applied everywhere. The page previously ran five competing
-   radii (4px badges, 6px cards, 15px float-cards, 32px hero card, 70px
-   pills), which is what read as unfinished next to a site using a single
-   consistent value.
-     8px  (rounded-lg)  small chips and icon buttons
-     14px               controls — buttons, inputs, focus ring
-     16px (rounded-2xl) content cards and articles
-     24px               the large hero card
-     15px               float-cards only; matches the Matter.js chamfer
-                        radius R, so the physics silhouette tracks the visual.
 
    ── EVERYTHING BELOW MUST STAY INSIDE A @layer ──
    Tailwind v4 emits its utilities inside cascade layers, and unlayered CSS
@@ -72,8 +149,9 @@
   html, body { overscroll-behavior: none; }
 
   body {
-    font-family: 'Space Grotesk', 'Montserrat', sans-serif;
+    font-family: var(--font-sans);
     background: var(--color-paper);
+    color: var(--color-ink);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -83,9 +161,9 @@
   /* Visible keyboard focus — the buttons had no focus state at all.
      Radius tracks the 14px control radius so the ring hugs the shape. */
   :focus-visible {
-    outline: 2px solid #2c2c2c;
+    outline: 2px solid var(--color-ink);
     outline-offset: 3px;
-    border-radius: 14px;
+    border-radius: var(--radius-control);
   }
 }
 
@@ -96,21 +174,25 @@
 
 /* ── Navbar ── */
 /* The rule spans the viewport; the contents don't. .navbar-inner repeats the
-   hero's container exactly (max-width 1280 + clamp(24px, 3vw, 40px)) so the
-   logo starts on the same vertical as the headline and every section heading.
+   page container exactly (--container-page + --spacing-gutter) so the logo
+   starts on the same vertical as the headline and every section heading.
    The old `padding: 0 clamp(20px, 6vw, 120px)` with no max-width put it ~34px
-   off at 1440px, and further off the wider the screen got. */
+   off at 1440px, and further off the wider the screen got.
+
+   --color-line-hi, not --color-line: this is the one boundary on the page that
+   carries weight, separating the chrome from the content. Every other hairline
+   is --color-line. */
 .navbar {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid var(--color-line-hi);
   flex-shrink: 0;
 }
 .navbar-inner {
   display: flex;
   align-items: center;
   gap: 40px;
-  max-width: 1280px;
+  max-width: var(--container-page);
   margin-inline: auto;
-  padding-inline: clamp(24px, 3vw, 40px);
+  padding-inline: var(--spacing-gutter);
   height: 88px;
 }
 
@@ -118,10 +200,10 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: var(--font-sans);
   font-weight: 700;
-  font-size: 24px;
-  color: #2c2c2c;
+  font-size: var(--text-2xl);
+  color: var(--color-ink);
   white-space: nowrap;
   flex-shrink: 0;
   text-decoration: none;
@@ -136,9 +218,9 @@
   margin-left: auto;
   gap: 40px;
   font-family: 'Montserrat', sans-serif;
-  font-size: 16px;
+  font-size: var(--text-base);
   font-weight: 500;
-  color: #000;
+  color: var(--color-ink);
   text-transform: capitalize;
 }
 .nav-links a {
@@ -151,12 +233,12 @@
 .btn-cta {
   background: var(--color-accent);
   border: 2px solid var(--accent-edge);
-  border-radius: 14px;
+  border-radius: var(--radius-control);
   padding: 8px 22px;      /* → 44px tall (24px line box + 2×2px border) */
   font-family: 'Montserrat', sans-serif;
-  font-size: 16px;
+  font-size: var(--text-base);
   font-weight: 500;
-  color: #000;
+  color: var(--color-ink);
   cursor: pointer;
   text-transform: capitalize;
   white-space: nowrap;
@@ -165,11 +247,11 @@
   text-decoration: none;
   display: inline-block;
 }
-.btn-cta:hover { background: #fff; border-color: rgba(0, 0, 0, 0.35); }
+.btn-cta:hover { background: var(--color-paper); border-color: var(--accent-edge-hi); }
 
 /* ── Hero ──
-   Same container geometry as the Tailwind sections below (max-w-7xl mx-auto
-   px-6 lg:px-10), so the headline's left edge lines up with every section
+   Same container tokens as every section below (--container-page +
+   --spacing-gutter), so the headline's left edge lines up with every section
    heading instead of merely landing near it by way of justify-content:center.
    Height is content-driven — the old min-height: calc(100vh - 88px) is what
    created the dead band under the headline on tall viewports. */
@@ -178,9 +260,9 @@
   align-items: center;
   justify-content: space-between;
   gap: clamp(40px, 4vw, 64px);
-  max-width: 1280px;
+  max-width: var(--container-page);
   margin-inline: auto;
-  padding-inline: clamp(24px, 3vw, 40px);
+  padding-inline: var(--spacing-gutter);
   padding-block: clamp(48px, 7vw, 100px);
   width: 100%;
   flex-shrink: 0;
@@ -196,15 +278,16 @@
   max-width: 584px;
 }
 
+/* The display-lg step carries size, leading, tracking and weight together —
+   tracking is em-based so it scales with the clamped size, since a flat -4px
+   looks broken once the headline drops to 36px on a phone. */
 .headline {
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 400;
-  /* Tracking is em-based so it scales with the clamped size — a flat -4px
-     looks broken once the headline drops to 36px on a phone. */
-  font-size: clamp(36px, 4.2vw, 58px);
-  line-height: 1.1;
-  letter-spacing: -0.033em;
-  color: #000;
+  font-family: var(--font-sans);
+  font-weight: var(--text-display-lg--font-weight);
+  font-size: var(--text-display-lg);
+  line-height: var(--text-display-lg--line-height);
+  letter-spacing: var(--text-display-lg--letter-spacing);
+  color: var(--color-ink);
   text-transform: capitalize;
   margin-bottom: 32px;
 }
@@ -212,20 +295,20 @@
 
 .hero-sub {
   font-family: 'Montserrat', sans-serif;
-  font-size: 18px;
+  font-size: var(--text-lg);
   font-weight: 500;
   line-height: 1.6;
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--color-mute);
   max-width: 584px;
   margin-bottom: 12px;
 }
 
 .hero-sub2 {
   font-family: 'Montserrat', sans-serif;
-  font-size: 18px;
+  font-size: var(--text-lg);
   font-weight: 500;
   line-height: 1.6;
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--color-mute);
   max-width: 584px;
   margin-bottom: 48px;
 }
@@ -240,18 +323,18 @@
   align-self: flex-start;
   background: var(--color-accent);
   border: 2px solid var(--accent-edge);
-  border-radius: 14px;
+  border-radius: var(--radius-control);
   padding: 11px 28px;     /* → 52px tall (26px line box + 2×2px border) */
   font-family: 'Montserrat', sans-serif;
-  font-size: 17px;
+  font-size: var(--text-lg);
   font-weight: 500;
-  color: #000;
+  color: var(--color-ink);
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
   transition: background-color 0.22s ease, border-color 0.22s ease;
 }
-.btn-hero:hover { background: #fff; border-color: rgba(0, 0, 0, 0.35); }
+.btn-hero:hover { background: var(--color-paper); border-color: var(--accent-edge-hi); }
 
 /* ── Hero right: the tetromino well ──
    .dot-card is an empty, fluid, square box; tetris.js builds its own 608px
@@ -269,8 +352,8 @@
   max-width: 608px;
   margin-inline: auto;
   aspect-ratio: 1;
-  background: #2c2c2c;
-  border-radius: 24px;
+  background: var(--color-ink);
+  border-radius: var(--radius-panel);
   overflow: hidden;
   position: relative;
 }
@@ -284,10 +367,10 @@
    arbitrary-value utilities in the markup instead. */
 
 .eyebrow {
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-family: var(--font-mono);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  font-size: 11px;
+  font-size: var(--text-2xs);
 }
 
 .link-u { position: relative; }
@@ -315,8 +398,8 @@
    but a 56px pitch (the decoration cell size) rather than the well's 61px. */
 .dot-grid {
   background-image:
-    linear-gradient(to right,  rgba(255,255,255,0.055) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255,255,255,0.055) 1px, transparent 1px);
+    linear-gradient(to right,  var(--grid-line-dark) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line-dark) 1px, transparent 1px);
   background-size: 56px 56px;
 }
 
@@ -330,7 +413,7 @@
 .tt-deco i {
   position: absolute;
   width: 56px; height: 56px;
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.10);
+  box-shadow: inset 0 0 0 1px var(--tt-hairline);
 }
 
 /* ── Process Gantt ──
@@ -343,7 +426,7 @@
 
    --tone is the whole colour story: solid on the badge, a flat wash on the
    pill. Override --tone on one pill and that pill restyles completely. Set it
-   to #8699F7 (already in the tetromino palette) to take the chart blue. */
+   to var(--color-piece-blue) to take the chart blue. */
 .gantt {
   --gantt-lanes: 6;
   --lane: calc(100% / var(--gantt-lanes));
@@ -369,7 +452,7 @@
   width: calc(var(--lane) - var(--gutter));
   background: color-mix(in srgb, var(--color-line) 14%, var(--color-paper));
   border: 1px solid var(--color-line);
-  border-radius: 28px;
+  border-radius: var(--radius-panel);
 }
 
 /* Buffer weeks: contingency, not committed work. Diagonal hatching is the
@@ -404,7 +487,7 @@
   gap: 12px;
   min-height: 56px;
   padding: 8px 24px 8px 8px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: color-mix(in srgb, var(--tone) 11%, var(--color-paper));
   /* Same 1px weight as every other border on the page, but derived from
      --tone rather than hardcoded to --color-line: the accent pill needs a
@@ -421,9 +504,9 @@
   height: 40px;
   border-radius: 50%;
   background: var(--tone);
-  color: #fff;
+  color: var(--color-paper);
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: var(--text-xs);
   font-weight: 500;
   letter-spacing: 0.04em;
 }
@@ -431,7 +514,7 @@
 .gantt-pill-txt { min-width: 0; }
 .gantt-pill-txt strong {
   display: block;
-  font-size: 16px;
+  font-size: var(--text-base);
   line-height: 1.25;
   font-weight: 600;
   letter-spacing: -0.02em;
@@ -443,7 +526,7 @@
   margin-top: 2px;
   font-family: var(--font-mono);
   font-style: normal;
-  font-size: 11px;
+  font-size: var(--text-2xs);
   line-height: 1.2;
   letter-spacing: 0.08em;
   color: var(--color-mute);
@@ -483,7 +566,7 @@
   position: relative;
   padding-left: 16px;
   margin-bottom: 10px;
-  font-size: 13px;
+  font-size: var(--text-xs);
   line-height: 1.4;
   color: var(--color-mute);
 }
@@ -507,7 +590,7 @@
   width: var(--lane);
   text-align: center;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-2xs);
   letter-spacing: 0.08em;
   color: var(--color-dim);
 }
@@ -517,7 +600,9 @@
   display: block;
   margin-top: 3px;
   font-weight: 500;
-  font-size: 10px;
+  /* Relative, not a scale step: this sits one notch under its own parent on
+     purpose, and --text-2xs is already the scale's floor. */
+  font-size: 0.9em;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
@@ -566,14 +651,14 @@
 }
 
 @media (max-width: 640px) {
-  .hero-sub, .hero-sub2 { font-size: 16px; }
+  .hero-sub, .hero-sub2 { font-size: var(--text-base); }
   .headline { margin-bottom: 24px; }
   .hero-sub2 { margin-bottom: 32px; }
   /* Full-bleed CTA on phones: a 32px-padded pill floating in a narrow column
      reads as an afterthought next to a full-width headline. */
   .btn-hero { align-self: stretch; justify-content: center; }
-  .logo { font-size: 20px; }
-  .btn-cta { padding: 12px 18px; font-size: 14px; }
+  .logo { font-size: var(--text-xl); }
+  .btn-cta { padding: 12px 18px; font-size: var(--text-sm); }
 }
 
 /* Below ~430px the wordmark and the CTA collide. Drop the wordmark and keep

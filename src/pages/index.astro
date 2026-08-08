@@ -1,14 +1,16 @@
 ---
+import '../styles/global.css';
+
 const base = import.meta.env.BASE_URL;
 // Normalised base with no trailing slash — matches how the physics script
 // builds each src (B + '/logos/...'), so the preload URL is identical and the
 // browser reuses the same fetch instead of requesting the icon twice.
 const basePrefix = base.endsWith('/') ? base.slice(0, -1) : base;
 
-// Hero-canvas icons. Preloaded in <head> so they're fetched during initial
-// parse (in parallel) and decoded before the physics drop runs — otherwise
-// cards fall as blank squares and the icon pops in after they've landed.
-// Keep this list in sync with logoDefs/the profile images in the script below.
+// Well icons. Preloaded in <head> so they're fetched during initial parse (in
+// parallel) and decoded before the first piece falls — otherwise cells land as
+// blank tiles and the icon pops in afterwards.
+// Manually mirrors LOGOS + PHOTOS in src/scripts/tetris.js — edit both.
 const heroAssets = [
   'logos/Symbol.svg.svg',
   'logos/make_symbol.svg.svg',
@@ -26,317 +28,164 @@ const heroAssets = [
   'image.png',
   'T024D9G3RV4-U05ENL69F37-458b1cdf045b-512.jpg',
 ];
+
+// ── Static tetromino decorations for the closing CTA ──
+// Same seven shapes, same 12px fused-corner rule and same hairline as the
+// well, but no logos and no motion. Positions are multiples of the 56px cell
+// so the pieces land on the section's background grid; the negative offsets
+// are exactly one cell, so even the bleed stays on a grid line.
+const TT_CELL = 56, TT_RADIUS = 12;
+const TT_SHAPES = {
+  I: [[0,0],[1,0],[2,0],[3,0]],
+  O: [[0,0],[1,0],[0,1],[1,1]],
+  T: [[0,0],[1,0],[2,0],[1,1]],
+  S: [[1,0],[2,0],[0,1],[1,1]],
+  J: [[0,0],[0,1],[1,1],[2,1]],
+};
+// A corner rounds only where both of its edges face outward, so cells inside a
+// piece fuse — identical to Tetris.prototype.radii in src/scripts/tetris.js.
+function ttRadii(cells: number[][], i: number) {
+  const has = (x: number, y: number) => cells.some(c => c[0] === x && c[1] === y);
+  const [x, y] = cells[i];
+  return [
+    (!has(x, y - 1) && !has(x - 1, y)) ? TT_RADIUS : 0,
+    (!has(x, y - 1) && !has(x + 1, y)) ? TT_RADIUS : 0,
+    (!has(x, y + 1) && !has(x + 1, y)) ? TT_RADIUS : 0,
+    (!has(x, y + 1) && !has(x - 1, y)) ? TT_RADIUS : 0,
+  ].map(v => v + 'px').join(' ');
+}
+const TT_LEFT = [
+  { s: 'O', c: '#8699F7', x: -56, y:   0 },
+  { s: 'J', c: '#7BB784', x:  56, y: 168 },
+  { s: 'S', c: '#EEAF79', x: -56, y: 336 },
+];
+const TT_RIGHT = [
+  { s: 'T', c: '#E3662E', x:  56, y:  56 },
+  { s: 'I', c: '#F7DB55', x:  56, y: 224 },
+  { s: 'O', c: '#8699F7', x: 112, y: 504 },
+];
+
+// ── Process timeline (Gantt) ──
+// One source for both renderings: the Gantt on lg+ and the stacked cards
+// below it. Duplicating this prose in two markup blocks is how the two drift
+// apart, so both are generated from here.
+// Everything is measured in weeks: `w` is the starting week (0-indexed) and
+// `ws` how many weeks it lasts. Lanes, pills and task lists are all derived
+// from those two numbers with the same formula, so a pill lines up with its
+// lane by construction rather than by two sets of numbers agreeing. (This
+// replaced a 24-column grid whose lines fell a few pixels off the lanes.)
+const PROCESS = [
+  {
+    n: '01', name: 'Discovery', when: 'Week 0', w: 0, ws: 1,
+    body: '30 minutes. We map your current tools, the bottlenecks, and what "done" looks like. You leave with a written scope and fixed price.',
+    tasks: ['Discovery call', 'Tools & bottlenecks', 'Written scope', 'Fixed price'],
+  },
+  {
+    n: '02', name: 'Build', when: 'Weeks 1–3', w: 1, ws: 3,
+    body: 'We build the system on Airtable + n8n + your existing stack. You see weekly demo videos; nothing is built in a vacuum.',
+    tasks: ['System build', 'Weekly demo videos', 'Integration testing'],
+  },
+  {
+    n: '03', name: 'Launch', when: 'Week 4', w: 4, ws: 1, hl: true,
+    body: 'We deploy live, train your team, and ship documentation written for humans, not engineers.',
+    tasks: ['Deploy live', 'Team training', 'Documentation'],
+  },
+  {
+    n: '04', name: 'Maintain', when: 'Ongoing', w: 5, ws: 1,
+    body: 'Optional retainer for changes, monitoring, and the next system. Most clients stay.',
+    tasks: ['Monitoring', 'Changes & fixes', 'Next system'],
+  },
+];
+// One rounded lane per week, and one axis label centred under each. Both are
+// driven off the same index so a label can never drift off its lane.
+// `buffer` marks contingency weeks: the work is scoped to finish before them,
+// and they exist only in case it doesn't. They're hatched and labelled rather
+// than just greyed — an unexplained different-looking lane reads as a styling
+// slip, not as a schedule fact.
+const GANTT_TICKS = [
+  { t: 'Week 0' },
+  { t: 'Week 1' },
+  { t: 'Week 2', buffer: true },
+  { t: 'Week 3', buffer: true },
+  { t: 'Week 4' },
+  { t: 'Ongoing' },
+];
+
+// ── FILL IN BEFORE LAUNCH ───────────────────────────────────────────────
+// Scheduling link used by every "Book a call" CTA (Calendly, Cal.com, …).
+// While empty, the CTAs fall back to jumping to the #book section.
+const BOOKING_URL = '';
+// ────────────────────────────────────────────────────────────────────────
+
+const bookHref = BOOKING_URL || '#book';
+const bookAttrs = BOOKING_URL ? { target: '_blank', rel: 'noopener' } : {};
+
+const title = 'Automatic Nation — Automation & Integrations Agency';
+const description =
+  'We build custom integrations and automated workflows across Airtable, n8n, and 900+ apps. 50+ workflows shipped. Book a discovery call.';
+// Absolute URLs for canonical/OG — Astro.site comes from `site` in
+// astro.config.mjs, so pointing that at a custom domain updates both.
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL(`${basePrefix}/og-image.png`, Astro.site).href;
 ---
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Automatic Nation — Automation &amp; Integrations Agency</title>
-  <meta name="description" content="We build custom integrations and automated workflows across Airtable, n8n, and 9,000+ apps. 50+ workflows shipped. Book a discovery call." />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
 
-  <!-- Fonts: hero set + JetBrains Mono for section eyebrows -->
+  <link rel="icon" type="image/svg+xml" href={`${basePrefix}/favicon.svg`} />
+  <link rel="alternate icon" href={`${basePrefix}/favicon.ico`} />
+
+  <!-- Social cards -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={ogImage} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+
+  <!-- Fonts: hero set + JetBrains Mono for section eyebrows.
+       preconnect saves a round trip — the stylesheet alone can't start the
+       font fetch until it has resolved and parsed. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Montserrat:wght@400;500;600;700&family=Poppins:wght@700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <!-- Preload hero-canvas icons so they're decoded before the physics drop -->
   {heroAssets.map(a => <link rel="preload" as="image" href={`${basePrefix}/${a}`} />)}
 
-  <!-- Tailwind CDN — only powers the imported sections below the hero -->
-  <!-- is:inline keeps Astro from hoisting/bundling these CDN tags -->
-  <script is:inline src="https://cdn.tailwindcss.com"></script>
-  <script is:inline>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            ink:    '#2c2c2c',
-            paper:  '#ffffff',
-            mute:   '#525252',
-            dim:    '#A3A3A3',
-            line:   '#E5E5E5',
-            lineDk: '#484848',
-            accent: '#f6da74',
-          },
-          fontFamily: {
-            sans: ["'Space Grotesk'", "'Montserrat'", 'system-ui', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
-          },
-        }
-      }
-    }
-  </script>
-
-  <style is:global>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Space Grotesk', 'Montserrat', sans-serif;
-      background: #fff;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* ── Navbar ── */
-    .navbar {
-      display: flex;
-      align-items: center;
-      padding: 0 120px;
-      height: 88px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-      flex-shrink: 0;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: 24px;
-      color: #2c2c2c;
-      white-space: nowrap;
-      flex-shrink: 0;
-      text-decoration: none;
-    }
-    .logo svg { flex-shrink: 0; }
-
-    .nav-links {
-      display: flex;
-      flex: 1;
-      justify-content: center;
-      gap: 40px;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 16px;
-      font-weight: 500;
-      color: #000;
-      text-transform: capitalize;
-    }
-    .nav-links a {
-      text-decoration: none;
-      color: inherit;
-      transition: opacity 0.2s;
-    }
-    .nav-links a:hover { opacity: 0.6; }
-
-    .btn-cta {
-      background: #f6da74;
-      border: none;
-      border-radius: 70px;
-      padding: 16px 24px;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 16px;
-      font-weight: 500;
-      color: #000;
-      cursor: pointer;
-      text-transform: capitalize;
-      white-space: nowrap;
-      flex-shrink: 0;
-      transition: opacity 0.2s;
-      text-decoration: none;
-      display: inline-block;
-    }
-    .btn-cta:hover { opacity: 0.85; }
-
-    /* ── Hero ── */
-    .hero {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 72px;
-      padding: 0 121px;
-      height: calc(100vh - 88px);
-      flex-shrink: 0;
-    }
-
-    .hero-left {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      flex-shrink: 0;
-      max-width: 561px;
-    }
-
-    .headline {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 400;
-      font-size: 72px;
-      line-height: 1;
-      letter-spacing: -4px;
-      color: #000;
-      text-transform: capitalize;
-    }
-    .headline strong { font-weight: 700; }
-
-    .hero-sub {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 20px;
-      font-weight: 500;
-      line-height: 36px;
-      color: rgba(0, 0, 0, 0.6);
-      max-width: 508px;
-    }
-
-    .hero-sub2 {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 20px;
-      font-weight: 500;
-      line-height: 32px;
-      color: rgba(0, 0, 0, 0.6);
-      max-width: 508px;
-    }
-
-    .email-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .email-input {
-      background: #fafafa;
-      border: 1px solid rgba(0, 0, 0, 0.2);
-      border-radius: 37px;
-      padding: 20px 18px;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 18px;
-      font-weight: 500;
-      color: #aaa;
-      width: 339px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .email-input:focus { border-color: rgba(0,0,0,0.5); color: #000; }
-
-    .btn-submit {
-      background: #f6da74;
-      border: none;
-      border-radius: 70px;
-      padding: 20px 24px;
-      width: 146px;
-      height: 64px;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 18px;
-      font-weight: 500;
-      color: #000;
-      cursor: pointer;
-      text-transform: capitalize;
-      transition: opacity 0.2s;
-    }
-    .btn-submit:hover { opacity: 0.85; }
-
-    /* ── Hero right: dot card ── */
-    .hero-right { flex-shrink: 0; }
-
-    .dot-card {
-      width: 608px;
-      height: 608px;
-      background: #2c2c2c;
-      border-radius: 32px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    #dotCanvas {
-      display: block;
-      width: 608px;
-      height: 608px;
-      position: absolute;
-      top: 0; left: 0;
-    }
-
-    .float-card {
-      position: absolute;
-      top: 0; left: 0;
-      width: 76px;
-      height: 76px;
-      background: #fff;
-      border-radius: 15px;
-      box-shadow: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      will-change: transform;
-    }
-    .float-card img { width: 48px; height: 48px; object-fit: contain; pointer-events: none; user-select: none; -webkit-user-drag: none; }
-    .float-card { user-select: none; }
-
-    .float-card--count {
-      background: #f6da74;
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: 15px;
-      color: #2c2c2c;
-    }
-
-    .float-card--profile { padding: 0; overflow: hidden; }
-    .float-card--profile img { width: 100%; height: 100%; object-fit: cover; }
-
-    /* ── Section helpers (used by Tailwind sections below) ── */
-    .tracking-tight2 { letter-spacing: -0.02em; }
-    .tracking-tight3 { letter-spacing: -0.035em; }
-    .leading-95      { line-height: 0.95; }
-
-    .eyebrow {
-      font-family: 'JetBrains Mono', ui-monospace, monospace;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      font-size: 11px;
-    }
-
-    .link-u { position: relative; }
-    .link-u::after {
-      content: ''; position: absolute; left: 0; right: 0; bottom: -2px; height: 1px;
-      background: currentColor; transform: scaleX(0); transform-origin: left;
-      transition: transform .25s ease;
-    }
-    .link-u:hover::after { transform: scaleX(1); }
-
-    .cta { transition: transform .15s ease, background-color .15s ease; }
-    .cta:hover { transform: scale(1.02); }
-
-    /* dotted bg for dark sections — matches hero canvas (2 px radius, 35 px gap, 15% opacity) */
-    .dot-grid {
-      background-image: radial-gradient(circle, rgba(255,255,255,0.08) 2px, transparent 2px);
-      background-size: 35px 35px;
-    }
-
-    /* reveal-on-scroll */
-    .reveal { opacity: 0; transform: translateY(12px); transition: opacity .6s ease, transform .6s ease; }
-    .reveal.in { opacity: 1; transform: translateY(0); }
-
-    /* horizontal scroll snap (mobile use-cases row) */
-    .h-snap { scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
-    .h-snap > * { scroll-snap-align: start; }
-
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-    .h2-display { font-size: clamp(32px, 5vw, 56px); }
-    .h2-xl      { font-size: clamp(40px, 6vw, 80px); }
-  </style>
 </head>
 <body>
 
 <!-- ══════════════════════════════════════════ -->
 <!--  NAVBAR                                    -->
 <!-- ══════════════════════════════════════════ -->
-<nav class="navbar">
-  <a href="#" class="logo">
+<header class="navbar">
+  {/* Inner container so the bottom rule stays full-bleed (like every section
+      border on the page) while the contents sit on the same 1280px column as
+      the hero and the sections. */}
+  <div class="navbar-inner">
+  <a href={base} class="logo">
     <svg width="32" height="31" viewBox="0 0 32 31" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M11.6217 0C11.7142 0.000353627 11.7891 0.0752685 11.7895 0.167763V21.8947H13.4737V12.125L20.2105 0H21.8947V21.8947H23.5789V12.125L30.3158 0H32V15.1579H30.3158L21.8947 30.3158H20.2105V15.1579L11.7895 30.3158H10.1053V15.8076C10.105 15.6342 9.87405 15.5741 9.78947 15.7253L1.73191 30.2286C1.70227 30.282 1.64653 30.3156 1.58553 30.3158H0.167763C0.0752688 30.3154 0.000354051 30.2405 0 30.148V15.3257C0.000354057 15.2332 0.0752688 15.1582 0.167763 15.1579H1.58553C1.64653 15.1577 1.70227 15.1241 1.73191 15.0707L10.0576 0.087171C10.0872 0.0338245 10.1429 0.00014998 10.2039 0H11.6217Z" fill="#2C2C2C"/>
     </svg>
-    Automatic Nation
+    <span class="logo-text">Automatic Nation</span>
   </a>
-  <nav class="nav-links">
+  <nav class="nav-links" aria-label="Main">
     <a href="#templates">Use cases</a>
     <a href="#process">Process</a>
     <a href="#faq">FAQ</a>
   </nav>
-  <a href="#book" class="btn-cta">Book a call</a>
-</nav>
+  <a href={bookHref} {...bookAttrs} class="btn-cta">Book a call</a>
+  </div>
+</header>
 
 <!-- ══════════════════════════════════════════ -->
 <!--  HERO                                      -->
@@ -344,9 +193,7 @@ const heroAssets = [
 <section class="hero">
   <div class="hero-left">
     <h1 class="headline">
-      Save your team<br>
-      <strong>22 hours</strong> a week<br>
-      of manual work.
+      We build systems that save your team <strong>22 hours</strong> a week.
     </h1>
     <p class="hero-sub">
       We build custom integrations and automated workflows across 900+ popular platforms.
@@ -354,16 +201,15 @@ const heroAssets = [
     <p class="hero-sub2">
       First system live in under 4 weeks, fixed scope, fixed price.
     </p>
-    <div class="email-row">
-      <input class="email-input" type="email" placeholder="Enter your Email" />
-      <button class="btn-submit">Lets Talk</button>
-    </div>
+    <a href={bookHref} {...bookAttrs} class="btn-hero">
+      Book a free consultation <span aria-hidden="true">→</span>
+    </a>
   </div>
 
   <div class="hero-right">
-    <div class="dot-card" data-base={base}>
-      <canvas id="dotCanvas" width="608" height="608"></canvas>
-    </div>
+    {/* Empty on purpose: tetris.js builds the 608×608 stage, the cell guides,
+        the HUD and the NEXT preview inside this box at runtime. */}
+    <div class="dot-card" data-base={base}></div>
   </div>
 </section>
 
@@ -374,23 +220,23 @@ const heroAssets = [
   <div class="max-w-7xl mx-auto px-6 lg:px-10 py-20">
     <div class="max-w-2xl reveal">
       <p class="eyebrow text-mute mb-4">Who this is for</p>
-      <h2 class="h2-display font-bold tracking-tight3 leading-95">This pays off fastest if you're…</h2>
+      <h2 class="text-[clamp(32px,5vw,56px)] font-bold tracking-[-0.035em] leading-[0.95]">This pays off fastest if you're…</h2>
     </div>
 
     <div class="mt-14 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-line border border-line reveal">
       <div class="p-8 lg:p-10">
         <p class="eyebrow text-mute mb-4">Ops teams</p>
-        <h3 class="text-[18px] font-semibold tracking-tight2">Copy-pasting between 5+ tools every day</h3>
+        <h3 class="text-[18px] font-semibold tracking-[-0.02em]">Copy-pasting between 5+ tools every day</h3>
         <p class="mt-3 text-[14px] text-mute leading-relaxed">Your team knows the bottleneck. You just haven't had time to fix it. We scope it in a single call and build it in weeks — not quarters.</p>
       </div>
       <div class="p-8 lg:p-10">
         <p class="eyebrow text-mute mb-4">Founders</p>
-        <h3 class="text-[18px] font-semibold tracking-tight2">Team burning &gt;10 hours/week on manual work</h3>
+        <h3 class="text-[18px] font-semibold tracking-[-0.02em]">Team burning &gt;10 hours/week on manual work</h3>
         <p class="mt-3 text-[14px] text-mute leading-relaxed">That's a part-time hire you're already paying for in wasted time. We give it back — on a fixed budget, without adding headcount.</p>
       </div>
       <div class="p-8 lg:p-10">
         <p class="eyebrow text-mute mb-4">Power users</p>
-        <h3 class="text-[18px] font-semibold tracking-tight2">Outgrown Zapier or your DIY Airtable setup</h3>
+        <h3 class="text-[18px] font-semibold tracking-[-0.02em]">Outgrown Zapier or your DIY Airtable setup</h3>
         <p class="mt-3 text-[14px] text-mute leading-relaxed">You know the tools. You just don't have time to build the right system from scratch. We pick up where your DIY left off.</p>
       </div>
     </div>
@@ -404,52 +250,57 @@ const heroAssets = [
   <div class="max-w-7xl mx-auto px-6 lg:px-10 py-24">
     <div class="max-w-3xl reveal">
       <p class="eyebrow text-dim mb-4">What it looks like in practice</p>
-      <h2 class="h2-display font-bold tracking-tight3 leading-95">Real workflows we've built — adapt one or bring your own.</h2>
+      <h2 class="text-[clamp(32px,5vw,56px)] font-bold tracking-[-0.035em] leading-[0.95]">Real workflows we've built — adapt one or bring your own.</h2>
     </div>
 
-    <div class="mt-16 -mx-6 lg:mx-0 px-6 lg:px-0 overflow-x-auto h-snap no-scrollbar">
-      <div class="flex lg:grid lg:grid-cols-4 gap-5 min-w-max lg:min-w-0">
+    {/* The row bleeds to both edges (-mx-6) but the cards must line up with the
+        heading, so the 24px inset lives on the flex row, not on the scroll
+        container: a scroller's padding-left doesn't offset a child carrying
+        min-width:max-content (the card landed at 0 while the h2 sat at 24),
+        and its padding-right is dropped outright, killing the trailing gap. */}
+    <div class="mt-16 -mx-6 lg:mx-0 overflow-x-auto h-snap no-scrollbar">
+      <div class="flex lg:grid lg:grid-cols-4 gap-5 min-w-max lg:min-w-0 px-6 lg:px-0">
 
-        <article class="w-[78vw] sm:w-[60vw] lg:w-auto border border-lineDk rounded-md p-7 bg-ink">
+        <article class="w-[78vw] sm:w-[60vw] lg:w-auto border border-line-dk rounded-2xl p-7 bg-ink">
           <div class="flex items-center gap-2">
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded border border-lineDk text-dim">HUBSPOT</span>
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded border border-lineDk text-dim">CLEARBIT</span>
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded border border-lineDk text-dim">SLACK</span>
+            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">HUBSPOT</span>
+            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">CLEARBIT</span>
+            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">SLACK</span>
           </div>
-          <h3 class="mt-6 text-[20px] font-semibold tracking-tight2">Lead enrichment &amp; routing</h3>
+          <h3 class="mt-6 text-[20px] font-semibold tracking-[-0.02em]">Lead enrichment &amp; routing</h3>
           <p class="mt-3 text-[14px] text-dim leading-relaxed">Every new lead is auto-enriched with company data, scored, and routed to the right rep in Slack. No more "who's taking this?"</p>
           <p class="mt-8 font-mono text-[11px] text-accent">Leads routed in &lt;60 seconds</p>
         </article>
 
-        <article class="w-[78vw] sm:w-[60vw] lg:w-auto border border-lineDk rounded-md p-7 bg-ink">
+        <article class="w-[78vw] sm:w-[60vw] lg:w-auto border border-line-dk rounded-2xl p-7 bg-ink">
           <div class="flex items-center gap-2">
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded border border-lineDk text-dim">AIRTABLE</span>
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded border border-lineDk text-dim">STRIPE</span>
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded border border-lineDk text-dim">POSTGRES</span>
+            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">AIRTABLE</span>
+            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">STRIPE</span>
+            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">POSTGRES</span>
           </div>
-          <h3 class="mt-6 text-[20px] font-semibold tracking-tight2">Operations dashboard in Airtable</h3>
+          <h3 class="mt-6 text-[20px] font-semibold tracking-[-0.02em]">Operations dashboard in Airtable</h3>
           <p class="mt-3 text-[14px] text-dim leading-relaxed">Live revenue, pipeline, and ops metrics in one Airtable view — synced from your billing system, CRM, and product database.</p>
           <p class="mt-8 font-mono text-[11px] text-accent">Revenue + pipeline: one view, always live</p>
         </article>
 
-        <article class="w-[78vw] sm:w-[60vw] lg:w-auto border border-lineDk rounded-md p-7 bg-ink">
+        <article class="w-[78vw] sm:w-[60vw] lg:w-auto border border-line-dk rounded-2xl p-7 bg-ink">
           <div class="flex items-center gap-2">
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded border border-lineDk text-dim">N8N</span>
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded border border-lineDk text-dim">OPENAI</span>
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded border border-lineDk text-dim">GMAIL</span>
+            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">N8N</span>
+            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">OPENAI</span>
+            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">GMAIL</span>
           </div>
-          <h3 class="mt-6 text-[20px] font-semibold tracking-tight2">AI-drafted client updates</h3>
+          <h3 class="mt-6 text-[20px] font-semibold tracking-[-0.02em]">AI-drafted client updates</h3>
           <p class="mt-3 text-[14px] text-dim leading-relaxed">Project status pulled from your PM tool, summarized by an LLM, drafted as a client-ready email — sent every Friday with one click.</p>
           <p class="mt-8 font-mono text-[11px] text-accent">Friday updates drafted in 30 seconds, not 3 hours</p>
         </article>
 
-        <article class="w-[78vw] sm:w-[60vw] lg:w-auto border border-lineDk rounded-md p-7 bg-ink">
+        <article class="w-[78vw] sm:w-[60vw] lg:w-auto border border-line-dk rounded-2xl p-7 bg-ink">
           <div class="flex items-center gap-2">
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded border border-lineDk text-dim">SHOPIFY</span>
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded border border-lineDk text-dim">AIRTABLE</span>
-            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded border border-lineDk text-dim">QUICKBOOKS</span>
+            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">SHOPIFY</span>
+            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">AIRTABLE</span>
+            <span class="px-2.5 py-1 text-[10px] font-semibold tracking-wider rounded-lg border border-line-dk text-dim">QUICKBOOKS</span>
           </div>
-          <h3 class="mt-6 text-[20px] font-semibold tracking-tight2">Inventory sync across channels</h3>
+          <h3 class="mt-6 text-[20px] font-semibold tracking-[-0.02em]">Inventory sync across channels</h3>
           <p class="mt-3 text-[14px] text-dim leading-relaxed">Stock, orders, and accounting kept in sync across three systems — no nightly CSV exports, no manual reconciliations.</p>
           <p class="mt-8 font-mono text-[11px] text-accent">Reconciliation: 4 hours/month → 0</p>
         </article>
@@ -458,7 +309,10 @@ const heroAssets = [
     </div>
 
     <!-- Client pull-quote placeholder -->
-    <div class="mt-14 reveal border border-lineDk rounded-md p-8 lg:p-10 max-w-3xl">
+    {/* bg-ink is load-bearing, not decoration: without a fill the section's
+        line grid shows straight through the card. Same reason the use-case
+        articles above carry it. */}
+    <div class="mt-14 reveal border border-line-dk rounded-2xl p-8 lg:p-10 max-w-3xl bg-ink">
       <p class="text-[18px] lg:text-[20px] font-medium leading-relaxed text-white">
         "[CLIENT QUOTE — to be filled in: one sentence on the time or money saved.]"
       </p>
@@ -481,30 +335,66 @@ const heroAssets = [
 
     <div class="mt-8 max-w-3xl reveal">
       <p class="eyebrow text-mute mb-4">How we work</p>
-      <h2 class="h2-display font-bold tracking-tight3 leading-95">From first call to live system in under 4 weeks.</h2>
+      <h2 class="text-[clamp(32px,5vw,56px)] font-bold tracking-[-0.035em] leading-[0.95]">From first call to live system in under 4 weeks.</h2>
     </div>
 
-    <ol class="mt-16 grid grid-cols-1 lg:grid-cols-4 gap-px bg-line border border-line reveal">
-      <li class="bg-paper p-8">
-        <div class="font-mono text-[24px] font-bold text-ink">01</div>
-        <h3 class="mt-4 text-[18px] font-semibold tracking-tight2">Discovery call (Week 0)</h3>
-        <p class="mt-3 text-[14px] text-mute leading-relaxed">30 minutes. We map your current tools, the bottlenecks, and what "done" looks like. You leave with a written scope and fixed price.</p>
-      </li>
-      <li class="bg-paper p-8">
-        <div class="font-mono text-[24px] font-bold text-ink">02</div>
-        <h3 class="mt-4 text-[18px] font-semibold tracking-tight2">Build (Weeks 1–3)</h3>
-        <p class="mt-3 text-[14px] text-mute leading-relaxed">We build the system on Airtable + n8n + your existing stack. You see weekly demo videos; nothing is built in a vacuum.</p>
-      </li>
-      <li class="bg-paper p-8">
-        <div class="font-mono text-[24px] font-bold text-ink">03</div>
-        <h3 class="mt-4 text-[18px] font-semibold tracking-tight2">Launch (Week 4)</h3>
-        <p class="mt-3 text-[14px] text-mute leading-relaxed">We deploy live, train your team, and ship documentation written for humans, not engineers.</p>
-      </li>
-      <li class="bg-paper p-8">
-        <div class="font-mono text-[24px] font-bold text-ink">04</div>
-        <h3 class="mt-4 text-[18px] font-semibold tracking-tight2">Maintain (Ongoing)</h3>
-        <p class="mt-3 text-[14px] text-mute leading-relaxed">Optional retainer for changes, monitoring, and the next system. Most clients stay.</p>
-      </li>
+    {/* Gantt, lg+ only. Below that it's replaced by the stacked cards below —
+        a 24-column chart at phone width is unreadable, and only one of the two
+        is ever in the accessibility tree since the other is display:none. */}
+    <div class="gantt hidden lg:block mt-16 reveal">
+      <div class="gantt-plot">
+        <div class="gantt-lanes" aria-hidden="true">
+          {GANTT_TICKS.map((k, i) => (
+            <i class={k.buffer ? 'is-buffer' : undefined} style={`--i:${i}`}></i>
+          ))}
+        </div>
+
+        <ol class="gantt-bars">
+          {PROCESS.map(p => (
+            <li style={`--w:${p.w};--ws:${p.ws}`}>
+              <span class={`gantt-pill${p.hl ? ' gantt-pill--hl' : ''}`}>
+                <b class="gantt-badge">{p.n}</b>
+                <span class="gantt-pill-txt">
+                  <strong>{p.name}</strong>
+                  <em>{p.when}</em>
+                </span>
+              </span>
+            </li>
+          ))}
+        </ol>
+
+        <ol class="gantt-tasks">
+          {PROCESS.map(p => (
+            <li style={`--w:${p.w}`}>
+              <span class="sr-only">{p.name} ({p.when})</span>
+              <ul>{p.tasks.map(t => <li>{t}</li>)}</ul>
+            </li>
+          ))}
+        </ol>
+
+        <div class="gantt-axis" aria-hidden="true">
+          {GANTT_TICKS.map((k, i) => (
+            <span class={k.buffer ? 'is-buffer' : undefined} style={`--i:${i}`}>
+              {k.t}{k.buffer && <b>buffer</b>}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <ol class="lg:hidden mt-16 grid grid-cols-1 gap-px bg-line border border-line reveal">
+      {PROCESS.map(p => (
+        <li class="bg-paper p-8">
+          <div class="font-mono text-[24px] font-bold text-ink">{p.n}</div>
+          <h3 class="mt-4 text-[18px] font-semibold tracking-[-0.02em]">{p.name} ({p.when})</h3>
+          <p class="mt-3 text-[14px] text-mute leading-relaxed">{p.body}</p>
+          <ul class="mt-4 flex flex-wrap gap-2">
+            {p.tasks.map(t => (
+              <li class="font-mono text-[11px] text-mute border border-line rounded-lg px-2 py-1">{t.t}</li>
+            ))}
+          </ul>
+        </li>
+      ))}
     </ol>
   </div>
 </section>
@@ -514,10 +404,10 @@ const heroAssets = [
 <!-- ══════════════════════════════════════════ -->
 <section class="bg-paper border-t border-b border-line">
   <div class="max-w-7xl mx-auto px-6 lg:px-10 py-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 reveal">
-    <p class="text-[18px] font-semibold tracking-tight2 max-w-lg">
+    <p class="text-[18px] font-semibold tracking-[-0.02em] max-w-lg">
       Most teams already know which workflow they'd automate first. Tell us yours.
     </p>
-    <a href="#book" class="cta inline-flex items-center gap-2 bg-accent text-ink text-[14px] font-medium px-6 py-3 rounded-md whitespace-nowrap">
+    <a href={bookHref} {...bookAttrs} class="cta inline-flex items-center gap-2 bg-accent hover:bg-white text-ink text-[14px] font-medium px-6 py-2.5 rounded-[14px] whitespace-nowrap">
       Book a call <span aria-hidden="true">→</span>
     </a>
   </div>
@@ -530,20 +420,20 @@ const heroAssets = [
   <div class="max-w-7xl mx-auto px-6 lg:px-10 py-24">
     <div class="max-w-3xl reveal">
       <p class="eyebrow text-mute mb-4">Common questions</p>
-      <h2 class="h2-display font-bold tracking-tight3 leading-95">What teams ask before booking.</h2>
+      <h2 class="text-[clamp(32px,5vw,56px)] font-bold tracking-[-0.035em] leading-[0.95]">What teams ask before booking.</h2>
     </div>
 
     <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-px bg-line border border-line reveal">
       <div class="bg-paper p-8 lg:p-10">
-        <h3 class="text-[18px] font-semibold tracking-tight2">What does a project typically cost?</h3>
+        <h3 class="text-[18px] font-semibold tracking-[-0.02em]">What does a project typically cost?</h3>
         <p class="mt-3 text-[14px] text-mute leading-relaxed">Pricing is fixed and scoped after the discovery call. Most projects land between <strong>[FILL IN RANGE]</strong>. No hourly billing, no scope creep, no surprises — you hear the exact number on the call.</p>
       </div>
       <div class="bg-paper p-8 lg:p-10">
-        <h3 class="text-[18px] font-semibold tracking-tight2">What happens if something breaks?</h3>
+        <h3 class="text-[18px] font-semibold tracking-[-0.02em]">What happens if something breaks?</h3>
         <p class="mt-3 text-[14px] text-mute leading-relaxed">Every system ships with monitoring and error handling — most clients never see a failure surface to users. Retainer clients get same-business-day response on incidents.</p>
       </div>
       <div class="bg-paper p-8 lg:p-10">
-        <h3 class="text-[18px] font-semibold tracking-tight2">Who owns the system after launch?</h3>
+        <h3 class="text-[18px] font-semibold tracking-[-0.02em]">Who owns the system after launch?</h3>
         <p class="mt-3 text-[14px] text-mute leading-relaxed">You do. Everything runs in your accounts — your Airtable, your n8n, your databases. We hand over docs written for humans and train your team. The retainer is optional, not a lock-in.</p>
       </div>
     </div>
@@ -553,18 +443,34 @@ const heroAssets = [
 <!-- ══════════════════════════════════════════ -->
 <!--  CLOSING CTA (dark)                        -->
 <!-- ══════════════════════════════════════════ -->
-<section id="book" class="bg-ink text-white dot-grid">
-  <div class="max-w-4xl mx-auto px-6 lg:px-10 py-32 text-center">
+<section id="book" class="bg-ink text-white dot-grid relative overflow-hidden">
+  {/* Decorative pieces, hidden below lg: at 224px wide they'd sit on top of
+      the copy on narrow screens, and the 280px content padding they clear
+      only applies from lg up. */}
+  <div class="tt-deco tt-deco--l hidden lg:block" aria-hidden="true">
+    {TT_LEFT.map(p => TT_SHAPES[p.s].map((cell, i) => (
+      <i style={`left:${p.x + cell[0] * TT_CELL}px;top:${p.y + cell[1] * TT_CELL}px;background:${p.c};border-radius:${ttRadii(TT_SHAPES[p.s], i)}`}></i>
+    )))}
+  </div>
+  <div class="tt-deco tt-deco--r hidden lg:block" aria-hidden="true">
+    {TT_RIGHT.map(p => TT_SHAPES[p.s].map((cell, i) => (
+      <i style={`left:${p.x + cell[0] * TT_CELL}px;top:${p.y + cell[1] * TT_CELL}px;background:${p.c};border-radius:${ttRadii(TT_SHAPES[p.s], i)}`}></i>
+    )))}
+  </div>
+  {/* 1456 = the design's 896px text column + 2×280px of padding to clear the
+      224px decorations. The handoff's prototype is content-box (no reset), so
+      it writes this as max-width:896px + padding:0 280px; under Tailwind's
+      border-box preflight that same pair would squeeze the copy to 336px. */}
+  <div class="relative z-10 max-w-4xl lg:max-w-[1456px] mx-auto px-6 lg:px-[280px] py-32 text-center">
     <p class="eyebrow text-dim reveal">Ready when you are</p>
-    <h2 class="mt-6 h2-xl font-bold tracking-tight3 leading-95 reveal">
+    <h2 class="mt-6 text-[clamp(40px,6vw,80px)] font-bold tracking-[-0.035em] leading-[0.95] reveal">
       Another quarter of manual work.<br/>Or one 30-minute call.
     </h2>
     <p class="mt-8 text-[18px] text-dim max-w-2xl mx-auto leading-relaxed reveal">
       Walk us through your stack. We'll tell you what we'd automate first, what it costs, and how long it takes. No pitch deck — just a fixed-scope proposal you can say yes or no to.
     </p>
     <div class="mt-12 reveal">
-      <!-- TODO: replace href with Calendly URL -->
-      <a href="#book" class="cta inline-flex items-center gap-2 bg-accent text-ink text-[16px] font-medium px-8 py-4 rounded-md">
+      <a href={bookHref} {...bookAttrs} class="cta inline-flex items-center gap-2 bg-accent hover:bg-white text-ink text-[16px] font-medium px-8 py-3 rounded-[14px]">
         Book your discovery call <span aria-hidden="true">→</span>
       </a>
     </div>
@@ -575,10 +481,10 @@ const heroAssets = [
 <!-- ══════════════════════════════════════════ -->
 <!--  FOOTER                                    -->
 <!-- ══════════════════════════════════════════ -->
-<footer class="bg-ink text-dim border-t border-lineDk">
+<footer class="bg-ink text-dim border-t border-line-dk">
   <div class="max-w-7xl mx-auto px-6 lg:px-10 py-16 grid grid-cols-1 md:grid-cols-3 gap-10">
     <div>
-      <div class="font-bold tracking-tight2 text-[18px]" style="color:#fff;font-family:'Space Grotesk',sans-serif;">
+      <div class="font-bold tracking-[-0.02em] text-[18px]" style="color:#fff;font-family:'Space Grotesk',sans-serif;">
         Automatic Nation
       </div>
       <p class="mt-3 text-[13px]">Custom integrations &amp; automated workflows for teams that want to ship.</p>
@@ -597,7 +503,7 @@ const heroAssets = [
       <p class="eyebrow mb-4" style="opacity:0.7;">Get in touch</p>
       <a href="mailto:hello@automaticnation.com" class="link-u text-[14px]" style="color:#fff;">hello@automaticnation.com</a>
       <div class="mt-4 flex items-center gap-3">
-        <a href="#" aria-label="LinkedIn" class="border border-lineDk rounded p-2 hover:text-white transition-colors">
+        <a href="#" aria-label="LinkedIn" class="border border-line-dk rounded-lg p-2 hover:text-white transition-colors">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/>
             <rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
@@ -606,7 +512,7 @@ const heroAssets = [
       </div>
     </div>
   </div>
-  <div class="border-t border-lineDk">
+  <div class="border-t border-line-dk">
     <p class="max-w-7xl mx-auto px-6 lg:px-10 py-6 font-mono text-[11px]" style="opacity:0.7;">
       &copy; 2026 Automatic Nation — Made with too much coffee in [CITY].
     </p>
@@ -617,180 +523,34 @@ const heroAssets = [
 <!--  SCRIPTS                                   -->
 <!-- ══════════════════════════════════════════ -->
 
-<!-- Dot-grid canvas — is:inline preserves execution order -->
-<script is:inline>
-  const canvas = document.getElementById('dotCanvas');
-  const ctx    = canvas.getContext('2d');
-  const COLS = 17, ROWS = 17, H_GAP = 35, V_GAP = 35, ORIGIN_X = 24, ORIGIN_Y = 24;
-  for (let r = 0; r < ROWS; r++) {
-    for (let c = 0; c < COLS; c++) {
-      ctx.beginPath();
-      ctx.arc(ORIGIN_X + c * H_GAP, ORIGIN_Y + r * V_GAP, 2, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255,255,255,0.15)';
-      ctx.fill();
-    }
-  }
-</script>
+<!-- Hero tetromino well.
+     NOT is:inline: it needs Astro's bundling to resolve the import. That is
+     safe now — the only reason the old hero scripts had to be inline was
+     execution order against the Matter.js CDN tag, and that tag is gone. -->
+<script>
+  import { Tetris } from '../scripts/tetris.js';
+  import { initSmoothScroll } from '../scripts/smooth-scroll.js';
 
-<!-- Matter.js physics engine — is:inline keeps it before the IIFE below -->
-<script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+  initSmoothScroll();
 
-<!-- Hero logo physics -->
-<script is:inline>
-/* ── Hero logo physics ── */
-(function () {
-  const { Engine, Runner, Events, Bodies, World, Body, Mouse, MouseConstraint } = Matter;
-
-  const CW = 608, CH = 608, SZ = 76, R = 15;
-  const raw = document.querySelector('.dot-card').dataset.base || '';
-  const B = raw.endsWith('/') ? raw.slice(0, -1) : raw;
-
-  const logoDefs = [
-    { src: B+'/logos/Symbol.svg.svg',             cx:  50, av: -0.10, delay:    0 },
-    { src: B+'/logos/make_symbol.svg.svg',        cx: 150, av:  0.12, delay:  150 },
-    { src: B+'/logos/mondaycom_symbol.svg.svg',   cx: 260, av: -0.08, delay:  300 },
-    { src: B+'/logos/zapier_logo.svg.svg',        cx: 370, av:  0.09, delay:  450 },
-    { src: B+'/logos/airtable_symbol.svg.svg',    cx: 470, av: -0.11, delay:  600 },
-    { src: B+'/logos/calude.svg',                 cx: 100, av:  0.10, delay:  750 },
-    { src: B+'/logos/n8n.svg',                    cx: 200, av: -0.09, delay:  900 },
-    { src: B+'/logos/notion.svg',                 cx: 310, av:  0.08, delay: 1050 },
-    { src: B+'/logos/open.svg',                   cx: 420, av: -0.07, delay: 1200 },
-    { src: B+'/logos/vercel.svg',                 cx: 530, av:  0.11, delay: 1350 },
-    { src: B+'/logos/Google Gemini.svg.svg',      cx:  70, av: -0.08, delay: 1500 },
-    { src: B+'/logos/Google Mail.svg.svg',        cx: 180, av:  0.09, delay: 1650 },
-    { src: B+'/logos/git.svg',                    cx: 560, av: -0.10, delay: 1800 },
-    { src: B+'/image.png',                        profile: true, cx: 460, av:  0.06, delay: 1950 },
-    { src: B+'/T024D9G3RV4-U05ENL69F37-458b1cdf045b-512.jpg', profile: true, cx: 220, av: -0.07, delay: 2100 },
-  ];
-
-  const sphereDefs = [
-    { r: 28, color: '#371F5E', cx: 310, delay:   80 },
-    { r: 20, color: '#EF9FC6', cx: 100, delay:  240 },
-    { r: 32, color: '#3C5835', cx: 560, delay:  400 },
-    { r: 22, color: '#EA812F', cx: 200, delay:  560 },
-    { r: 26, color: '#D7B737', cx: 430, delay:  720 },
-    { r: 18, color: '#EF9FC6', cx:  55, delay:  880 },
-    { r: 30, color: '#371F5E', cx: 350, delay: 1030 },
-    { r: 24, color: '#2563EB', cx: 140, delay: 1180 },
-    { r: 20, color: '#16A34A', cx: 490, delay: 1330 },
-    { r: 28, color: '#DC2626', cx: 270, delay: 1480 },
-    { r: 22, color: '#7C3AED', cx: 390, delay: 1630 },
-  ];
-
-  const dotCard = document.querySelector('.dot-card');
-  dotCard.style.cursor = 'grab';
-  dotCard.style.touchAction = 'none';
-  dotCard.addEventListener('mousedown', () => { dotCard.style.cursor = 'grabbing'; });
-  dotCard.addEventListener('mouseup',   () => { dotCard.style.cursor = 'grab'; });
-  dotCard.addEventListener('dragstart', e => e.preventDefault());
-
-  let engine, runner, physBodies, physEls, timers;
-
-  function start() {
-    engine = Engine.create({ enableSleeping: true });
-    engine.gravity.y = 1.1;
-    runner = Runner.create();
-    Runner.run(runner, engine);
-    physBodies = [];
-    physEls    = [];
-    timers     = [];
-
-    const wo = { isStatic: true, friction: 0.5, restitution: 0.15 };
-    World.add(engine.world, [
-      Bodies.rectangle(CW / 2, CH + 30, CW + 100, 60, wo),
-      Bodies.rectangle(-30,    CH / 2,  60, CH * 3,   wo),
-      Bodies.rectangle(CW + 30, CH / 2, 60, CH * 3,   wo),
-    ]);
-
-    logoDefs.forEach(d => {
-      timers.push(setTimeout(() => {
-        const el = document.createElement('div');
-        el.className = 'float-card' + (d.profile ? ' float-card--profile' : '');
-        const img = document.createElement('img');
-        img.src = d.src; img.alt = '';
-        img.draggable = false;
-        el.appendChild(img);
-        dotCard.appendChild(el);
-
-        const b = Bodies.rectangle(d.cx, -SZ / 2 - 10, SZ, SZ, {
-          chamfer:     { radius: R },
-          restitution: 0.30,
-          friction:    0.45,
-          frictionAir: 0.012,
-          density:     0.002,
-          angle:       (Math.random() - 0.5) * 0.4,
-        });
-        Body.setAngularVelocity(b, d.av + (Math.random() - 0.5) * 0.05);
-        b._hw = SZ / 2; b._hh = SZ / 2;
-        World.add(engine.world, b);
-        physBodies.push(b);
-        physEls.push(el);
-      }, d.delay));
-    });
-
-    sphereDefs.forEach(d => {
-      timers.push(setTimeout(() => {
-        const el = document.createElement('div');
-        el.style.cssText = `position:absolute;top:0;left:0;width:${d.r * 2}px;height:${d.r * 2}px;` +
-                           `border-radius:50%;background:${d.color};will-change:transform;`;
-        dotCard.appendChild(el);
-
-        const b = Bodies.circle(d.cx, -d.r - 10, d.r, {
-          restitution: 0.38, friction: 0.35, frictionAir: 0.01, density: 0.0015,
-        });
-        Body.setAngularVelocity(b, (Math.random() - 0.5) * 0.2);
-        b._hw = d.r; b._hh = d.r;
-        World.add(engine.world, b);
-        physBodies.push(b);
-        physEls.push(el);
-      }, d.delay));
-    });
-
-    Events.on(engine, 'afterUpdate', () => {
-      for (let i = 0; i < physBodies.length; i++) {
-        const b  = physBodies[i];
-        const el = physEls[i];
-        el.style.transform =
-          `translate(${b.position.x - b._hw}px,${b.position.y - b._hh}px) rotate(${b.angle}rad)`;
-      }
-    });
-
-    const mouse = Mouse.create(dotCard);
-    const mc = MouseConstraint.create(engine, {
-      mouse, constraint: { stiffness: 0.06, damping: 0.1, render: { visible: false } }
-    });
-    World.add(engine.world, mc);
-
-    Events.on(mc, 'enddrag', function (e) {
-      const maxSpeed = 6;
-      const v = e.body.velocity;
-      const speed = Math.sqrt(v.x * v.x + v.y * v.y);
-      if (speed > maxSpeed) {
-        const scale = maxSpeed / speed;
-        Body.setVelocity(e.body, { x: v.x * scale, y: v.y * scale });
-      }
+  const card = document.querySelector('.dot-card');
+  if (card) {
+    // Same BASE_URL dance as before: the module can't see import.meta.env at
+    // runtime, so the base arrives via data-base and is normalised to match
+    // the <link rel="preload"> URLs character for character.
+    const raw = card.dataset.base || '';
+    const B = raw.endsWith('/') ? raw.slice(0, -1) : raw;
+    new Tetris(card, {
+      // Fall speed cut 25% from the engine's 2000 default. minMs scales the
+      // other way (220 / 0.75 = 293): it's a hard floor on a fall's duration,
+      // so leaving it at 220 would keep short drops at their old timing while
+      // only the long falls slowed down.
+      cols: 10, rows: 10, size: 608, radius: 12, speed: 1500, gap: 100,
+      minMs: 293,
+      holdDepth: 8, holdMs: 2600, guides: true, hud: true, seed: 63,
+      assetBase: B + '/',
     });
   }
-
-  // Decode every icon before dropping anything, so each card already shows its
-  // logo on the first frame instead of popping in after it has landed. The
-  // <head> preloads mean these usually resolve from cache almost instantly; the
-  // 4 s fail-safe guarantees the scene never freezes on one slow asset.
-  (function preloadThenStart() {
-    let pending = logoDefs.length;
-    let started = false;
-    const go = () => { if (!started) { started = true; start(); } };
-    if (!pending) return go();
-    const tick = () => { if (--pending <= 0) go(); };
-    logoDefs.forEach(d => {
-      const im = new Image();
-      im.onload = tick;
-      im.onerror = tick;   // a missing icon shouldn't block the rest
-      im.src = d.src;
-    });
-    setTimeout(go, 4000);
-  })();
-})();
 </script>
 
 <!-- Reveal-on-scroll -->

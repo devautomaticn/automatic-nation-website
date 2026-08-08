@@ -1,0 +1,598 @@
+@import "tailwindcss";
+
+/* ── Design tokens ──────────────────────────────────────────────────────
+   Ported from the old inline `tailwind.config` that the CDN build used.
+   Tailwind v4 derives utility names from these custom-property names, so
+   `--color-line-dk` is what generates `border-line-dk`. Keys must be
+   kebab-case — the old camelCase `lineDk` has no v4 equivalent.
+   ──────────────────────────────────────────────────────────────────── */
+@theme {
+  --color-ink:     #2c2c2c;
+  --color-paper:   #FFFBF9;
+  --color-mute:    #525252;
+  --color-dim:     #a3a3a3;
+  --color-line:    #e5e5e5;
+  --color-line-dk: #484848;
+  /* Matches the tetromino palette's yellow, so the CTAs and the well's
+     line-clear flash are the same colour. --accent-edge recomputes itself. */
+  --color-accent:  #F7DB55;
+
+  --font-sans: 'Space Grotesk', 'Montserrat', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* Borde de los botones: el propio acento oscurecido al 55% de luminosidad,
+   a 40% de opacidad. Derivado con color-mix en lugar de un rgba() fijo para
+   que siga al token — cambiar --color-accent reajusta el borde solo, sin
+   dejar un borde huérfano del color anterior.
+   Va fuera de @theme: Tailwind genera utilidades desde las claves de @theme,
+   y esto es un valor interno, no una utilidad que alguien deba escribir. */
+:root {
+  --accent-edge: color-mix(in srgb,
+                   color-mix(in srgb, #000 45%, var(--color-accent)) 40%,
+                   transparent);
+}
+
+/* Hero + navbar are hand-written CSS (not Tailwind). Everything below the
+   hero uses Tailwind utilities against the tokens above.
+
+   ── RADIUS SCALE ──
+   One language, applied everywhere. The page previously ran five competing
+   radii (4px badges, 6px cards, 15px float-cards, 32px hero card, 70px
+   pills), which is what read as unfinished next to a site using a single
+   consistent value.
+     8px  (rounded-lg)  small chips and icon buttons
+     14px               controls — buttons, inputs, focus ring
+     16px (rounded-2xl) content cards and articles
+     24px               the large hero card
+     15px               float-cards only; matches the Matter.js chamfer
+                        radius R, so the physics silhouette tracks the visual.
+
+   ── EVERYTHING BELOW MUST STAY INSIDE A @layer ──
+   Tailwind v4 emits its utilities inside cascade layers, and unlayered CSS
+   beats every layered rule regardless of specificity. An unlayered
+   `* { margin: 0; padding: 0 }` therefore silently cancels every p-*, m-*,
+   and gap-* utility on the page — no error, the whole site just loses its
+   spacing. (Under the v3 CDN there were no layers, so plain specificity let
+   .px-6 win over *, which is why this only bites after the migration.)
+   ──────────────────────────────────────────────────────────────────────── */
+
+@layer base {
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* Fallback for anchor jumps when the smooth-scroll module isn't running
+     (no JS, or reduced motion). initSmoothScroll() flips this to `auto` when
+     Lenis takes over, or the browser's own animation fights the rAF loop. */
+  html { scroll-behavior: smooth; }
+
+  /* Kill the elastic overscroll bounce at every edge — the page pulling past
+     its end and springing back. `none` rather than `contain`: contain only
+     stops the scroll chaining to the parent, it keeps the rubber band.
+     Trade-off: this also disables pull-to-refresh on Android Chrome. */
+  html, body { overscroll-behavior: none; }
+
+  body {
+    font-family: 'Space Grotesk', 'Montserrat', sans-serif;
+    background: var(--color-paper);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Visible keyboard focus — the buttons had no focus state at all.
+     Radius tracks the 14px control radius so the ring hugs the shape. */
+  :focus-visible {
+    outline: 2px solid #2c2c2c;
+    outline-offset: 3px;
+    border-radius: 14px;
+  }
+}
+
+@layer components {
+
+/* .sr-only comes from Tailwind itself — don't redefine it here, a
+   components-layer copy would just lose to the utility anyway. */
+
+/* ── Navbar ── */
+/* The rule spans the viewport; the contents don't. .navbar-inner repeats the
+   hero's container exactly (max-width 1280 + clamp(24px, 3vw, 40px)) so the
+   logo starts on the same vertical as the headline and every section heading.
+   The old `padding: 0 clamp(20px, 6vw, 120px)` with no max-width put it ~34px
+   off at 1440px, and further off the wider the screen got. */
+.navbar {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+.navbar-inner {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: clamp(24px, 3vw, 40px);
+  height: 88px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: #2c2c2c;
+  white-space: nowrap;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+.logo svg { flex-shrink: 0; }
+
+/* margin-left:auto rather than flex:1 + centring: it pushes the links AND the
+   CTA to the right edge as one group, and the 40px gap comes from
+   .navbar-inner so the spacing between all three items is the same value. */
+.nav-links {
+  display: flex;
+  margin-left: auto;
+  gap: 40px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #000;
+  text-transform: capitalize;
+}
+.nav-links a {
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.2s;
+}
+.nav-links a:hover { opacity: 0.6; }
+
+.btn-cta {
+  background: var(--color-accent);
+  border: 2px solid var(--accent-edge);
+  border-radius: 14px;
+  padding: 8px 22px;      /* → 44px tall (24px line box + 2×2px border) */
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #000;
+  cursor: pointer;
+  text-transform: capitalize;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background-color 0.22s ease, border-color 0.22s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+.btn-cta:hover { background: #fff; border-color: rgba(0, 0, 0, 0.35); }
+
+/* ── Hero ──
+   Same container geometry as the Tailwind sections below (max-w-7xl mx-auto
+   px-6 lg:px-10), so the headline's left edge lines up with every section
+   heading instead of merely landing near it by way of justify-content:center.
+   Height is content-driven — the old min-height: calc(100vh - 88px) is what
+   created the dead band under the headline on tall viewports. */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(40px, 4vw, 64px);
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: clamp(24px, 3vw, 40px);
+  padding-block: clamp(48px, 7vw, 100px);
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* Spacing here is per-element, not a uniform gap: the headline needs far more
+   air beneath it than the two sub-paragraphs need between themselves. */
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex-shrink: 0;
+  max-width: 584px;
+}
+
+.headline {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 400;
+  /* Tracking is em-based so it scales with the clamped size — a flat -4px
+     looks broken once the headline drops to 36px on a phone. */
+  font-size: clamp(36px, 4.2vw, 58px);
+  line-height: 1.1;
+  letter-spacing: -0.033em;
+  color: #000;
+  text-transform: capitalize;
+  margin-bottom: 32px;
+}
+.headline strong { font-weight: 700; }
+
+.hero-sub {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.6);
+  max-width: 584px;
+  margin-bottom: 12px;
+}
+
+.hero-sub2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.6);
+  max-width: 584px;
+  margin-bottom: 48px;
+}
+
+/* Hero CTA. Same accent + 2px --accent-edge + 14px radius as .btn-cta and
+   .cta — one button component at three sizes, not three components. Bigger
+   than the navbar's because it's the page's primary action. */
+.btn-hero {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  align-self: flex-start;
+  background: var(--color-accent);
+  border: 2px solid var(--accent-edge);
+  border-radius: 14px;
+  padding: 11px 28px;     /* → 52px tall (26px line box + 2×2px border) */
+  font-family: 'Montserrat', sans-serif;
+  font-size: 17px;
+  font-weight: 500;
+  color: #000;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.22s ease, border-color 0.22s ease;
+}
+.btn-hero:hover { background: #fff; border-color: rgba(0, 0, 0, 0.35); }
+
+/* ── Hero right: the tetromino well ──
+   .dot-card is an empty, fluid, square box; tetris.js builds its own 608px
+   stage inside it and CSS-scales that to the card's real width. Authoring
+   against a fixed 608 is what keeps the cell size (608/10 → 61px), the guide
+   pitch and the piece geometry valid at every viewport. */
+/* An explicit flex-basis is load-bearing: with `width: auto` here, the card's
+   percentage width would resolve against a parent sized by its own content
+   and collapse to zero. Basis 608 + shrink lets it give way to the copy on
+   mid-size screens instead. */
+.hero-right { flex: 0 1 608px; min-width: 0; }
+
+.dot-card {
+  width: 100%;
+  max-width: 608px;
+  margin-inline: auto;
+  aspect-ratio: 1;
+  background: #2c2c2c;
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── Section helpers (used by the Tailwind sections below the hero) ──
+   NOTE: don't reintroduce custom classes inside Tailwind's generated
+   namespaces (leading-*, tracking-*, text-*, h-*, w-*, p-*, m-*). v4 mints
+   `leading-95` as a real utility — line-height: calc(0.25rem * 95) ≈ 380px —
+   which sits in @layer utilities and beats anything defined here. The old
+   .leading-95 / .tracking-tight2 / .h2-display helpers are now written as
+   arbitrary-value utilities in the markup instead. */
+
+.eyebrow {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 11px;
+}
+
+.link-u { position: relative; }
+.link-u::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -2px; height: 1px;
+  background: currentColor; transform: scaleX(0); transform-origin: left;
+  transition: transform .25s ease;
+}
+.link-u:hover::after { transform: scaleX(1); }
+
+/* The section CTAs. Same 2px --accent-edge as .btn-cta and .btn-hero —
+   those two had it and this one didn't, which is why the "Book a call" buttons
+   below the hero read as a different component. The edge derives from
+   --color-accent via color-mix, so all three stay in sync with the token. */
+/* The hover fill can't live here: .bg-accent is a Tailwind utility, and v4
+   emits utilities in a layer that beats @layer components no matter the
+   specificity — a `.cta:hover { background }` rule would simply never apply.
+   The markup carries `hover:bg-white` instead, which is in the same layer. */
+.cta {
+  border: 2px solid var(--accent-edge);
+  transition: background-color 0.22s ease;
+}
+
+/* Line grid for dark sections — same vocabulary as the well's cell guides,
+   but a 56px pitch (the decoration cell size) rather than the well's 61px. */
+.dot-grid {
+  background-image:
+    linear-gradient(to right,  rgba(255,255,255,0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.055) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+/* ── Static tetromino decorations (#book) ──
+   Decorative only, no logos. They read as intentional because they sit on the
+   section's own 56px line grid — hence the cell-multiple offsets below, and
+   the round() on the right column so it stays on a grid line at any width. */
+.tt-deco { position: absolute; top: 0; pointer-events: none; }
+.tt-deco--l { left: 0;  width: 224px; height: 504px; }
+.tt-deco--r { width: 224px; height: 616px; left: calc(round(down, 100% - 224px, 56px)); }
+.tt-deco i {
+  position: absolute;
+  width: 56px; height: 56px;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.10);
+}
+
+/* ── Process Gantt ──
+   Everything is measured in weeks. --lane is one week's share of the width and
+   --edge is half the gutter, so a lane, a pill and a task column all resolve
+   from the same two values: left = w × lane + edge, width = ws × lane − gutter.
+   A pill therefore snaps to its lane by construction. (An earlier version laid
+   the pills on a separate 24-column grid, whose lines landed a few pixels off
+   the lanes — two sets of numbers that had to agree, and didn't.)
+
+   --tone is the whole colour story: solid on the badge, a flat wash on the
+   pill. Override --tone on one pill and that pill restyles completely. Set it
+   to #8699F7 (already in the tetromino palette) to take the chart blue. */
+.gantt {
+  --gantt-lanes: 6;
+  --lane: calc(100% / var(--gantt-lanes));
+  --gutter: 12px;
+  --edge: calc(var(--gutter) / 2);
+  --tone: var(--color-ink);
+}
+
+.gantt-plot { position: relative; padding-bottom: 8px; }
+
+/* One rounded lane per week: 1px solid --color-line, the same border every
+   card in the light sections uses (the site has no translucent borders below
+   the hero — only the navbar and the email input use rgba, and those are
+   separate hand-written CSS). Safe now that the lanes sit a gutter apart; the
+   borders only read as misalignment when the lanes overlapped. The fill stays,
+   dialled back, so a lane still reads as a container and not just an outline. */
+.gantt-lanes { position: absolute; inset: 0; pointer-events: none; }
+.gantt-lanes i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--i) * var(--lane) + var(--edge));
+  width: calc(var(--lane) - var(--gutter));
+  background: color-mix(in srgb, var(--color-line) 14%, var(--color-paper));
+  border: 1px solid var(--color-line);
+  border-radius: 28px;
+}
+
+/* Buffer weeks: contingency, not committed work. Diagonal hatching is the
+   conventional read for slack in a schedule, and it stays legible under the
+   pill that crosses it because the stripes are lighter than the pill's fill. */
+.gantt-lanes i.is-buffer {
+  background-color: var(--color-paper);
+  background-image: repeating-linear-gradient(
+    45deg,
+    color-mix(in srgb, var(--color-line) 70%, var(--color-paper)) 0 1px,
+    transparent 1px 10px
+  );
+}
+
+/* Plain block flow, one pill per line — that stacking is what makes the
+   staircase, and it needs no explicit rows. */
+.gantt-bars {
+  position: relative;         /* above .gantt-lanes */
+  list-style: none;
+  margin: 0;
+  padding: 26px 0 0;
+}
+.gantt-bars > li {
+  margin-left: calc(var(--w) * var(--lane) + var(--edge));
+  width: calc(var(--ws) * var(--lane) - var(--gutter));
+  margin-bottom: 12px;
+}
+
+.gantt-pill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 8px 24px 8px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tone) 11%, var(--color-paper));
+  /* Same 1px weight as every other border on the page, but derived from
+     --tone rather than hardcoded to --color-line: the accent pill needs a
+     warm edge, and a grey hairline on yellow reads as a stray outline. */
+  border: 1px solid color-mix(in srgb, var(--tone) 24%, var(--color-paper));
+}
+
+.gantt-badge {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--tone);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.gantt-pill-txt { min-width: 0; }
+.gantt-pill-txt strong {
+  display: block;
+  font-size: 16px;
+  line-height: 1.25;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+  white-space: nowrap;
+}
+.gantt-pill-txt em {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  color: var(--color-mute);
+  white-space: nowrap;
+}
+
+/* Launch is the payoff the headline promises, so it's the one phase carrying
+   the accent. Yellow can't hold white text, so its number flips to ink.
+   Its border can't come from the generic rule either: that mix *lightens*
+   --tone, which reads on ink but leaves a light tone all but invisible against
+   its own wash. It borrows --accent-edge instead — the accent darkened, and the
+   exact border the accent buttons use, so the two match by construction. */
+.gantt-pill--hl {
+  --tone: var(--color-accent);
+  border-color: var(--accent-edge);
+}
+.gantt-pill--hl .gantt-badge { color: var(--color-ink); }
+
+/* One column per week; each list sits in its phase's starting lane. The four
+   phases start in different weeks, so they never collide. */
+.gantt-tasks {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--gantt-lanes), 1fr);
+  list-style: none;
+  margin: 0;
+  padding: 30px 0 0;
+}
+.gantt-tasks > li {
+  grid-row: 1;
+  grid-column: calc(var(--w) + 1);
+  min-width: 0;
+  padding-inline: 22px;
+}
+.gantt-tasks ul { list-style: none; margin: 0; padding: 0; }
+.gantt-tasks ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--color-mute);
+}
+.gantt-tasks ul li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-dim);
+}
+
+/* Labels centred on their lane, off the same --lane maths. */
+.gantt-axis { position: relative; height: 52px; }
+.gantt-axis span {
+  position: absolute;
+  top: 24px;
+  left: calc(var(--i) * var(--lane));
+  width: var(--lane);
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--color-dim);
+}
+/* The hatch says "different"; only the word says "buffer". */
+.gantt-axis span.is-buffer { color: color-mix(in srgb, var(--color-dim) 70%, var(--color-paper)); }
+.gantt-axis span.is-buffer b {
+  display: block;
+  margin-top: 3px;
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* reveal-on-scroll */
+.reveal { opacity: 0; transform: translateY(12px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.in { opacity: 1; transform: translateY(0); }
+
+/* horizontal scroll snap (mobile use-cases row) */
+.h-snap {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  /* Same bounce, horizontally: without this the row rubber-bands at its ends
+     and, worse, a swipe past the end chains into the browser's back gesture. */
+  overscroll-behavior-x: none;
+}
+.h-snap > * { scroll-snap-align: start; }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Responsive ──────────────────────────────────────────────────────── */
+
+/* Stack the hero before the 608px card starts squeezing the copy. */
+@media (max-width: 1024px) {
+  .hero {
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 0;
+    height: auto;
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+  .hero-left { max-width: 100%; }
+  /* Stacked layout puts the well first: it's the thing that moves, so it
+     earns the top of the fold. The copy stays first in the DOM, so reading
+     order and focus order are unchanged — only the visual order flips. */
+  .hero-right { flex: 0 0 auto; width: 100%; order: -1; margin-bottom: 40px; }
+}
+
+/* The three nav anchors are duplicated in the footer sitemap, so dropping
+   them here costs no navigation and avoids a hamburger menu. */
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+  .navbar-inner { justify-content: space-between; }
+}
+
+@media (max-width: 640px) {
+  .hero-sub, .hero-sub2 { font-size: 16px; }
+  .headline { margin-bottom: 24px; }
+  .hero-sub2 { margin-bottom: 32px; }
+  /* Full-bleed CTA on phones: a 32px-padded pill floating in a narrow column
+     reads as an afterthought next to a full-width headline. */
+  .btn-hero { align-self: stretch; justify-content: center; }
+  .logo { font-size: 20px; }
+  .btn-cta { padding: 12px 18px; font-size: 14px; }
+}
+
+/* Below ~430px the wordmark and the CTA collide. Drop the wordmark and keep
+   the monogram — the CTA is the thing that has to survive. */
+@media (max-width: 430px) {
+  .logo-text { display: none; }
+}
+
+/* ── Motion preferences ──────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  /* Reveals must not stay stuck at opacity 0 once transitions are killed. */
+  .reveal { opacity: 1; transform: none; }
+  .cta:hover { transform: none; }
+}
+
+} /* end @layer components */

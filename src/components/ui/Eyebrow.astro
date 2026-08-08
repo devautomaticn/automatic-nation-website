@@ -15,7 +15,7 @@ interface Props {
   class?: string;
 }
 
-const { tone = 'mute', as: Tag = 'p', class: className }: Props = Astro.props;
+const { tone = 'mute', as: Tag = 'p', class: className } = Astro.props as Props;
 
 const TONE = { mute: 'text-mute', dim: 'text-dim', faint: 'text-faint' } as const;
 ---

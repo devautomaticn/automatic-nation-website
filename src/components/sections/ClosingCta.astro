@@ -1,0 +1,55 @@
+---
+import Section from '../ui/Section.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+import Button from '../ui/Button.astro';
+import TetrominoDeco from '../deco/TetrominoDeco.astro';
+import type { Piece } from '../deco/TetrominoDeco.astro';
+import type { Cta } from '../../lib/design';
+
+/** The page's last word: full-bleed dark, centred, optional decorations. */
+interface Props {
+  id?: string;
+  eyebrow?: string;
+  /** Plain text. Use the "title" slot for a heading with a <br/>. */
+  title?: string;
+  body?: string;
+  cta: Cta;
+  /** Small print under the button. */
+  note?: string;
+  deco?: { left: Piece[]; right: Piece[] } | false;
+}
+
+const { id, eyebrow, title, body, cta, note, deco = false } = Astro.props as Props;
+---
+<Section {id} tone="ink" grid container={false} class="relative overflow-hidden">
+  {deco && (
+    <>
+      <TetrominoDeco side="left" pieces={deco.left} />
+      <TetrominoDeco side="right" pieces={deco.right} />
+    </>
+  )}
+
+  {/* The text column clears the 224px decorations from lg up. The design
+      prototype is content-box (no reset), so it writes this as a max-width
+      plus symmetric padding; under Tailwind's border-box preflight that same
+      pair would squeeze the copy to a third of its width. */}
+  <div class="relative z-10 max-w-narrow lg:max-w-[1456px] mx-auto px-gutter lg:px-[280px] py-section text-center">
+    <SectionHeader
+      tone="ink"
+      align="center"
+      width="full"
+      scale="display-xl"
+      {eyebrow}
+      {title}
+      lead={body}
+    >
+      <slot name="title" slot="title" />
+    </SectionHeader>
+
+    <div class="mt-12 reveal">
+      <Button href={cta.href} external={cta.external} size="lg" arrow>{cta.label}</Button>
+    </div>
+
+    {note && <p class="mt-6 font-mono text-xs text-dim reveal">{note}</p>}
+  </div>
+</Section>

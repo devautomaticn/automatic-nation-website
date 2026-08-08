@@ -27,7 +27,7 @@ const {
   border = false,
   radius = false,
   class: className,
-}: Props = Astro.props;
+} = Astro.props as Props;
 
 const TONE = { paper: 'bg-paper', ink: 'bg-ink', transparent: '' } as const;
 const PAD = { sm: 'p-7', md: 'p-8', lg: 'p-8 lg:p-10', none: '' } as const;

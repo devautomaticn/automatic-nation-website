@@ -34,7 +34,7 @@ const {
   tone = 'paper',
   reveal = true,
   class: className,
-}: Props = Astro.props;
+} = Astro.props as Props;
 
 // Literal, not `h${level}`: a template string widens to `string`, and a
 // dynamic tag typed as `string` loses every HTML attribute in the process.

@@ -1,0 +1,29 @@
+---
+import Card from '../ui/Card.astro';
+import Chip from '../ui/Chip.astro';
+import type { Phase } from '../../data/process';
+
+/**
+ * The numbered-steps list. It started as the Gantt's mobile fallback, which is
+ * why it takes the same Phase shape — but it stands on its own, and it's the
+ * right choice for a landing that wants a process without a schedule.
+ */
+interface Props {
+  phases: Phase[];
+  class?: string;
+}
+
+const { phases, class: className } = Astro.props as Props;
+---
+<ol class:list={['grid grid-cols-1 gap-px bg-line border border-line reveal', className]}>
+  {phases.map(p => (
+    <Card as="li">
+      <div class="font-mono text-2xl font-bold text-ink">{p.n}</div>
+      <h3 class="mt-4 text-lg font-semibold tracking-[-0.02em]">{p.name} ({p.when})</h3>
+      <p class="mt-3 text-sm text-mute leading-relaxed">{p.body}</p>
+      <ul class="mt-4 flex flex-wrap gap-2">
+        {p.tasks.map(t => <li><Chip tone="paper" font="mono">{t}</Chip></li>)}
+      </ul>
+    </Card>
+  ))}
+</ol>

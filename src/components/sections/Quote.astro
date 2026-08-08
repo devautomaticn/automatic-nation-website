@@ -1,0 +1,32 @@
+---
+import Card from '../ui/Card.astro';
+import type { Tone } from '../../lib/design';
+
+interface Props {
+  text: string;
+  name: string;
+  role: string;
+  company: string;
+  tone?: Tone;
+  class?: string;
+}
+
+const { text, name, role, company, tone = 'ink', class: className } = Astro.props as Props;
+---
+{/* The fill is load-bearing on ink, not decoration: without it the section's
+    line grid shows straight through the card. */}
+<Card
+  as="figure"
+  {tone}
+  pad="lg"
+  border
+  radius
+  class:list={['reveal max-w-prose', className]}
+>
+  <blockquote class:list={['text-lg lg:text-xl font-medium leading-relaxed', tone === 'ink' ? 'text-paper' : 'text-ink']}>
+    "{text}"
+  </blockquote>
+  <figcaption class:list={['mt-5 font-mono text-2xs', tone === 'ink' ? 'text-dim' : 'text-mute']}>
+    — {name}, {role} · {company}
+  </figcaption>
+</Card>

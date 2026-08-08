@@ -28,7 +28,7 @@ const {
   noindex = false,
   article,
   jsonLd,
-}: Props = Astro.props;
+} = Astro.props as Props;
 
 const canonical = absolute(path, Astro.site);
 const image = absolute(ogImage, Astro.site);

@@ -1,0 +1,21 @@
+---
+import Section from '../ui/Section.astro';
+import Button from '../ui/Button.astro';
+import type { Cta } from '../../lib/design';
+
+/** A one-line prompt with a button, between two heavier sections. */
+interface Props {
+  text: string;
+  cta: Cta;
+}
+
+const { text, cta } = Astro.props as Props;
+---
+<Section
+  size="sm"
+  border="y"
+  innerClass="flex flex-col sm:flex-row items-center justify-between gap-6 reveal"
+>
+  <p class="text-lg font-medium max-w-lg">{text}</p>
+  <Button href={cta.href} external={cta.external} size="sm" arrow>{cta.label}</Button>
+</Section>

@@ -1,0 +1,78 @@
+---
+import Section from '../ui/Section.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+import Steps from './Steps.astro';
+import type { Phase, Tick } from '../../data/process';
+
+/**
+ * The delivery timeline: a Gantt from lg up, the same data as numbered steps
+ * below it.
+ *
+ * This is parameterised, not generalised. The .gantt-* system in global.css
+ * encodes one specific thing — a weekly schedule with hatched buffer weeks and
+ * one highlighted phase — and its --lane/--gutter/--edge maths is a deliberate
+ * fix for an earlier version whose two coordinate systems disagreed. Only the
+ * data and the lane count are props. A landing that wants a process without a
+ * schedule uses <Steps> directly.
+ */
+interface Props {
+  id?: string;
+  eyebrow?: string;
+  title: string;
+  /** The mono stat line above the heading. */
+  stat?: string;
+  phases: Phase[];
+  ticks: Tick[];
+}
+
+const { id, eyebrow, title, stat, phases, ticks } = Astro.props as Props;
+---
+<Section {id}>
+  {stat && (
+    <p class="font-mono text-xs text-dim tracking-wide reveal">{stat}</p>
+  )}
+
+  <SectionHeader class={stat ? 'mt-block-sm' : undefined} {eyebrow} {title} />
+
+  <div class="gantt mt-block hidden lg:block reveal" style={`--gantt-lanes:${ticks.length}`}>
+    <div class="gantt-plot">
+      <div class="gantt-lanes" aria-hidden="true">
+        {ticks.map((k, i) => (
+          <i class={k.buffer ? 'is-buffer' : undefined} style={`--i:${i}`}></i>
+        ))}
+      </div>
+
+      <ol class="gantt-bars">
+        {phases.map(p => (
+          <li style={`--w:${p.w};--ws:${p.ws}`}>
+            <div class:list={['gantt-pill', p.hl && 'gantt-pill--hl']}>
+              <span class="gantt-badge">{p.n}</span>
+              <span class="gantt-pill-txt">
+                <strong>{p.name}</strong>
+                <em>{p.when}</em>
+              </span>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <ul class="gantt-tasks">
+        {phases.map(p => (
+          <li style={`--w:${p.w}`}>
+            <ul>{p.tasks.map(t => <li>{t}</li>)}</ul>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="gantt-axis" aria-hidden="true">
+      {ticks.map((k, i) => (
+        <span class={k.buffer ? 'is-buffer' : undefined} style={`--i:${i}`}>
+          {k.t}{k.buffer && <b>buffer</b>}
+        </span>
+      ))}
+    </div>
+  </div>
+
+  <Steps {phases} class="lg:hidden mt-block" />
+</Section>

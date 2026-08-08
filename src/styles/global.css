@@ -301,6 +301,10 @@
   flex-shrink: 0;
 }
 
+/* A hero with no media column: the copy takes the full measure instead of
+   leaving a 608px hole where the well would have been. */
+.hero--copy .hero-left { max-width: min(100%, 900px); }
+
 /* Spacing here is per-element, not a uniform gap: the headline needs far more
    air beneath it than the two sub-paragraphs need between themselves. */
 .hero-left {
@@ -309,6 +313,55 @@
   gap: 0;
   flex-shrink: 0;
   max-width: 584px;
+}
+
+/* Primary button and optional text link on one baseline. */
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+/* ── Hero form ──
+   A native form, no island. Fills the media column, so it inherits the same
+   608px ceiling the well and the image variant use. */
+.hero-form {
+  width: 100%;
+  max-width: 608px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 32px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-panel);
+  background: var(--color-paper);
+}
+.hero-form-row { display: flex; flex-direction: column; gap: 8px; }
+.hero-form input,
+.hero-form textarea {
+  font-family: 'Montserrat', sans-serif;
+  font-size: var(--text-base);
+  color: var(--color-ink);
+  padding: 12px 14px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-control);
+  background: var(--color-paper);
+  transition: border-color 0.2s ease;
+}
+.hero-form input:focus,
+.hero-form textarea:focus { border-color: var(--color-ink); }
+.hero-form textarea { resize: vertical; }
+
+/* The image variant's unframed case — same square as .dot-card, no fill. */
+.hero-media {
+  width: 100%;
+  max-width: 608px;
+  margin-inline: auto;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--radius-panel);
 }
 
 /* The display-lg step carries size, leading, tracking and weight together —

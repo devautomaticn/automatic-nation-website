@@ -1,0 +1,42 @@
+---
+import { SHAPES, radii, DECO_CELL, CELL_RADIUS, PALETTE } from '../../lib/tetromino';
+
+/**
+ * Static tetromino pieces bleeding in from one edge of a dark section.
+ *
+ * Same shapes, same fused-corner rule and same hairline as the hero well, but
+ * no logos and no motion — they read as intentional because they sit on the
+ * section's own 56px line grid. Offsets are therefore cell multiples; even the
+ * negative ones are exactly one cell, so the bleed stays on a grid line.
+ */
+export interface Piece {
+  /** A key of SHAPES: I, O, T, S, Z, J, L. */
+  shape: keyof typeof SHAPES;
+  /** An index into PALETTE. */
+  color: number;
+  /** Offsets in pixels — keep them multiples of 56. */
+  x: number;
+  y: number;
+}
+
+interface Props {
+  side: 'left' | 'right';
+  pieces: Piece[];
+}
+
+const { side, pieces } = Astro.props as Props;
+---
+{/* Hidden below lg: at 224px wide these would sit on top of the copy on narrow
+    screens, and the content padding that clears them only applies from lg up. */}
+<div class:list={['tt-deco', side === 'left' ? 'tt-deco--l' : 'tt-deco--r', 'hidden lg:block']} aria-hidden="true">
+  {pieces.map(p => SHAPES[p.shape].map((cell, i) => (
+    <i
+      style={[
+        `left:${p.x + cell[0] * DECO_CELL}px`,
+        `top:${p.y + cell[1] * DECO_CELL}px`,
+        `background:${PALETTE[p.color % PALETTE.length]}`,
+        `border-radius:${radii(SHAPES[p.shape], i, CELL_RADIUS)}`,
+      ].join(';')}
+    ></i>
+  )))}
+</div>

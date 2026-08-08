@@ -1,0 +1,59 @@
+---
+import Section from '../ui/Section.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Card from '../ui/Card.astro';
+import type { Tone } from '../../lib/design';
+
+/** A divided grid of short eyebrow + title + body cells. */
+export interface Feature {
+  eyebrow?: string;
+  title: string;
+  body: string;
+}
+
+interface Props {
+  id?: string;
+  tone?: Tone;
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  items: Feature[];
+  /** Defaults to one column per item, capped at 4. */
+  columns?: 2 | 3 | 4;
+}
+
+const { id, tone = 'paper', eyebrow, title, lead, items, columns } = Astro.props as Props;
+
+const cols = columns ?? (Math.min(items.length, 4) as 2 | 3 | 4);
+// Written out rather than interpolated: Tailwind scans source text, so
+// `sm:grid-cols-${n}` produces a class that is never generated.
+const COLS = {
+  2: 'sm:grid-cols-2',
+  3: 'sm:grid-cols-3',
+  4: 'sm:grid-cols-2 lg:grid-cols-4',
+} as const;
+
+const line = tone === 'ink' ? 'divide-line-dk border-line-dk' : 'divide-line border-line';
+---
+<Section {id} {tone} border={tone === 'paper' ? 'top' : 'none'}>
+  <SectionHeader {tone} {eyebrow} {title} {lead} />
+
+  <div
+    class:list={[
+      'mt-block grid grid-cols-1 divide-y sm:divide-y-0 sm:divide-x border reveal',
+      COLS[cols],
+      line,
+    ]}
+  >
+    {items.map(item => (
+      <Card tone="transparent" pad="lg">
+        {item.eyebrow && <Eyebrow tone={tone === 'ink' ? 'dim' : 'mute'} class="mb-4">{item.eyebrow}</Eyebrow>}
+        <h3 class="text-lg font-semibold tracking-[-0.02em]">{item.title}</h3>
+        <p class:list={['mt-3 text-sm leading-relaxed', tone === 'ink' ? 'text-dim' : 'text-mute']}>
+          {item.body}
+        </p>
+      </Card>
+    ))}
+  </div>
+</Section>

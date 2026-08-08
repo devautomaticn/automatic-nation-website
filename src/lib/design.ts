@@ -4,10 +4,17 @@
  * in one place, and a typo is a build error rather than a class that silently
  * resolves to nothing.
  *
- * (It also makes every primitive's frontmatter a real TS module. Astro only
- * infers `Astro.props` from `interface Props` in a module; a frontmatter with
- * no imports or exports is a script, and its props degrade to
- * `Record<string, any>` with no warning.)
+ * ── Why every component writes `Astro.props as Props` ──
+ * Astro's inference of `Astro.props` from `interface Props` is unreliable here:
+ * in several components it resolves to `Record<string, any>` instead, which
+ * silently drops the types on every destructured variable. The cast pins the
+ * type down on the component's own side.
+ *
+ * It costs nothing in safety. Destructuring a name that isn't in `Props` is
+ * still an error, and the *caller* side is checked independently by Astro's
+ * generated component types — `<Chip tone="bogus">` fails `astro check` either
+ * way. Uniform on purpose: mixing casts and annotations invites someone to
+ * "fix" the annotation back and get an unexplained failure.
  */
 
 /** Light or dark ground. Decides text, border and eyebrow colours together. */

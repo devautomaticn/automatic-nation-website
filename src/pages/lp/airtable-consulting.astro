@@ -1,0 +1,65 @@
+---
+/**
+ * A landing page, end to end. This is the shape to copy for a new one:
+ * pick sections, hand each one its slice of the copy file, done.
+ *
+ * Note what is NOT here compared to index.astro — no HeroTetris, so no
+ * preloadImages and no tetris module in the bundle. A landing only pays for
+ * the well if it asks for it.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HeroCopy from '../../components/heroes/HeroCopy.astro';
+import FeatureGrid from '../../components/sections/FeatureGrid.astro';
+import UseCases from '../../components/sections/UseCases.astro';
+import Process from '../../components/sections/Process.astro';
+import CtaStrip from '../../components/sections/CtaStrip.astro';
+import Faq from '../../components/sections/Faq.astro';
+import ClosingCta from '../../components/sections/ClosingCta.astro';
+
+import { BOOKING } from '../../lib/site';
+import { PROCESS, GANTT_TICKS } from '../../data/process';
+import * as copy from '../../data/landings/airtable-consulting';
+
+const book = { href: BOOKING.href, external: BOOKING.external };
+---
+<BaseLayout title={copy.seo.title} description={copy.seo.description} path="lp/airtable-consulting">
+  <HeroCopy
+    eyebrow={copy.hero.eyebrow}
+    title={copy.hero.title}
+    sub={copy.hero.sub}
+    sub2={copy.hero.sub2}
+    cta={{ ...book, label: copy.hero.ctaLabel }}
+    ctaSecondary={{ href: '#process', label: copy.hero.ctaSecondaryLabel }}
+  />
+
+  <FeatureGrid id="symptoms" {...copy.symptoms} />
+
+  <UseCases
+    id="work"
+    eyebrow={copy.work.eyebrow}
+    title={copy.work.title}
+    items={copy.work.items}
+    link={{ ...book, label: copy.work.linkLabel }}
+  />
+
+  <Process
+    id="process"
+    eyebrow="How it works"
+    title="Audit first. Rebuild only what needs it."
+    phases={PROCESS}
+    ticks={GANTT_TICKS}
+  />
+
+  <CtaStrip text={copy.strip.text} cta={{ ...book, label: copy.strip.ctaLabel }} />
+
+  <Faq id="faq" eyebrow={copy.faq.eyebrow} title={copy.faq.title} items={copy.faq.items} />
+
+  <ClosingCta
+    id="book"
+    eyebrow={copy.closing.eyebrow}
+    title={copy.closing.title}
+    body={copy.closing.body}
+    note={copy.closing.note}
+    cta={{ ...book, label: copy.closing.ctaLabel }}
+  />
+</BaseLayout>

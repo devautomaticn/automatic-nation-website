@@ -1,0 +1,72 @@
+---
+import HeroShell from './HeroShell.astro';
+import type { HeroProps } from './HeroShell.astro';
+import { BASE } from '../../lib/url';
+
+/**
+ * The tetromino well. The only hero that costs JavaScript.
+ *
+ * The page must ALSO pass HERO_ASSETS to BaseLayout's preloadImages — Astro
+ * doesn't hoist <head> content out of a nested component, so this component
+ * cannot emit its own preloads, and without them the first pieces land as
+ * blank tiles. That coupling is deliberate: it keeps "this page pays for the
+ * well" visible in the page's frontmatter rather than hidden in here.
+ */
+interface Props extends HeroProps {
+  /** Engine overrides. Defaults below are the tuned home-page values. */
+  tetris?: Partial<{
+    cols: number; rows: number; size: number; radius: number;
+    speed: number; gap: number; minMs: number;
+    holdDepth: number; holdMs: number; seed: number;
+    guides: boolean; hud: boolean;
+  }>;
+  class?: string;
+}
+
+const { tetris = {}, ...shell } = Astro.props as Props;
+
+const options = {
+  cols: 10, rows: 10, size: 608, radius: 12,
+  // Fall speed cut 25% from the engine's 2000 default. minMs scales the other
+  // way (220 / 0.75 = 293): it's a hard floor on a fall's duration, so leaving
+  // it at 220 would keep short drops at their old timing while only the long
+  // falls slowed down.
+  speed: 1500, gap: 100, minMs: 293,
+  holdDepth: 8, holdMs: 2600, guides: true, hud: true, seed: 63,
+  ...tetris,
+};
+---
+<HeroShell {...shell}>
+  <slot name="title" slot="title" />
+
+  {/* Empty on purpose: tetris.js builds the 608×608 stage, the cell guides,
+      the HUD and the NEXT preview inside this box at runtime. */}
+  <div
+    slot="media"
+    class="dot-card"
+    data-base={BASE}
+    data-tetris={JSON.stringify(options)}
+  ></div>
+
+  <slot />
+</HeroShell>
+
+<!-- NOT is:inline: it needs Astro's bundling to resolve the import. That is
+     safe now — the only reason the old hero scripts had to be inline was
+     execution order against the Matter.js CDN tag, and that tag is gone. -->
+<script>
+  import { Tetris } from '../../scripts/tetris.js';
+
+  const card = document.querySelector<HTMLElement>('.dot-card[data-tetris]');
+  if (card) {
+    // The module can't see import.meta.env at runtime, so the base arrives via
+    // data-base. It is already normalised (no trailing slash), which is what
+    // makes assetBase produce URLs identical to the <link rel="preload"> ones —
+    // a stray double slash would silently fetch all fifteen icons twice.
+    const B = card.dataset.base || '';
+    new Tetris(card, {
+      ...JSON.parse(card.dataset.tetris || '{}'),
+      assetBase: B + '/',
+    });
+  }
+</script>

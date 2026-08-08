@@ -1,0 +1,72 @@
+---
+import Section from '../ui/Section.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+import Card from '../ui/Card.astro';
+import Chip from '../ui/Chip.astro';
+import Metric from '../ui/Metric.astro';
+import Quote from './Quote.astro';
+import { href as resolveHref } from '../../lib/url';
+import type { Cta } from '../../lib/design';
+
+export interface UseCase {
+  /** Rendered as chips. Tool names, uppercase. */
+  stack: string[];
+  title: string;
+  body: string;
+  /** The payoff line — "Leads routed in <60 seconds". */
+  metric: string;
+}
+
+export interface Testimonial {
+  text: string;
+  name: string;
+  role: string;
+  company: string;
+}
+
+interface Props {
+  id?: string;
+  eyebrow?: string;
+  title: string;
+  items: UseCase[];
+  quote?: Testimonial;
+  link?: Cta;
+}
+
+const { id, eyebrow, title, items, quote, link } = Astro.props as Props;
+---
+<Section {id} tone="ink" grid>
+  <SectionHeader tone="ink" {eyebrow} {title} width="prose" />
+
+  {/* The row bleeds to both edges but the cards must line up with the heading,
+      so the inset lives on the flex row, not on the scroll container: a
+      scroller's padding-left doesn't offset a child carrying
+      min-width:max-content (the card landed at 0 while the h2 sat at 24), and
+      its padding-right is dropped outright, killing the trailing gap. */}
+  <div class="mt-block -mx-gutter lg:mx-0 overflow-x-auto h-snap no-scrollbar">
+    <div class="flex lg:grid lg:grid-cols-4 gap-5 min-w-max lg:min-w-0 px-gutter lg:px-0">
+      {items.map(item => (
+        <Card as="article" tone="ink" pad="sm" border radius class="w-[78vw] sm:w-[60vw] lg:w-auto">
+          <div class="flex items-center gap-2">
+            {item.stack.map(tech => <Chip>{tech}</Chip>)}
+          </div>
+          <h3 class="mt-6 text-xl font-semibold tracking-[-0.02em]">{item.title}</h3>
+          <p class="mt-3 text-sm text-dim leading-relaxed">{item.body}</p>
+          <Metric class="mt-8" value={item.metric} />
+        </Card>
+      ))}
+    </div>
+  </div>
+
+  {quote && <Quote class="mt-block" {...quote} />}
+
+  {link && (
+    <div class="mt-block-sm reveal">
+      <a
+        href={resolveHref(link.href)}
+        {...(link.external ? { target: '_blank', rel: 'noopener' } : {})}
+        class="link-u text-sm text-dim hover:text-paper"
+      >{link.label} →</a>
+    </div>
+  )}
+</Section>

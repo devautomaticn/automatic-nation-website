@@ -1,0 +1,63 @@
+---
+import Button from '../ui/Button.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import type { Cta } from '../../lib/design';
+
+/**
+ * The hero's copy column plus the section geometry. Every hero variant is this
+ * component with something different in the "media" slot — or nothing, which
+ * is the plain-copy hero and the right default for a new landing.
+ *
+ * When the media slot is empty the copy widens to the full measure instead of
+ * leaving a 608px hole where the well would have been.
+ */
+export interface HeroProps {
+  eyebrow?: string;
+  /** Plain text. Use the "title" slot for a heading with <strong> or <br/>. */
+  title?: string;
+  /** Lead paragraph. */
+  sub?: string;
+  /** Second, tighter line — the fixed-scope promise on the home page. */
+  sub2?: string;
+  cta?: Cta;
+  /** Optional text link beside the button. */
+  ctaSecondary?: Cta;
+}
+
+interface Props extends HeroProps {
+  class?: string;
+}
+
+const { eyebrow, title, sub, sub2, cta, ctaSecondary, class: className } = Astro.props as Props;
+
+const hasMedia = Astro.slots.has('media');
+---
+<section class:list={['hero', !hasMedia && 'hero--copy', className]}>
+  <div class="hero-left">
+    {eyebrow && <Eyebrow class="mb-5">{eyebrow}</Eyebrow>}
+
+    <h1 class="headline">{title}<slot name="title" /></h1>
+
+    {sub && <p class="hero-sub">{sub}</p>}
+    {sub2 && <p class="hero-sub2">{sub2}</p>}
+
+    {(cta || ctaSecondary) && (
+      <div class="hero-actions">
+        {cta && <Button href={cta.href} external={cta.external} size="lg" arrow>{cta.label}</Button>}
+        {ctaSecondary && (
+          <a
+            href={ctaSecondary.href}
+            {...(ctaSecondary.external ? { target: '_blank', rel: 'noopener' } : {})}
+            class="link-u text-sm text-mute hover:text-ink"
+          >{ctaSecondary.label} →</a>
+        )}
+      </div>
+    )}
+
+    <slot />
+  </div>
+
+  {hasMedia && (
+    <div class="hero-right"><slot name="media" /></div>
+  )}
+</section>

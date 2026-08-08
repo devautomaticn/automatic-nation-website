@@ -1,0 +1,19 @@
+---
+import HeroShell from './HeroShell.astro';
+import type { HeroProps } from './HeroShell.astro';
+
+/**
+ * Copy-only hero. No media, no JavaScript, nothing to preload — the right
+ * default for a new landing. The tetromino well is one option among four, not
+ * a requirement, and it costs a module plus fifteen preloaded images.
+ */
+interface Props extends HeroProps {
+  class?: string;
+}
+
+const props = Astro.props as Props;
+---
+<HeroShell {...props}>
+  <slot name="title" slot="title" />
+  <slot />
+</HeroShell>

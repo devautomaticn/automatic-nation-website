@@ -12,10 +12,6 @@ interface Props {
   class?: string;
 }
 
-// `as`, not a `: Props` annotation, because this frontmatter has no *value*
-// import — a type-only import is erased, so Astro falls back to typing
-// Astro.props as Record<string, any>, which can't satisfy a required prop.
-// Callers are still fully checked against Props; only this side needs the hint.
 const { value, label, tone = 'accent', class: className } = Astro.props as Props;
 
 const TONE = { accent: 'text-accent', dim: 'text-dim', mute: 'text-mute' } as const;

@@ -33,7 +33,7 @@ const {
   type = 'button',
   class: className,
   ...rest
-}: Props = Astro.props;
+} = Astro.props as Props;
 
 const classes = [
   'btn',

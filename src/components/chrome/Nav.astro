@@ -10,7 +10,7 @@ interface Props {
   links?: readonly { label: string; href: string }[];
 }
 
-const { cta, links = NAV }: Props = Astro.props;
+const { cta, links = NAV } = Astro.props as Props;
 const action = cta === undefined
   ? { label: 'Book a call', href: BOOKING.href, external: BOOKING.external }
   : cta;

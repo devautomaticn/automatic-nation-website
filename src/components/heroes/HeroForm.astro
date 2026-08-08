@@ -1,0 +1,71 @@
+---
+import HeroShell from './HeroShell.astro';
+import type { HeroProps } from './HeroShell.astro';
+import Button from '../ui/Button.astro';
+
+/**
+ * Copy plus inline lead capture. A native <form> POST — no framework, no
+ * island, no client JS. Point `action` at a form endpoint (Formspree, an n8n
+ * webhook, whatever) and it works with JavaScript disabled.
+ */
+type Field = 'name' | 'email' | 'company' | 'message';
+
+interface Props extends HeroProps {
+  /** Where the form POSTs. Required — a form with no action posts to itself. */
+  action: string;
+  method?: 'post' | 'get';
+  fields?: Field[];
+  submitLabel?: string;
+  /** Small print under the button. */
+  consent?: string;
+  class?: string;
+}
+
+const {
+  action,
+  method = 'post',
+  fields = ['name', 'email'],
+  submitLabel = 'Get started',
+  consent,
+  ...shell
+} = Astro.props as Props;
+
+interface FieldSpec {
+  label: string;
+  /** Narrower than `string` so it satisfies <input type>. */
+  type: 'text' | 'email' | 'tel';
+  autocomplete: string;
+  textarea?: boolean;
+}
+
+const FIELDS: Record<Field, FieldSpec> = {
+  name:    { label: 'Name',    type: 'text',  autocomplete: 'name' },
+  email:   { label: 'Email',   type: 'email', autocomplete: 'email' },
+  company: { label: 'Company', type: 'text',  autocomplete: 'organization' },
+  message: { label: 'What are you trying to automate?', type: 'text', autocomplete: 'off', textarea: true },
+};
+---
+<HeroShell {...shell}>
+  <slot name="title" slot="title" />
+
+  <form slot="media" {action} {method} class="hero-form">
+    {fields.map(name => {
+      const f = FIELDS[name];
+      return (
+        <div class="hero-form-row">
+          <label class="eyebrow text-mute" for={`hero-${name}`}>{f.label}</label>
+          {f.textarea ? (
+            <textarea id={`hero-${name}`} {name} rows="4" required autocomplete={f.autocomplete}></textarea>
+          ) : (
+            <input id={`hero-${name}`} {name} type={f.type} required autocomplete={f.autocomplete} />
+          )}
+        </div>
+      );
+    })}
+
+    <Button type="submit" size="lg" block>{submitLabel}</Button>
+    {consent && <p class="mt-4 text-2xs text-mute leading-relaxed">{consent}</p>}
+  </form>
+
+  <slot />
+</HeroShell>

@@ -1,409 +1,60 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Section from '../components/ui/Section.astro';
-import SectionHeader from '../components/ui/SectionHeader.astro';
-import Eyebrow from '../components/ui/Eyebrow.astro';
-import Button from '../components/ui/Button.astro';
-import Card from '../components/ui/Card.astro';
-import Chip from '../components/ui/Chip.astro';
-import Metric from '../components/ui/Metric.astro';
+import HeroTetris from '../components/heroes/HeroTetris.astro';
+import FeatureGrid from '../components/sections/FeatureGrid.astro';
+import UseCases from '../components/sections/UseCases.astro';
+import Process from '../components/sections/Process.astro';
+import CtaStrip from '../components/sections/CtaStrip.astro';
+import Faq from '../components/sections/Faq.astro';
+import ClosingCta from '../components/sections/ClosingCta.astro';
 
 import { BASE } from '../lib/url';
 import { BOOKING } from '../lib/site';
 import { HERO_ASSETS } from '../lib/hero-assets';
-import { SHAPES, radii, DECO_CELL, CELL_RADIUS, PALETTE } from '../lib/tetromino';
+import { PROCESS, GANTT_TICKS } from '../data/process';
 import { organization, webSite, faqPage } from '../lib/jsonld';
+import * as copy from '../data/landings/home';
 
-// ── Static tetromino decorations for the closing CTA ──
-// Same shapes, same fused-corner rule and same hairline as the well, but no
-// logos and no motion. Positions are multiples of the 56px cell so the pieces
-// land on the section's background grid; the negative offsets are exactly one
-// cell, so even the bleed stays on a grid line.
-const [YELLOW, BLUE, RED, ORANGE, GREEN] = PALETTE;
-const TT_LEFT = [
-  { s: 'O', c: BLUE,   x: -DECO_CELL, y: 0 },
-  { s: 'J', c: GREEN,  x:  DECO_CELL, y: 168 },
-  { s: 'S', c: ORANGE, x: -DECO_CELL, y: 336 },
-];
-const TT_RIGHT = [
-  { s: 'T', c: RED,    x:  DECO_CELL,     y: DECO_CELL },
-  { s: 'I', c: YELLOW, x:  DECO_CELL,     y: 224 },
-  { s: 'O', c: BLUE,   x:  DECO_CELL * 2, y: 504 },
-];
-
-// ── Who it's for ──
-const AUDIENCE = [
-  {
-    eyebrow: 'Ops teams',
-    title: 'Copy-pasting between 5+ tools every day',
-    body: "Your team knows the bottleneck. You just haven't had time to fix it. We scope it in a single call and build it in weeks — not quarters.",
-  },
-  {
-    eyebrow: 'Founders',
-    title: 'Team burning >10 hours/week on manual work',
-    body: "That's a part-time hire you're already paying for in wasted time. We give it back — on a fixed budget, without adding headcount.",
-  },
-  {
-    eyebrow: 'Power users',
-    title: 'Outgrown Zapier or your DIY Airtable setup',
-    body: "You know the tools. You just don't have time to build the right system from scratch. We pick up where your DIY left off.",
-  },
-];
-
-// ── Use cases ──
-const USE_CASES = [
-  {
-    stack: ['HUBSPOT', 'CLEARBIT', 'SLACK'],
-    title: 'Lead enrichment & routing',
-    body: 'Every new lead is auto-enriched with company data, scored, and routed to the right rep in Slack. No more "who\'s taking this?"',
-    metric: 'Leads routed in <60 seconds',
-  },
-  {
-    stack: ['AIRTABLE', 'STRIPE', 'POSTGRES'],
-    title: 'Operations dashboard in Airtable',
-    body: 'Live revenue, pipeline, and ops metrics in one Airtable view — synced from your billing system, CRM, and product database.',
-    metric: 'Revenue + pipeline: one view, always live',
-  },
-  {
-    stack: ['N8N', 'OPENAI', 'GMAIL'],
-    title: 'AI-drafted client updates',
-    body: 'Project status pulled from your PM tool, summarized by an LLM, drafted as a client-ready email — sent every Friday with one click.',
-    metric: 'Friday updates drafted in 30 seconds, not 3 hours',
-  },
-  {
-    stack: ['SHOPIFY', 'AIRTABLE', 'QUICKBOOKS'],
-    title: 'Inventory sync across channels',
-    body: 'Stock, orders, and accounting kept in sync across three systems — no nightly CSV exports, no manual reconciliations.',
-    metric: 'Reconciliation: 4 hours/month → 0',
-  },
-];
-
-// ── Process timeline (Gantt) ──
-// One source for both renderings: the Gantt on lg+ and the stacked cards below
-// it. Duplicating this prose in two markup blocks is how the two drift apart,
-// so both are generated from here.
-// Everything is measured in weeks: `w` is the starting week (0-indexed) and
-// `ws` how many weeks it lasts. Lanes, pills and task lists are all derived
-// from those two numbers with the same formula, so a pill lines up with its
-// lane by construction rather than by two sets of numbers agreeing. (This
-// replaced a 24-column grid whose lines fell a few pixels off the lanes.)
-const PROCESS = [
-  {
-    n: '01', name: 'Discovery', when: 'Week 0', w: 0, ws: 1,
-    body: '30 minutes. We map your current tools, the bottlenecks, and what "done" looks like. You leave with a written scope and fixed price.',
-    tasks: ['Discovery call', 'Tools & bottlenecks', 'Written scope', 'Fixed price'],
-  },
-  {
-    n: '02', name: 'Build', when: 'Weeks 1–3', w: 1, ws: 3,
-    body: 'We build the system on Airtable + n8n + your existing stack. You see weekly demo videos; nothing is built in a vacuum.',
-    tasks: ['System build', 'Weekly demo videos', 'Integration testing'],
-  },
-  {
-    n: '03', name: 'Launch', when: 'Week 4', w: 4, ws: 1, hl: true,
-    body: 'We deploy live, train your team, and ship documentation written for humans, not engineers.',
-    tasks: ['Deploy live', 'Team training', 'Documentation'],
-  },
-  {
-    n: '04', name: 'Maintain', when: 'Ongoing', w: 5, ws: 1,
-    body: 'Optional retainer for changes, monitoring, and the next system. Most clients stay.',
-    tasks: ['Monitoring', 'Changes & fixes', 'Next system'],
-  },
-];
-// One rounded lane per week, and one axis label centred under each. Both are
-// driven off the same index so a label can never drift off its lane.
-const GANTT_TICKS = [
-  { t: 'Week 0' },
-  { t: 'Week 1' },
-  { t: 'Week 2' },
-  { t: 'Week 3' },
-  { t: 'Week 4' },
-  { t: 'Ongoing', buffer: true },
-];
-
-// ── FAQ ──
-const FAQ = [
-  {
-    q: 'What does a project typically cost?',
-    a: 'Pricing is fixed and scoped up front — no hourly billing, no surprises. Most first systems land in the [FILL IN RANGE] range depending on the number of integrations. You get the number before any work starts.',
-  },
-  {
-    q: 'What if we already have something half-built?',
-    a: "That's the common case. We audit what exists, keep what works, and rebuild only what's holding you back. You're not paying us to redo your own work.",
-  },
-  {
-    q: 'What happens after launch?',
-    a: 'You own everything — the accounts, the workflows, the documentation. A retainer for changes and monitoring is optional, not a lock-in.',
-  },
-];
-
-const title = 'Automatic Nation — Automation & Integrations Agency';
-const description =
-  'We build custom integrations and automated workflows across Airtable, n8n, and 900+ apps. 50+ workflows shipped. Book a discovery call.';
 const origin = new URL(`${BASE}/`, Astro.site).href;
+const book = { href: BOOKING.href, external: BOOKING.external };
 ---
 <BaseLayout
-  {title}
-  {description}
+  title={copy.seo.title}
+  description={copy.seo.description}
   preloadImages={HERO_ASSETS}
-  jsonLd={[organization(origin), webSite(origin), faqPage(FAQ)]}
+  jsonLd={[organization(origin), webSite(origin), faqPage(copy.faq.items)]}
 >
+  <HeroTetris sub={copy.hero.sub} sub2={copy.hero.sub2} cta={{ ...book, label: copy.hero.ctaLabel }}>
+    <Fragment slot="title">
+      We build systems that save your team <strong>22 hours</strong> a week.
+    </Fragment>
+  </HeroTetris>
 
-  <!-- ══════════════════════════════════════════ -->
-  <!--  HERO                                      -->
-  <!-- ══════════════════════════════════════════ -->
-  <section class="hero">
-    <div class="hero-left">
-      <h1 class="headline">
-        We build systems that save your team <strong>22 hours</strong> a week.
-      </h1>
-      <p class="hero-sub">
-        We build custom integrations and automated workflows across 900+ popular platforms.
-      </p>
-      <p class="hero-sub2">
-        First system live in under 4 weeks, fixed scope, fixed price.
-      </p>
-      <Button href={BOOKING.href} external={BOOKING.external} size="lg" arrow>
-        Book a free consultation
-      </Button>
-    </div>
+  <FeatureGrid id="who-its-for" {...copy.audience} />
 
-    <div class="hero-right">
-      {/* Empty on purpose: tetris.js builds the 608×608 stage, the cell guides,
-          the HUD and the NEXT preview inside this box at runtime. */}
-      <div class="dot-card" data-base={BASE}></div>
-    </div>
-  </section>
+  <UseCases
+    id="templates"
+    eyebrow={copy.useCases.eyebrow}
+    title={copy.useCases.title}
+    items={copy.useCases.items}
+    quote={copy.useCases.quote}
+    link={{ ...book, label: copy.useCases.linkLabel }}
+  />
 
-  <!-- ══════════════════════════════════════════ -->
-  <!--  WHO IT'S FOR                              -->
-  <!-- ══════════════════════════════════════════ -->
-  <Section id="who-its-for" border="top">
-    <SectionHeader eyebrow="Who this is for" title="This pays off fastest if you're…" />
+  <Process id="process" {...copy.process} phases={PROCESS} ticks={GANTT_TICKS} />
 
-    <div class="mt-block grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-line border border-line reveal">
-      {AUDIENCE.map(item => (
-        <Card tone="transparent" pad="lg">
-          <Eyebrow class="mb-4">{item.eyebrow}</Eyebrow>
-          <h3 class="text-lg font-semibold tracking-[-0.02em]">{item.title}</h3>
-          <p class="mt-3 text-sm text-mute leading-relaxed">{item.body}</p>
-        </Card>
-      ))}
-    </div>
-  </Section>
+  <CtaStrip text={copy.strip.text} cta={{ ...book, label: copy.strip.ctaLabel }} />
 
-  <!-- ══════════════════════════════════════════ -->
-  <!--  USE CASES (dark)                          -->
-  <!-- ══════════════════════════════════════════ -->
-  <Section id="templates" tone="ink" grid>
-    <SectionHeader
-      tone="ink"
-      eyebrow="What it looks like in practice"
-      title="Real workflows we've built — adapt one or bring your own."
-      width="prose"
-    />
+  <Faq id="faq" eyebrow={copy.faq.eyebrow} title={copy.faq.title} items={copy.faq.items} />
 
-    {/* The row bleeds to both edges but the cards must line up with the
-        heading, so the inset lives on the flex row, not on the scroll
-        container: a scroller's padding-left doesn't offset a child carrying
-        min-width:max-content (the card landed at 0 while the h2 sat at 24),
-        and its padding-right is dropped outright, killing the trailing gap. */}
-    <div class="mt-block -mx-gutter lg:mx-0 overflow-x-auto h-snap no-scrollbar">
-      <div class="flex lg:grid lg:grid-cols-4 gap-5 min-w-max lg:min-w-0 px-gutter lg:px-0">
-        {USE_CASES.map(item => (
-          <Card as="article" tone="ink" pad="sm" border radius class="w-[78vw] sm:w-[60vw] lg:w-auto">
-            <div class="flex items-center gap-2">
-              {item.stack.map(tech => <Chip>{tech}</Chip>)}
-            </div>
-            <h3 class="mt-6 text-xl font-semibold tracking-[-0.02em]">{item.title}</h3>
-            <p class="mt-3 text-sm text-dim leading-relaxed">{item.body}</p>
-            <Metric class="mt-8" value={item.metric} />
-          </Card>
-        ))}
-      </div>
-    </div>
-
-    {/* bg-ink is load-bearing, not decoration: without a fill the section's
-        line grid shows straight through the card. Same reason the use-case
-        articles above carry it. */}
-    <Card tone="ink" pad="lg" border radius class="mt-block reveal max-w-prose">
-      <p class="text-lg lg:text-xl font-medium leading-relaxed text-paper">
-        "[CLIENT QUOTE — to be filled in: one sentence on the time or money saved.]"
-      </p>
-      <p class="mt-5 font-mono text-2xs text-dim">— [Name], [Role] · [Company]</p>
-    </Card>
-
-    <div class="mt-block-sm reveal">
-      <a
-        href={BOOKING.href}
-        {...(BOOKING.external ? { target: '_blank', rel: 'noopener' } : {})}
-        class="link-u text-sm text-dim hover:text-paper"
-      >See how we'd build yours →</a>
-    </div>
-  </Section>
-
-  <!-- ══════════════════════════════════════════ -->
-  <!--  PROCESS                                   -->
-  <!-- ══════════════════════════════════════════ -->
-  <Section id="process">
-    <p class="font-mono text-xs text-dim tracking-wide reveal">
-      50+ workflows shipped · ~22 hrs saved/week · &lt;4 wks first delivery
-    </p>
-
-    <SectionHeader
-      class="mt-block-sm"
-      eyebrow="How it works"
-      title="Four weeks from first call to live system."
-    />
-
-    <div class="gantt mt-block hidden lg:block reveal" style={`--gantt-lanes:${GANTT_TICKS.length}`}>
-      <div class="gantt-plot">
-        <div class="gantt-lanes" aria-hidden="true">
-          {GANTT_TICKS.map((k, i) => (
-            <i class={k.buffer ? 'is-buffer' : undefined} style={`--i:${i}`}></i>
-          ))}
-        </div>
-
-        <ol class="gantt-bars">
-          {PROCESS.map(p => (
-            <li style={`--w:${p.w};--ws:${p.ws}`}>
-              <div class:list={['gantt-pill', p.hl && 'gantt-pill--hl']}>
-                <span class="gantt-badge">{p.n}</span>
-                <span class="gantt-pill-txt">
-                  <strong>{p.name}</strong>
-                  <em>{p.when}</em>
-                </span>
-              </div>
-            </li>
-          ))}
-        </ol>
-
-        <ul class="gantt-tasks">
-          {PROCESS.map(p => (
-            <li style={`--w:${p.w}`}>
-              <ul>{p.tasks.map(t => <li>{t}</li>)}</ul>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div class="gantt-axis" aria-hidden="true">
-        {GANTT_TICKS.map((k, i) => (
-          <span class={k.buffer ? 'is-buffer' : undefined} style={`--i:${i}`}>
-            {k.t}{k.buffer && <b>buffer</b>}
-          </span>
-        ))}
-      </div>
-    </div>
-
-    <ol class="lg:hidden mt-block grid grid-cols-1 gap-px bg-line border border-line reveal">
-      {PROCESS.map(p => (
-        <Card as="li">
-          <div class="font-mono text-2xl font-bold text-ink">{p.n}</div>
-          <h3 class="mt-4 text-lg font-semibold tracking-[-0.02em]">{p.name} ({p.when})</h3>
-          <p class="mt-3 text-sm text-mute leading-relaxed">{p.body}</p>
-          <ul class="mt-4 flex flex-wrap gap-2">
-            {p.tasks.map(t => <li><Chip tone="paper" font="mono">{t}</Chip></li>)}
-          </ul>
-        </Card>
-      ))}
-    </ol>
-  </Section>
-
-  <!-- ══════════════════════════════════════════ -->
-  <!--  MID-PAGE CTA STRIP                        -->
-  <!-- ══════════════════════════════════════════ -->
-  <Section size="sm" border="y" innerClass="flex flex-col sm:flex-row items-center justify-between gap-6 reveal">
-    <p class="text-lg font-medium max-w-lg">
-      Not sure what's worth automating? That's the first call.
-    </p>
-    <Button href={BOOKING.href} external={BOOKING.external} size="sm" arrow>
-      Book a call
-    </Button>
-  </Section>
-
-  <!-- ══════════════════════════════════════════ -->
-  <!--  FAQ                                       -->
-  <!-- ══════════════════════════════════════════ -->
-  <Section id="faq">
-    <SectionHeader eyebrow="Questions" title="The things people ask before saying yes." />
-
-    <div class="mt-block grid grid-cols-1 md:grid-cols-3 gap-px bg-line border border-line reveal">
-      {FAQ.map(item => (
-        <Card pad="lg">
-          <h3 class="text-lg font-semibold tracking-[-0.02em]">{item.q}</h3>
-          <p class="mt-3 text-sm text-mute leading-relaxed">{item.a}</p>
-        </Card>
-      ))}
-    </div>
-  </Section>
-
-  <!-- ══════════════════════════════════════════ -->
-  <!--  CLOSING CTA (dark)                        -->
-  <!-- ══════════════════════════════════════════ -->
-  <Section id="book" tone="ink" grid container={false} class="relative overflow-hidden">
-    {/* Decorative pieces, hidden below lg: at 224px wide they'd sit on top of
-        the copy on narrow screens, and the content padding they clear only
-        applies from lg up. */}
-    {[
-      { cls: 'tt-deco--l', pieces: TT_LEFT },
-      { cls: 'tt-deco--r', pieces: TT_RIGHT },
-    ].map(group => (
-      <div class:list={['tt-deco', group.cls, 'hidden lg:block']} aria-hidden="true">
-        {group.pieces.map(p => SHAPES[p.s].map((cell, i) => (
-          <i style={`left:${p.x + cell[0] * DECO_CELL}px;top:${p.y + cell[1] * DECO_CELL}px;background:${p.c};border-radius:${radii(SHAPES[p.s], i, CELL_RADIUS)}`}></i>
-        )))}
-      </div>
-    ))}
-
-    {/* The text column clears the 224px decorations from lg up. The handoff's
-        prototype is content-box (no reset), so it writes this as a max-width
-        plus symmetric padding; under Tailwind's border-box preflight that same
-        pair would squeeze the copy to a third of its width. */}
-    <div class="relative z-10 max-w-narrow lg:max-w-[1456px] mx-auto px-gutter lg:px-[280px] py-section text-center">
-      <SectionHeader
-        tone="ink"
-        align="center"
-        width="full"
-        scale="display-xl"
-        eyebrow="Ready when you are"
-        lead="Walk us through your stack. We'll tell you what we'd automate first, what it costs, and how long it takes. No pitch deck — just a fixed-scope proposal you can say yes or no to."
-      >
-        <Fragment slot="title">Another quarter of manual work.<br />Or one 30-minute call.</Fragment>
-      </SectionHeader>
-
-      <div class="mt-12 reveal">
-        <Button href={BOOKING.href} external={BOOKING.external} size="lg" arrow>
-          Book your discovery call
-        </Button>
-      </div>
-      <p class="mt-6 font-mono text-xs text-dim reveal">No obligation · Same-week availability</p>
-    </div>
-  </Section>
-
+  <ClosingCta
+    id="book"
+    eyebrow={copy.closing.eyebrow}
+    body={copy.closing.body}
+    note={copy.closing.note}
+    cta={{ ...book, label: copy.closing.ctaLabel }}
+    deco={copy.closingDeco}
+  >
+    <Fragment slot="title">Another quarter of manual work.<br />Or one 30-minute call.</Fragment>
+  </ClosingCta>
 </BaseLayout>
-
-<!-- Hero tetromino well.
-     NOT is:inline: it needs Astro's bundling to resolve the import. That is
-     safe now — the only reason the old hero scripts had to be inline was
-     execution order against the Matter.js CDN tag, and that tag is gone. -->
-<script>
-  import { Tetris } from '../scripts/tetris.js';
-
-  const card = document.querySelector<HTMLElement>('.dot-card');
-  if (card) {
-    // The module can't see import.meta.env at runtime, so the base arrives via
-    // data-base. It is already normalised (no trailing slash), which is what
-    // makes assetBase produce URLs identical to the <link rel="preload"> ones.
-    const B = card.dataset.base || '';
-    new Tetris(card, {
-      // Fall speed cut 25% from the engine's 2000 default. minMs scales the
-      // other way (220 / 0.75 = 293): it's a hard floor on a fall's duration,
-      // so leaving it at 220 would keep short drops at their old timing while
-      // only the long falls slowed down.
-      cols: 10, rows: 10, size: 608, radius: 12, speed: 1500, gap: 100,
-      minMs: 293,
-      holdDepth: 8, holdMs: 2600, guides: true, hud: true, seed: 63,
-      assetBase: B + '/',
-    });
-  }
-</script>

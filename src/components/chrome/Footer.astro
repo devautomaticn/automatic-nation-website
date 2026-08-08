@@ -7,7 +7,7 @@ interface Props {
   links?: readonly { label: string; href: string }[];
 }
 
-const { links = FOOTER_LINKS }: Props = Astro.props;
+const { links = FOOTER_LINKS } = Astro.props as Props;
 const year = 2026;
 const place = SITE.city || '[CITY]';
 ---

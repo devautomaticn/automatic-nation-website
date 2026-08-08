@@ -11,7 +11,7 @@ interface Props {
   class?: string;
 }
 
-const { tone = 'ink', font = 'sans', class: className }: Props = Astro.props;
+const { tone = 'ink', font = 'sans', class: className } = Astro.props as Props;
 
 const TONE = {
   ink: 'border-line-dk text-dim',

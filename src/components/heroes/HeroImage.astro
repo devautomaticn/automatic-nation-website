@@ -1,0 +1,40 @@
+---
+import { Image } from 'astro:assets';
+import HeroShell from './HeroShell.astro';
+import type { HeroProps } from './HeroShell.astro';
+import { asset } from '../../lib/url';
+
+/**
+ * Copy plus a picture in the right-hand column, on the same 608px square the
+ * well occupies so the two heroes share a silhouette.
+ */
+interface Props extends HeroProps {
+  /**
+   * An import from src/assets (processed, gets width/height and a hash) or a
+   * path under public/ as a plain string (unprocessed, needs alt sizing care).
+   */
+  image: ImageMetadata | string;
+  alt: string;
+  fit?: 'cover' | 'contain';
+  /** panel wraps the image in the same dark rounded card as the well. */
+  frame?: 'panel' | 'none';
+  class?: string;
+}
+
+const { image, alt, fit = 'cover', frame = 'panel', ...shell } = Astro.props as Props;
+
+const objectFit = fit === 'contain' ? 'object-contain' : 'object-cover';
+---
+<HeroShell {...shell}>
+  <slot name="title" slot="title" />
+
+  <div slot="media" class:list={[frame === 'panel' ? 'dot-card' : 'hero-media']}>
+    {typeof image === 'string' ? (
+      <img src={asset(image)} {alt} loading="eager" decoding="async" class:list={['w-full h-full', objectFit]} />
+    ) : (
+      <Image src={image} {alt} loading="eager" class:list={['w-full h-full', objectFit]} />
+    )}
+  </div>
+
+  <slot />
+</HeroShell>

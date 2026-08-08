@@ -31,5 +31,8 @@ automatic-nation-final.html
 /image.png
 /T024D9G3RV4-U05ENL69F37-458b1cdf045b-512.jpg
 
+# Design-tool exports (the spec that matters lives in docs/design/)
+*.zip
+
 # Generated reports
 competitor-analysis-report.md

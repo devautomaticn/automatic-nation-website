@@ -156,7 +156,7 @@ const ogImage = new URL(`${basePrefix}/og-image.png`, Astro.site).href;
        font fetch until it has resolved and parsed. -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Montserrat:wght@400;500;600;700&family=Poppins:wght@700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Montserrat:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <!-- Preload hero-canvas icons so they're decoded before the physics drop -->
   {heroAssets.map(a => <link rel="preload" as="image" href={`${basePrefix}/${a}`} />)}
@@ -320,7 +320,7 @@ const ogImage = new URL(`${basePrefix}/og-image.png`, Astro.site).href;
     </div>
 
     <div class="mt-10 reveal">
-      <a href="#book" class="link-u text-[14px] text-dim hover:text-white">See how we'd build yours →</a>
+      <a href={bookHref} {...bookAttrs} class="link-u text-[14px] text-dim hover:text-white">See how we'd build yours →</a>
     </div>
   </div>
 </section>
@@ -390,7 +390,7 @@ const ogImage = new URL(`${basePrefix}/og-image.png`, Astro.site).href;
           <p class="mt-3 text-[14px] text-mute leading-relaxed">{p.body}</p>
           <ul class="mt-4 flex flex-wrap gap-2">
             {p.tasks.map(t => (
-              <li class="font-mono text-[11px] text-mute border border-line rounded-lg px-2 py-1">{t.t}</li>
+              <li class="font-mono text-[11px] text-mute border border-line rounded-lg px-2 py-1">{t}</li>
             ))}
           </ul>
         </li>

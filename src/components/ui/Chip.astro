@@ -2,6 +2,12 @@
 /**
  * A small bordered tag. The single most-duplicated string on the old page —
  * the tech chips alone repeated it twelve times.
+ *
+ * rounded-pill, not rounded-chip: at ~23px tall (11px text, py-1) an 8px
+ * radius is 35% of the height — neither capsule nor square, which read as
+ * unfinished. px-3 goes with it; horizontal padding below the radius lets the
+ * text crowd the curve. The chip token stays 8px for the footer icon button
+ * and inline code, which are not capsules.
  */
 import type { Tone } from '../../lib/design';
 
@@ -18,11 +24,16 @@ const TONE = {
   paper: 'border-line text-mute',
 } as const;
 
+/* Padding lives here, not in the base class, because it has to answer to the
+   tracking. `tracking-wider` adds 0.05em after EVERY letter including the
+   last, so the text box carries a phantom 0.05em on its right; splitting the
+   difference off the right padding is what actually optically centres the
+   glyphs. The mono variant has no tracking and stays symmetric. */
 const FONT = {
-  sans: 'text-2xs font-semibold tracking-wider',
-  mono: 'font-mono text-2xs',
+  sans: 'text-2xs font-semibold tracking-wider pl-3 pr-[calc(0.75rem-0.05em)]',
+  mono: 'font-mono text-2xs px-3',
 } as const;
 ---
-<span class:list={['inline-block px-2.5 py-1 border rounded-chip', TONE[tone], FONT[font], className]}>
+<span class:list={['inline-flex items-center justify-center shrink-0 whitespace-nowrap py-1 border rounded-pill', TONE[tone], FONT[font], className]}>
   <slot />
 </span>

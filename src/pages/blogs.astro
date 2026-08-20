@@ -1,0 +1,80 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/ui/Section.astro';
+import Container from '../components/ui/Container.astro';
+import SectionHeader from '../components/ui/SectionHeader.astro';
+import PostCard from '../components/blog/PostCard.astro';
+import ClosingCta from '../components/sections/ClosingCta.astro';
+import { NAV_AWAY, FOOTER_LINKS_AWAY, BOOKING_AWAY } from '../lib/site';
+import { sortByDate, postPath } from '../lib/blog';
+import { pageUrl } from '../lib/url';
+import { blogIndex, breadcrumbs } from '../lib/jsonld';
+
+/**
+ * The listing, at /blogs/ — the URL WordPress serves today, and where 6 of the
+ * migrated in-content links point. `/blog` meta-refreshes here via the
+ * `redirects` entry in astro.config.mjs.
+ */
+const posts = sortByDate(await getCollection('blog', p => !p.data.draft));
+
+// Newest first, then grouped by year. A year heading is free scannability and
+// costs no routes; paginating 61 posts would spread link equity across 7
+// near-duplicate URLs and bury the oldest three clicks deep. Revisit at ~150.
+const byYear = new Map<number, typeof posts>();
+for (const post of posts) {
+  const year = post.data.published.getUTCFullYear();
+  if (!byYear.has(year)) byYear.set(year, []);
+  byYear.get(year)!.push(post);
+}
+const years = [...byYear.keys()].sort((a, b) => b - a);
+
+const url = pageUrl('blogs', Astro.site);
+const book = { label: 'Book a call', href: BOOKING_AWAY.href, external: BOOKING_AWAY.external };
+---
+<BaseLayout
+  title="Blog — Airtable, automation and workflow guides"
+  description="Practical guides on Airtable, workflow automation and the systems that keep small teams from doing everything by hand."
+  path="blogs/"
+  jsonLd={[
+    blogIndex(url, posts.map(p => ({ url: pageUrl(postPath(p.id), Astro.site), title: p.data.title }))),
+    breadcrumbs([
+      { name: 'Home', url: pageUrl('', Astro.site) },
+      { name: 'Blog', url },
+    ]),
+  ]}
+  navLinks={NAV_AWAY}
+  footerLinks={FOOTER_LINKS_AWAY}
+  navCta={book}
+>
+  <Section size="lg" container={false}>
+    <Container>
+      <SectionHeader
+        eyebrow="Blog"
+        title="Guides for teams that want to stop doing it by hand"
+        lead={`${posts.length} posts on Airtable, automation, and the workflows in between.`}
+        scale="display-md"
+      />
+    </Container>
+
+    {years.map(year => (
+      <Container class="mt-block">
+        <h2 class="text-display-sm">{year}</h2>
+        <div class="mt-block-sm grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 reveal">
+          {byYear.get(year)!.map(post => <PostCard {post} />)}
+        </div>
+      </Container>
+    ))}
+  </Section>
+
+  {/* Every page must render a #book target: BOOKING falls back to '#book', so
+      without one the nav CTA and every migrated booking link go nowhere. */}
+  <ClosingCta
+    id="book"
+    eyebrow="Get started"
+    title="Let's automate the boring part."
+    body="Tell us what your team does by hand. We'll tell you what it costs to stop."
+    cta={book}
+    note="No pitch deck. A working session."
+  />
+</BaseLayout>

@@ -2,6 +2,7 @@
 import Container from '../ui/Container.astro';
 import Eyebrow from '../ui/Eyebrow.astro';
 import { SITE, FOOTER_LINKS } from '../../lib/site';
+import { href as url } from '../../lib/url';
 
 interface Props {
   links?: readonly { label: string; href: string }[];
@@ -23,7 +24,7 @@ const place = SITE.city || '[CITY]';
       <Eyebrow tone="faint" class="mb-4">Sitemap</Eyebrow>
       <ul class="space-y-2 text-xs">
         {links.map(item => (
-          <li><a href={item.href} class="link-u hover:text-paper">{item.label}</a></li>
+          <li><a href={url(item.href)} class="link-u hover:text-paper">{item.label}</a></li>
         ))}
       </ul>
     </div>

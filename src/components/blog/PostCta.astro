@@ -1,0 +1,44 @@
+---
+import Container from '../ui/Container.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Button from '../ui/Button.astro';
+import type { Cta } from '../../lib/design';
+
+/**
+ * The end-of-article call to action.
+ *
+ * Deliberately NOT sections/CtaStrip. That one is a full-bleed hairline row,
+ * which works on the home page and the landing page because it separates two
+ * heavy sections. On a post it lands between the article and ClosingCta — two
+ * page-level bands asking for the same booking within one screen, and the
+ * thinner one loses, which is why it read as flat and unfinished.
+ *
+ * This sits INSIDE the article measure instead, so it reads as the close of the
+ * piece rather than a band competing with the page. The accent wash gives it
+ * weight without going dark, which would collide with the ink section below.
+ *
+ * CtaStrip is untouched and still correct where it is.
+ */
+interface Props {
+  eyebrow?: string;
+  title: string;
+  body?: string;
+  cta: Cta;
+}
+
+const { eyebrow = 'Next step', title, body, cta } = Astro.props as Props;
+---
+<Container width="article" class="mt-block">
+  <div class="reveal rounded-panel bg-accent-soft p-8 lg:p-10 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+    <div class="max-w-md">
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <p class="mt-3 text-xl font-semibold tracking-[-0.02em] leading-snug">{title}</p>
+      {body && <p class="mt-2 text-sm text-mute leading-relaxed">{body}</p>}
+    </div>
+
+    {/* shrink-0 so the button keeps its shape when the copy wraps. */}
+    <Button href={cta.href} external={cta.external} size="lg" arrow class="shrink-0">
+      {cta.label}
+    </Button>
+  </div>
+</Container>

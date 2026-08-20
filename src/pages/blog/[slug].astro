@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+import RedirectStub from '../../layouts/RedirectStub.astro';
+import { postPath } from '../../lib/blog';
+import { pageUrl } from '../../lib/url';
+
+/**
+ * Stubs for the legacy `/blog/{slug}/` URLs.
+ *
+ * WordPress 301s these to `/{slug}/` today, so they exist in the wild and in at
+ * least one in-content link. Written as a real route rather than 61 entries in
+ * astro.config's `redirects` map, because a getStaticPaths over the same
+ * collection cannot drift out of sync with the posts and is greppable in dist/.
+ */
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', p => !p.data.draft);
+  return posts.map(post => ({
+    params: { slug: post.id },
+    props: { slug: post.id, title: post.data.title },
+  }));
+}
+
+interface Props {
+  slug: string;
+  title: string;
+}
+
+const { slug, title } = Astro.props as Props;
+---
+<RedirectStub to={pageUrl(postPath(slug), Astro.site)} title={title} />

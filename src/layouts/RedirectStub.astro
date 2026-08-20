@@ -1,0 +1,37 @@
+---
+/**
+ * A static redirect, for legacy URLs whose canonical target moved.
+ *
+ * GitHub Pages cannot serve a 301 — meta-refresh is the only mechanism
+ * available, and it passes link equity more slowly and less reliably. That is
+ * exactly why the 61 posts kept their WordPress URLs: only genuinely legacy
+ * aliases end up here, never a canonical post URL.
+ *
+ * The three parts all matter:
+ *   - the refresh moves a human,
+ *   - rel=canonical tells a crawler which URL is the real one,
+ *   - noindex keeps the stub itself out of the index.
+ * The visible link is the fallback for anyone whose browser blocks the refresh.
+ */
+interface Props {
+  /** Absolute destination URL. */
+  to: string;
+  title?: string;
+}
+
+const { to, title = 'Redirecting' } = Astro.props as Props;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta http-equiv="refresh" content={`0;url=${to}`} />
+  <link rel="canonical" href={to} />
+  <meta name="robots" content="noindex, follow" />
+</head>
+<body>
+  <p>This page has moved to <a href={to}>{to}</a>.</p>
+</body>
+</html>

@@ -1,0 +1,24 @@
+---
+import Section from '../ui/Section.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+import PostCard from './PostCard.astro';
+import type { Post } from '../../lib/blog';
+
+/**
+ * Three more posts after the body. On ink, so the jump from prose to chrome is
+ * a tonal break rather than an unmarked seam — the same trick UseCases uses.
+ */
+interface Props {
+  posts: Post[];
+}
+
+const { posts } = Astro.props as Props;
+---
+{posts.length > 0 && (
+  <Section tone="ink" grid size="sm" border="top">
+    <SectionHeader tone="ink" eyebrow="More reading" title="Keep going" scale="display-sm" />
+    <div class="mt-block-sm grid grid-cols-1 md:grid-cols-3 gap-5 reveal">
+      {posts.map(post => <PostCard {post} />)}
+    </div>
+  </Section>
+)}

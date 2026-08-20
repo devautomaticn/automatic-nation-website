@@ -57,7 +57,25 @@ const BORDER = {
   y: `border-y ${line}`,
 } as const;
 ---
-<section id={id} class:list={[TONE[tone], BORDER[border], grid && 'dot-grid', className]}>
+{/* The padding follows the element that actually wraps the content. With a
+    container it belongs on the container; with `container={false}` there is no
+    inner element to put it on, so it goes on the <section> itself.
+
+    That second case used to be missing entirely, which made `size` silently do
+    NOTHING whenever a caller passed `container={false}` — the section rendered
+    with no vertical rhythm at all and no error. Three blog pages hit it at
+    once. A caller that lays out its own padded wrapper (ClosingCta) must now
+    pass `size="none"` rather than rely on the prop being ignored. */}
+<section
+  id={id}
+  class:list={[
+    TONE[tone],
+    BORDER[border],
+    grid && 'dot-grid',
+    container === false && PAD[size],
+    className,
+  ]}
+>
   {container === false ? (
     <slot />
   ) : (

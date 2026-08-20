@@ -24,19 +24,25 @@ its copy.
 ```
 src/
   pages/            one file per page; structure only, ~60 lines
+                    [slug].astro = the 61 blog posts, at ROOT level
+  content/blog/     one directory per post: index.md + its images
+  content.config.ts the blog collection's zod schema
   data/landings/    the copy for each page, as typed objects
   data/process.ts   the delivery timeline, rendered two ways
   layouts/          BaseLayout — <head>, nav, footer, site-wide scripts
+                    RedirectStub — meta-refresh for legacy URLs
   components/
     ui/             Container Section SectionHeader Eyebrow Button Card Chip Metric
     sections/       FeatureGrid UseCases Process Steps Faq CtaStrip ClosingCta Quote
     heroes/         HeroShell + HeroCopy HeroImage HeroForm HeroTetris
+    blog/           PostCard PostMeta RelatedPosts
     chrome/         Nav Footer
     seo/            Seo
     deco/           TetrominoDeco
-  lib/              url site design tetromino hero-assets jsonld
+  lib/              url site design tetromino hero-assets jsonld blog rehype-prose
   styles/global.css Tailwind v4 @theme tokens, @layer base, @layer components
   scripts/          tetris.js (the well), smooth-scroll.js (Lenis)
+tools/wp-migrate/   the one-shot WordPress importer — sibling package, own deps
 docs/design/tetris-hero/README.md   the written spec for the hero
 ```
 
@@ -58,6 +64,78 @@ Rules that keep this cheap:
   a page should only pay that when the well is the point.
 - **Never write a raw colour, size, or spacing value in markup.** Use the tokens — see
   below. If a value doesn't exist as a token, add the token.
+
+### The blog, and the root namespace
+
+61 posts were migrated from WordPress. **They answer at root-level URLs —
+`/{slug}/`, not `/blog/{slug}/`** — because that is where they ranked for up to
+two years, and GitHub Pages cannot serve a 301 to move them (only meta-refresh,
+which passes link equity poorly). All 61 canonicals are byte-identical to the
+WordPress ones, trailing slash included.
+
+The consequences, which are not optional:
+
+- **The root namespace belongs to the blog.** A new page at
+  `src/pages/pricing.astro` would silently shadow a post with slug `pricing` —
+  Astro gives static routes priority, so the post just stops being built, with no
+  error. `RESERVED_SLUGS` in `src/lib/blog.ts` plus a `throw` in
+  `[slug].astro`'s `getStaticPaths` turns that into a named build failure.
+  **New marketing pages go under a prefix (`/lp/`, `/services/`); any new
+  root-level page must be added to `RESERVED_SLUGS`.**
+- **The post route is `[slug].astro`, never `[...slug].astro`.** A rest parameter
+  at the root would also try to match `lp/airtable-consulting`.
+- **The body is markdown; the frontmatter is a zod schema.** This does not
+  contradict "copy goes in `src/data/` as typed objects" — that rule wants a
+  missing field to be a *build error*, and zod delivers exactly that. It targets
+  *structured slots*; an 82,000-word prose body is the case markdown is for. The
+  long version is the comment at the top of `src/content.config.ts`.
+- **Post images live beside `index.md` and are referenced as `./01.webp`.**
+  A directory per post is what makes that work: the glob loader strips a trailing
+  `/index` from the id, so the directory name is the id is the URL. Relative
+  markdown images are resolved by Astro's own pipeline, which is the only reason
+  the BASE_URL trap cannot reach the 79 migrated images. **Never put post images
+  in `public/`** — nothing there can call `asset()` from inside a markdown file.
+- **Renaming a post directory changes an indexed URL.** Don't.
+- **Every page must render a `#book` target.** `BOOKING.href` falls back to
+  `'#book'` while `BOOKING_URL` is empty, so a page without one has a dead nav
+  CTA and dead migrated booking links.
+- **A page that does not contain the home page's sections must pass the `-AWAY`
+  link variants** (`NAV_AWAY`, `FOOTER_LINKS_AWAY`, `BOOKING_AWAY`) to
+  `BaseLayout`. `NAV`'s hrefs are bare fragments, correct only on a page that
+  owns those sections; elsewhere `#process` resolves against the current URL and
+  silently goes nowhere. `src/lib/site.ts` has the full note.
+
+`tools/wp-migrate/README.md` documents the importer and the cutover checklist.
+Re-running it is safe: `alt-text.mjs` is read, never written, so review work
+survives a re-migration.
+
+### Prose typography
+
+Markdown bodies are styled by **one class, `.article-body`**, in
+`@layer components`. Not `@tailwindcss/typography`: it ships its own scale and
+colour ramp, and matching it to the `@theme` tokens takes more `prose-*`
+overrides than writing the ~120 lines outright.
+
+It only works *because* it is in `@layer components`: `@layer base` sets
+`* { margin: 0 }`, and components is a later layer, so these rules win on layer
+order alone. Move the block out of the layer and every article collapses into a
+zero-rhythm wall of text, with no error.
+
+Two things it must not fight:
+
+- **Shiki writes an inline `background-color` on `<pre>`.** An inline style beats
+  every layered rule — the layer trap from the other direction. Style the box
+  (radius, padding, scroll) and let Shiki own the fill.
+- **Tables can be 9 columns wide** against a 704px measure, so the horizontal
+  scroll lives on a `.article-scroll` wrapper that `src/lib/rehype-prose.ts`
+  injects at build time. A `<table>` cannot scroll itself.
+
+`src/lib/rehype-prose.ts` also adds `target="_blank" rel="noopener"` to external
+links (one rule instead of the 219 attributes the migration stripped) and warns
+per build on images with no alt text. It **warns rather than throws** on purpose:
+WordPress shipped 94 of 148 images with empty alt, and a hard failure would block
+the whole migration behind a copywriting pass. Generated pseudo-alt would be
+worse than empty — a screen-reader user can skip an empty one.
 
 ### Design tokens
 
@@ -99,10 +177,24 @@ as *utilities*, which can't lose the layer fight.
 
 ### Deployment and the BASE_URL trap
 
-GitHub Pages via `.github/workflows/deploy.yml` on push to `main`. `astro.config.mjs` sets
-`base: '/automatic-nation-website'`, so **the site is not served from the domain root**. Any
-path to a `public/` asset needs the base prefix or it 404s in production while working fine
-in `npm run dev`.
+GitHub Pages via `.github/workflows/deploy.yml` on push to `main`, at the **apex domain**:
+`site: 'https://automaticnation.com'`, **no `base`**, `public/CNAME`. The project-subpath
+`base: '/automatic-nation-website'` was removed when the blog was migrated — a base prefix
+makes it impossible for the 61 posts to answer on the URLs they ranked on.
+
+So `BASE` is the empty string today, and `asset('logos/n8n.svg')` yields `/logos/n8n.svg`.
+The helpers are still the only sanctioned way to build a path: the base existed once and
+could return on a preview deploy, and four hand-written copies of the same three lines is
+what they replaced.
+
+**Pushing requires DNS and the Pages custom domain to be configured first** — see the
+cutover checklist in `tools/wp-migrate/README.md`.
+
+`trailingSlash: 'always'`, because WordPress served every URL with one and every canonical
+carried it. Note that setting governs *routing* only; it does not touch a URL string built
+in `src/lib/url.ts`. That is why **`pageUrl()` exists alongside `absolute()`** — a page URL
+needs the trailing slash, an asset URL must not have one. Using `absolute()` for a canonical
+emits a self-canonical pointing one redirect away from itself.
 
 **`src/lib/url.ts` is the only place this is handled.** Use `asset('logos/n8n.svg')` for
 anything under `public/`, `href()` for a link, `absolute()` for canonical/OG. Never
@@ -162,7 +254,10 @@ Design intent — motion timings, tile treatment, grid pitch — is specified in
 - Comments in `global.css` and the components document decisions that were arrived at by
   getting them wrong first. When you move code, move its comment with it.
 - FAQ JSON-LD is emitted by the *page*, not by `Faq.astro`, because it must appear on exactly
-  one URL. Two landings reusing the same FAQ copy must not both emit it.
+  one URL. Two landings reusing the same FAQ copy must not both emit it. The same rule governs
+  the blog: `blogIndex()` is emitted only by `blogs.astro`.
+- `tools/` is excluded from `tsconfig.json`. The WordPress importer is a sibling package with
+  its own dependencies and must stay out of the `npm run check` gate.
 
 ## Unfinished copy
 
@@ -175,4 +270,20 @@ Intentional placeholders, not bugs — but they must be filled before a real lau
 - The client quote in `src/data/landings/home.ts` (`[CLIENT QUOTE …]`, `[Name]`, `[Role]`,
   `[Company]`) and `[FILL IN RANGE]` in the pricing FAQ.
 - `public/og-image.png` is referenced by the OG tags but **does not exist**, so every social
-  card 404s today. Ship a static 1200×630 PNG; don't add a runtime OG generator.
+  card 404s today — now across 64 pages, not 2. Ship a static 1200×630 PNG; don't add a
+  runtime OG generator.
+- **55 migrated images have no alt text** — 19 of the 79 body images, plus all 36 heroes.
+  `tools/wp-migrate/out/alt-todo.tsv` is the authoritative list; answers go in
+  `tools/wp-migrate/alt-text.mjs`, then re-run the migration. `rehype-prose.ts` also warns
+  during a build, but only on a *cold* markdown render — Astro caches rendered markdown and
+  `astro check` warms that cache, so `npm run check && npm run build` prints nothing. Trust
+  the TSV, not the build log.
+- **`how-to-build-a-crm-system` ships placeholder contact details** in live copy
+  (`sales@mycompany.com`, `support@mycompany.com`), inherited from WordPress.
+- **7 in-content links were dropped**, all pointing at the two `/resources/` lead magnets that
+  have no page here. See `tools/wp-migrate/out/links-unresolved.tsv`.
+- These live WordPress URLs have **no equivalent here and will 404 at cutover**: `/about-us/`,
+  `/training-sessions/`, `/book-a-call-now/`, `/resource/`, two `/resources/{slug}/` lead
+  magnets, and 5 `/testimonials/{slug}/`. They are in the live sitemap today.
+- `tools/wp-migrate/out/triage.md` lists the 12 posts under 400 words and the 25 with no hero
+  image — a content decision, not a bug.

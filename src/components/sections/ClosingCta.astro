@@ -21,7 +21,9 @@ interface Props {
 
 const { id, eyebrow, title, body, cta, note, deco = false } = Astro.props as Props;
 ---
-<Section {id} tone="ink" grid container={false} class="relative overflow-hidden">
+{/* size="none": the inner div below carries py-section. Without this the
+    section would add a second copy — see the note in Section.astro. */}
+<Section {id} tone="ink" grid size="none" container={false} class="relative overflow-hidden">
   {deco && (
     <>
       <TetrominoDeco side="left" pieces={deco.left} />

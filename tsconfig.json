@@ -1,5 +1,6 @@
 {
   "extends": "astro/tsconfigs/strict",
   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"]
+  "// exclude": "tools/ is the one-shot WordPress importer — a sibling package with its own deps, never imported by the site. Type-checking it would put its Node-script style in the `npm run check` gate for no benefit.",
+  "exclude": ["dist", "tools"]
 }

@@ -34,6 +34,13 @@
      flash are the same colour by construction. --accent-edge recomputes. */
   --color-accent: var(--color-piece-yellow);
 
+  /* A wash of the accent over paper, for a panel that needs presence without
+     becoming a button. The end-of-post CTA can't go full yellow (reads as a
+     giant button) or ink (collides with the ClosingCta directly below it).
+     Derived rather than a fixed hex so it tracks --color-accent, the same way
+     --accent-edge does. */
+  --color-accent-soft: color-mix(in srgb, var(--color-accent) 22%, var(--color-paper));
+
   --font-sans: 'Space Grotesk', 'Montserrat', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
@@ -88,12 +95,19 @@
   /* ── Radius ──
      One language, applied everywhere. The page previously ran five competing
      radii (4px badges, 6px cards, 32px hero card, 70px pills), which is what
-     read as unfinished next to a site using a single consistent value. */
-  --radius-chip:    0.5rem;    /* 8  — tags, small controls */
+     read as unfinished next to a site using a single consistent value.
+
+     The scale was tightened once (chip 8→6, control 14→10, card 16→12,
+     panel 24→16): softer corners read as consumer, tighter ones as
+     considered. --radius-cell is deliberately NOT part of that pass — it is
+     the tetromino geometry, duplicated in tetromino.ts and tetris.js, and
+     specified in docs/design/tetris-hero/README.md. Changing it here alone
+     desyncs the static decorations from the running well. */
+  --radius-chip:    0.375rem;  /* 6  — tags, small controls */
   --radius-cell:    0.75rem;   /* 12 — tetromino cells (mirrored in tetris.js) */
-  --radius-control: 0.875rem;  /* 14 — buttons, inputs, focus ring */
-  --radius-card:    1rem;      /* 16 — content cards and articles */
-  --radius-panel:   1.5rem;    /* 24 — hero card, gantt lanes */
+  --radius-control: 0.625rem;  /* 10 — buttons, inputs, focus ring */
+  --radius-card:    0.75rem;   /* 12 — content cards and articles */
+  --radius-panel:   1rem;      /* 16 — hero card, gantt lanes */
   --radius-pill:    999px;
 
   /* ── Containers ──
@@ -102,7 +116,19 @@
      copies that had to be kept in sync by a comment. */
   --container-page:   80rem;   /* 1280 */
   --container-narrow: 56rem;   /* 896  — wide text columns */
-  --container-prose:  44rem;   /* 704  — article body measure */
+  --container-prose:  44rem;   /* 704  — lead paragraphs, pull quotes */
+
+  /* 960 — the blog's body measure. Separate from --container-prose because
+     that one is shared with SectionHeader's lead, Quote and UseCases on the
+     home page, so widening it there would move copy nobody asked to move.
+
+     At --text-lg/1.7 this runs ~89 characters per line, which is past the
+     60–75 usually recommended for body copy. That is a deliberate call, not an
+     oversight: the wide column was asked for, and the 1.7 line-height is what
+     keeps it trackable. If it ever reads long, the better lever is raising the
+     body font-size in .article-body — that shortens the character count
+     without narrowing the column. */
+  --container-article: 60rem;
 }
 
 /* Derivados internos, fuera de @theme a propósito: Tailwind genera utilidades
@@ -736,5 +762,147 @@
   .reveal { opacity: 1; transform: none; }
   .btn:hover { transform: none; }
 }
+
+/* ── Article body ────────────────────────────────────────────────────────
+   The one prose scope, for markdown-rendered post bodies.
+
+   Descendant selectors rather than utilities, because this HTML comes out of
+   markdown and has no class attributes to hang utilities on. `.article-body`
+   is safe as a name: Tailwind v4 has no `article-*` namespace to mint it as a
+   utility, which is what killed the old `.h2-display` helper. `.prose` was
+   avoided on purpose — it's the typography plugin's namespace and reads as a
+   sibling of the real `max-w-prose` utility.
+
+   ── This block only works because it is inside @layer components ──
+   @layer base sets `* { margin: 0 }`. Components is a LATER layer, so these
+   rules win on layer order alone — no !important, no specificity games. Move
+   this out of the layer and every margin below silently dies, leaving a
+   zero-rhythm wall of text with no error. See the block comment at the top of
+   this file.
+
+   The lobotomised owl supplies the default flow; the per-element rules below
+   override it by specificity (`.article-body > h2` beats `.article-body > * + *`),
+   so heading air is declared in one place instead of as a margin on every
+   sibling that might precede one.
+   ──────────────────────────────────────────────────────────────────────── */
+.article-body > * + * { margin-top: 1.35em; }
+
+.article-body :is(p, li) {
+  font-size: var(--text-lg);
+  line-height: 1.7;
+}
+
+/* A display step carries size + leading + tracking + weight together. In
+   markup that's the single class `text-display-sm`; in hand-written CSS all
+   four paired sub-tokens have to be read explicitly, exactly as .headline
+   does above. */
+.article-body > h2 {
+  margin-top: var(--spacing-block-sm);
+  font-size:      var(--text-display-sm);
+  line-height:    var(--text-display-sm--line-height);
+  letter-spacing: var(--text-display-sm--letter-spacing);
+  font-weight:    var(--text-display-sm--font-weight);
+}
+/* h3/h4 match the card-heading voice used by UseCases and Faq, so the blog
+   reads as the same site rather than as a bolted-on section. */
+.article-body > h3 { margin-top: 2.5rem; font-size: var(--text-xl); font-weight: 600; letter-spacing: -0.02em; }
+.article-body > h4 { margin-top: 2rem;   font-size: var(--text-lg); font-weight: 600; }
+
+/* Clears the 88px navbar when an in-page anchor or a heading link is used. */
+.article-body :is(h2, h3, h4) { scroll-margin-top: 6.5rem; }
+
+/* The reset stripped list indentation along with every other padding. */
+.article-body :is(ul, ol) { padding-left: 1.5rem; }
+.article-body ul { list-style: disc; }
+.article-body ol { list-style: decimal; }
+.article-body li + li { margin-top: 0.5rem; }
+.article-body li > :is(ul, ol) { margin-top: 0.5rem; }
+/* Numbered walkthroughs put a screenshot inside the step it belongs to. */
+.article-body li img { margin-top: 0.75rem; }
+
+/* --accent-edge, not --color-accent: full yellow under 335 links is loud, and
+   the derived edge recomputes if the accent ever changes. */
+.article-body a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--accent-edge);
+  text-underline-offset: 2px;
+  transition: text-decoration-color 0.2s ease;
+}
+.article-body a:hover { text-decoration-color: var(--color-accent); }
+
+/* 1,599 of these across the corpus — weight only, no colour shift. */
+.article-body strong { font-weight: 700; }
+.article-body em { font-style: italic; }
+
+/* Matches Quote.astro's voice: accent rule, no quote glyph. */
+.article-body blockquote { border-left: 2px solid var(--color-accent); padding-left: 1.25rem; }
+.article-body blockquote :is(p, li) { font-size: var(--text-xl); line-height: 1.55; color: var(--color-mute); }
+
+.article-body :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  padding: 0.15em 0.4em;
+  border-radius: var(--radius-chip);
+  background: color-mix(in srgb, var(--color-line) 55%, var(--color-paper));
+}
+
+/* Shiki writes an INLINE background-color on <pre class="astro-code">, and an
+   inline style beats every layered rule regardless of specificity — the same
+   trap as unlayered CSS, from the other direction. So style the box only
+   (radius, padding, scroll) and let Shiki own the fill. Don't try to recolour
+   it from here; it will look like it works until the theme changes. */
+.article-body pre {
+  padding: 1.25rem;
+  border-radius: var(--radius-card);
+  overflow-x: auto;
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+.article-body pre code { background: none; padding: 0; font-size: inherit; }
+
+.article-body hr { border: 0; border-top: 1px solid var(--color-line); margin-block: var(--spacing-block-sm); }
+
+/* Tables run up to 9 columns and the prose measure is 704px, so the scroll
+   lives on a wrapper the rehype plugin injects — a <table> cannot scroll
+   itself, and the text column must keep its measure. overscroll-behavior-x
+   for the same reason as .h-snap: a swipe past the end must not chain into
+   the browser's back gesture. */
+.article-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-x: none; }
+.article-body table { border-collapse: collapse; width: 100%; min-width: 36rem; font-size: var(--text-sm); }
+.article-body :is(th, td) {
+  border: 1px solid var(--color-line);
+  padding: 0.625rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+  line-height: 1.5;
+}
+.article-body thead th { background: color-mix(in srgb, var(--color-line) 30%, var(--color-paper)); font-weight: 600; }
+/* 113 of the header cells wrap their text in <strong>; don't double the weight. */
+.article-body :is(th, td) strong { font-weight: 600; }
+
+/* The border is not decoration: these are UI screenshots on a near-white
+   ground, and their edges dissolve into --color-paper without it. */
+.article-body img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+}
+.article-body figure { margin-top: var(--spacing-block-sm); }
+.article-body figcaption {
+  margin-top: 0.625rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  color: var(--color-mute);
+  text-align: center;
+}
+
+/* YouTube embeds. aspect-ratio on the wrapper so the iframe can be 100%/100%
+   and never letterbox. */
+.article-embed { aspect-ratio: 16 / 9; }
+.article-embed iframe { width: 100%; height: 100%; border: 0; border-radius: var(--radius-card); }
 
 } /* end @layer components */

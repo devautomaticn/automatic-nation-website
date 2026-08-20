@@ -24,7 +24,7 @@ export type Tone = 'paper' | 'ink';
 export type TextTone = 'mute' | 'dim' | 'faint';
 
 /** Container measures — see --container-* in global.css. */
-export type Width = 'page' | 'narrow' | 'prose';
+export type Width = 'page' | 'narrow' | 'prose' | 'article';
 
 /** Vertical rhythm — see --spacing-section* in global.css. */
 export type SectionSize = 'lg' | 'sm' | 'xs' | 'none';

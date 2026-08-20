@@ -1,5 +1,6 @@
 ---
-import { asset, absolute } from '../../lib/url';
+import { asset, absolute, pageUrl } from '../../lib/url';
+import { SITE } from '../../lib/site';
 
 /**
  * Every <head> tag that depends on the page. The only place a URL gets
@@ -30,7 +31,9 @@ const {
   jsonLd,
 } = Astro.props as Props;
 
-const canonical = absolute(path, Astro.site);
+// pageUrl for the page (trailing slash, matching `trailingSlash: 'always'`),
+// absolute for the image (an asset — a trailing slash would break it).
+const canonical = pageUrl(path, Astro.site);
 const image = absolute(ogImage, Astro.site);
 const blocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 ---
@@ -41,6 +44,7 @@ const blocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 
 <link rel="icon" type="image/svg+xml" href={asset('favicon.svg')} />
 <link rel="alternate icon" href={asset('favicon.ico')} />
+<link rel="alternate" type="application/rss+xml" title={`${SITE.name} — Blog`} href={asset('rss.xml')} />
 
 <meta property="og:type" content={ogType} />
 <meta property="og:url" content={canonical} />

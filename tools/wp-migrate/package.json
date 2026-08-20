@@ -1,0 +1,20 @@
+{
+  "name": "wp-migrate",
+  "private": true,
+  "type": "module",
+  "description": "One-shot importer: automaticnation.com WordPress -> src/content/blog. Deliberately a sibling package so its 8 dependencies stay out of the site's package-lock.json and out of CI's `npm ci`.",
+  "scripts": {
+    "migrate": "node src/main.mjs",
+    "migrate:refetch": "node src/main.mjs --refetch"
+  },
+  "dependencies": {
+    "p-limit": "^7.1.1",
+    "rehype-parse": "^9.0.1",
+    "rehype-remark": "^10.0.1",
+    "remark-gfm": "^4.0.1",
+    "remark-stringify": "^11.0.0",
+    "sharp": "^0.35.3",
+    "unified": "^11.0.5",
+    "yaml": "^2.8.1"
+  }
+}

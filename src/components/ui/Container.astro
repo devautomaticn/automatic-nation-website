@@ -8,7 +8,7 @@ import type { Width } from '../../lib/design';
 
 interface Props {
   as?: string;
-  /** page = 1280 (default) · narrow = 896 · prose = 704 */
+  /** page = 1280 (default) · narrow = 896 · article = 832 · prose = 704 */
   width?: Width;
   /** Horizontal inset. Off for containers nested inside another one. */
   gutter?: boolean;
@@ -21,6 +21,7 @@ const WIDTH = {
   page: 'max-w-page',
   narrow: 'max-w-narrow',
   prose: 'max-w-prose',
+  article: 'max-w-article',
 } as const;
 ---
 <Tag class:list={[WIDTH[width], 'mx-auto', gutter && 'px-gutter', className]}>

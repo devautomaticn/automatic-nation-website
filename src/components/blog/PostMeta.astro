@@ -1,0 +1,30 @@
+---
+import { formatDate, isoDate } from '../../lib/blog';
+
+/** Date + reading time, in the mono voice Metric and Eyebrow already use. */
+interface Props {
+  published: Date;
+  updated?: Date;
+  /** Minutes. Omit on cards where the estimate isn't wanted. */
+  minutes?: number;
+  class?: string;
+}
+
+const { published, updated, minutes, class: className } = Astro.props as Props;
+
+// Only worth showing when it's a real revision, not the same day as publication.
+const revised =
+  updated && updated.toISOString().slice(0, 10) !== published.toISOString().slice(0, 10)
+    ? updated
+    : undefined;
+---
+<p class:list={['font-mono text-2xs text-mute flex flex-wrap items-center gap-x-2 gap-y-1', className]}>
+  <time datetime={isoDate(published)}>{formatDate(published)}</time>
+  {minutes && <><span aria-hidden="true">·</span><span>{minutes} min read</span></>}
+  {revised && (
+    <>
+      <span aria-hidden="true">·</span>
+      <span>Updated <time datetime={isoDate(revised)}>{formatDate(revised)}</time></span>
+    </>
+  )}
+</p>

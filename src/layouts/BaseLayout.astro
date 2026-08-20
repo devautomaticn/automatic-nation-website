@@ -4,6 +4,7 @@ import Seo from '../components/seo/Seo.astro';
 import Nav from '../components/chrome/Nav.astro';
 import Footer from '../components/chrome/Footer.astro';
 import { asset } from '../lib/url';
+import type { Cta } from '../lib/design';
 
 interface Props {
   title: string;
@@ -28,6 +29,17 @@ interface Props {
   preloadImages?: readonly string[];
   nav?: boolean;
   footer?: boolean;
+  /**
+   * Chrome link overrides, forwarded to Nav and Footer.
+   *
+   * A page that does NOT contain the home page's #templates/#process/#faq
+   * sections must pass the -AWAY variants from src/lib/site.ts, or its navbar
+   * silently goes nowhere — a bare '#process' resolves against the current url.
+   * See the block comment on NAV in site.ts.
+   */
+  navLinks?: readonly { label: string; href: string }[];
+  footerLinks?: readonly { label: string; href: string }[];
+  navCta?: Cta | false;
   class?: string;
 }
 
@@ -44,6 +56,9 @@ const {
   preloadImages = [],
   nav = true,
   footer = true,
+  navLinks,
+  footerLinks,
+  navCta,
   class: className,
 } = Astro.props as Props;
 ---
@@ -65,9 +80,9 @@ const {
   {preloadImages.map(src => <link rel="preload" as="image" href={asset(src)} />)}
 </head>
 <body class={className}>
-  {nav && <Nav />}
+  {nav && <Nav links={navLinks} cta={navCta} />}
   <slot />
-  {footer && <Footer />}
+  {footer && <Footer links={footerLinks} />}
 
   <!-- Smooth scrolling. Site-wide and deliberately separate from any hero
        script: bundling them together would make every page that has no well
@@ -79,7 +94,19 @@ const {
 
   <!-- Reveal-on-scroll. Inline because it is nine lines with no imports, and
        inlining keeps it ahead of the bundled modules. The reduced-motion case
-       is handled in CSS, which unsets .reveal's initial opacity. -->
+       is handled in CSS, which unsets .reveal's initial opacity.
+
+       threshold MUST stay 0. It used to be 0.12 — "reveal once 12% of it is
+       showing" — but IntersectionObserver measures that ratio against the
+       ELEMENT, not the viewport, so for anything taller than ~8x the viewport
+       the ratio tops out below 0.12 and the callback never fires at all. The
+       element then keeps .reveal's opacity:0 forever. That silently hid all 57
+       cards in the blog index's 2025 group, with the year heading still
+       visible above the blank space.
+
+       rootMargin is what the 0.12 was reaching for: trigger when the element
+       crosses 12% up from the bottom edge of the viewport. That reads the same
+       on a normal section and, unlike a threshold, cannot become unreachable. -->
   <script is:inline>
     const _revealObserver = new IntersectionObserver((entries) => {
       for (const e of entries) {
@@ -88,7 +115,7 @@ const {
           _revealObserver.unobserve(e.target);
         }
       }
-    }, { threshold: 0.12 });
+    }, { threshold: 0, rootMargin: '0px 0px -12% 0px' });
     document.querySelectorAll('.reveal').forEach(el => _revealObserver.observe(el));
   </script>
 </body>

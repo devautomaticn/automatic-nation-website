@@ -45,3 +45,61 @@ export function faqPage(items: readonly { q: string; a: string }[]): Json {
     })),
   };
 }
+
+/** One migrated post. `url` and `image` must already be absolute — see pageUrl(). */
+export function blogPosting(post: {
+  url: string;
+  title: string;
+  description: string;
+  published: Date;
+  modified?: Date;
+  image?: string;
+}): Json {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.description,
+    url: post.url,
+    // mainEntityOfPage pins the canonical, which matters here: the posts kept
+    // their WordPress URLs, so there are legacy /blog/{slug}/ aliases pointing
+    // at them and the schema should agree with <link rel="canonical">.
+    mainEntityOfPage: { '@type': 'WebPage', '@id': post.url },
+    datePublished: post.published.toISOString(),
+    dateModified: (post.modified ?? post.published).toISOString(),
+    ...(post.image ? { image: post.image } : {}),
+    author: { '@type': 'Organization', name: SITE.name },
+    publisher: { '@type': 'Organization', name: SITE.name },
+  };
+}
+
+/** Trail for a post or the index. Absolute urls, in order, root first. */
+export function breadcrumbs(items: readonly { name: string; url: string }[]): Json {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map(({ name, url }, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name,
+      item: url,
+    })),
+  };
+}
+
+/**
+ * The listing page's post list. Emit on /blogs/ ONLY — the same one-url rule
+ * as faqPage above, for the same duplicate-content reason.
+ */
+export function blogIndex(
+  url: string,
+  posts: readonly { url: string; title: string }[],
+): Json {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: `${SITE.name} blog`,
+    url,
+    blogPost: posts.map(p => ({ '@type': 'BlogPosting', headline: p.title, url: p.url })),
+  };
+}

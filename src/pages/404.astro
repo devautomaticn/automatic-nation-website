@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/ui/Section.astro';
+import Container from '../components/ui/Container.astro';
+import Button from '../components/ui/Button.astro';
+import { NAV_AWAY, FOOTER_LINKS_AWAY, BOOKING_AWAY } from '../lib/site';
+import { href } from '../lib/url';
+
+/**
+ * Worth having now that 61 posts answer at root-level slugs: a mistyped or
+ * retired post URL lands here rather than on GitHub Pages' unbranded default.
+ */
+const book = { label: 'Book a call', href: BOOKING_AWAY.href, external: BOOKING_AWAY.external };
+---
+<BaseLayout
+  title="Page not found"
+  description="That page doesn't exist."
+  path="404/"
+  noindex
+  navLinks={NAV_AWAY}
+  footerLinks={FOOTER_LINKS_AWAY}
+  navCta={book}
+>
+  <Section size="lg" container={false}>
+    <Container width="article" class="text-center">
+      <p class="font-mono text-2xs text-mute">404</p>
+      <h1 class="mt-4 text-display-md">This page doesn't exist.</h1>
+      <p class="mt-5 text-lg text-mute">
+        It may have moved, or the link may be wrong. The blog index is a good place to pick up.
+      </p>
+      <div class="mt-block-sm flex flex-wrap gap-4 justify-center">
+        <Button href={href('blogs/')} size="md" arrow>Read the blog</Button>
+        <Button href={href('')} size="md" variant="ghost">Go home</Button>
+      </div>
+    </Container>
+  </Section>
+</BaseLayout>

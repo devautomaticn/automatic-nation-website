@@ -1,0 +1,53 @@
+---
+import { Image } from 'astro:assets';
+import PostMeta from './PostMeta.astro';
+import { href } from '../../lib/url';
+import { postPath, readingTime } from '../../lib/blog';
+import type { Post } from '../../lib/blog';
+
+/**
+ * One post in a listing.
+ *
+ * Hand-rolled rather than wrapping ui/Card.astro: the whole card is a single
+ * <a>, and Card renders its own padded <div> that would sit inside the link.
+ * The heading class stack is deliberately the one UseCases and Faq already use,
+ * so the blog reads as the same site.
+ */
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props as Props;
+const { title, description, hero, heroAlt, published, updated } = post.data;
+---
+{/* text-ink is NOT redundant. This card is rendered on paper by /blogs/ AND on
+    ink by RelatedPosts, and `tone="ink"` sets `text-paper` on the section — so
+    without an explicit colour the heading inherits white onto a white card and
+    the title vanishes. Every colour on this card is stated for that reason. */}
+<a
+  href={href(postPath(post.id))}
+  class="group flex flex-col bg-paper text-ink border border-line rounded-card overflow-hidden transition-colors hover:border-line-hi"
+>
+  {hero && (
+    <Image
+      src={hero}
+      alt={heroAlt ?? ''}
+      widths={[400, 800]}
+      sizes="(max-width: 768px) 100vw, 400px"
+      class="w-full aspect-[16/9] object-cover border-b border-line"
+      loading="lazy"
+    />
+  )}
+
+  {/* flex-1 + mt-auto on the meta: a grid row stretches every card to the
+      tallest, and only some posts have a hero, so without this the shorter
+      cards leave a ragged hole under their text. Pinning the date to the
+      bottom gives the row a common baseline whether or not there is an image. */}
+  <div class="flex flex-1 flex-col gap-3 p-5">
+    <h3 class="text-xl font-semibold tracking-[-0.02em] leading-snug group-hover:underline decoration-accent decoration-2 underline-offset-4">
+      {title}
+    </h3>
+    <p class="text-sm text-mute leading-relaxed">{description}</p>
+    <PostMeta class="mt-auto pt-2" {published} {updated} minutes={readingTime(post.body ?? '')} />
+  </div>
+</a>

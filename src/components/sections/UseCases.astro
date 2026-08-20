@@ -45,14 +45,17 @@ const { id, eyebrow, title, items, quote, link } = Astro.props as Props;
       its padding-right is dropped outright, killing the trailing gap. */}
   <div class="mt-block -mx-gutter lg:mx-0 overflow-x-auto h-snap no-scrollbar">
     <div class="flex lg:grid lg:grid-cols-4 gap-5 min-w-max lg:min-w-0 px-gutter lg:px-0">
+      {/* flex-col + mt-auto on the footer is what pins the metric and the
+          chips to the card's floor. Without it they trail whatever body copy
+          happens to be longest, and the four cards stop lining up. */}
       {items.map(item => (
-        <Card as="article" tone="ink" pad="sm" border radius class="w-[78vw] sm:w-[60vw] lg:w-auto">
-          <div class="flex items-center gap-2">
+        <Card as="article" tone="ink" pad="sm" border radius class="flex flex-col w-[78vw] sm:w-[60vw] lg:w-auto">
+          <h3 class="text-xl font-semibold tracking-[-0.02em]">{item.title}</h3>
+          <p class="mt-3 text-sm text-dim leading-relaxed">{item.body}</p>
+          <Metric class="mt-auto pt-8" value={item.metric} />
+          <div class="mt-5 flex flex-wrap items-center gap-2">
             {item.stack.map(tech => <Chip>{tech}</Chip>)}
           </div>
-          <h3 class="mt-6 text-xl font-semibold tracking-[-0.02em]">{item.title}</h3>
-          <p class="mt-3 text-sm text-dim leading-relaxed">{item.body}</p>
-          <Metric class="mt-8" value={item.metric} />
         </Card>
       ))}
     </div>

@@ -1,0 +1,130 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Container from '../components/ui/Container.astro';
+import Section from '../components/ui/Section.astro';
+import Eyebrow from '../components/ui/Eyebrow.astro';
+import PostMeta from '../components/blog/PostMeta.astro';
+import RelatedPosts from '../components/blog/RelatedPosts.astro';
+import PostCta from '../components/blog/PostCta.astro';
+import ClosingCta from '../components/sections/ClosingCta.astro';
+import { NAV_AWAY, FOOTER_LINKS_AWAY, BOOKING_AWAY, SITE } from '../lib/site';
+import { RESERVED_SLUGS, postPath, readingTime, related } from '../lib/blog';
+import type { Post } from '../lib/blog';
+import { pageUrl } from '../lib/url';
+import { blogPosting, breadcrumbs } from '../lib/jsonld';
+
+/**
+ * A migrated blog post, at the root-level URL WordPress served it on.
+ *
+ * `[slug]`, NOT `[...slug]`: a rest parameter at the root would also try to
+ * match nested routes like `lp/airtable-consulting`. One segment is the whole
+ * contract — the 61 posts are flat.
+ */
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', p => !p.data.draft);
+
+  // Astro gives a static file route priority over a dynamic one, so a page
+  // named after a post slug would shadow the post with no error at all — it
+  // would just stop being built. Fail loudly instead. This is the single most
+  // valuable line in the file, given the posts live at the root.
+  const clashes = posts.filter(p => RESERVED_SLUGS.has(p.id)).map(p => p.id);
+  if (clashes.length > 0) {
+    throw new Error(
+      `Blog slug collides with a reserved root path: ${clashes.join(', ')}. ` +
+      `Rename the post directory or update RESERVED_SLUGS in src/lib/blog.ts.`,
+    );
+  }
+
+  return posts.map(post => ({
+    params: { slug: post.id },
+    props: { post, all: posts },
+  }));
+}
+
+interface Props {
+  post: Post;
+  all: Post[];
+}
+
+const { post, all } = Astro.props as Props;
+const { Content } = await render(post);
+const { title, description, hero, heroAlt, published, updated } = post.data;
+
+const path = postPath(post.id);
+const url = pageUrl(path, Astro.site);
+const minutes = readingTime(post.body ?? '');
+
+// The -AWAY variants: this page does not contain the home page's
+// #templates/#process/#faq sections, so bare fragments would resolve against
+// this url and go nowhere. See the block comment on NAV in src/lib/site.ts.
+const book = { label: 'Book a call', href: BOOKING_AWAY.href, external: BOOKING_AWAY.external };
+---
+<BaseLayout
+  {title}
+  {description}
+  {path}
+  ogType="article"
+  article={{ published, modified: updated, author: SITE.name }}
+  jsonLd={[
+    blogPosting({ url, title, description, published, modified: updated }),
+    breadcrumbs([
+      { name: 'Home', url: pageUrl('', Astro.site) },
+      { name: 'Blog', url: pageUrl('blogs', Astro.site) },
+      { name: title, url },
+    ]),
+  ]}
+  navLinks={NAV_AWAY}
+  footerLinks={FOOTER_LINKS_AWAY}
+  navCta={book}
+>
+  <Section size="lg" container={false}>
+    <Container width="article">
+      <Eyebrow>Blog</Eyebrow>
+      <h1 class="mt-4 text-display-md">{title}</h1>
+      <p class="mt-5 text-lg text-mute leading-relaxed">{description}</p>
+      <PostMeta class="mt-6" {published} {updated} {minutes} />
+    </Container>
+
+    {hero && (
+      <Container width="article" class="mt-block-sm">
+        <Image
+          src={hero}
+          alt={heroAlt ?? ''}
+          widths={[960, 1920]}
+          sizes="(max-width: 768px) 100vw, 960px"
+          class="w-full rounded-card border border-line"
+          loading="eager"
+        />
+      </Container>
+    )}
+
+    <Container width="article" class="mt-block-sm article-body">
+      <Content />
+    </Container>
+
+    {/* Inside the Section, so it shares the article's measure and reads as the
+        close of the piece rather than a page-level band competing with the
+        ClosingCta below. */}
+    <PostCta
+      title="Want this kind of workflow built for your team?"
+      body="We design and build the automations behind it — and hand them over documented."
+      cta={{ ...book, label: 'Book a call' }}
+    />
+  </Section>
+
+  <RelatedPosts posts={related(all, post)} />
+
+  {/* id="book" is not cosmetic: BOOKING falls back to '#book', so every page
+      has to render a #book target or the nav CTA and the migrated booking
+      links are dead. Both existing pages do the same. */}
+  <ClosingCta
+    id="book"
+    eyebrow="Get started"
+    title="Let's automate the boring part."
+    body="Tell us what your team does by hand. We'll tell you what it costs to stop."
+    cta={{ ...book, label: 'Book a call' }}
+    note="No pitch deck. A working session."
+  />
+</BaseLayout>

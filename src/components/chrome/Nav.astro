@@ -1,6 +1,6 @@
 ---
 import Button from '../ui/Button.astro';
-import { BASE } from '../../lib/url';
+import { BASE, href as url } from '../../lib/url';
 import { NAV, BOOKING, SITE } from '../../lib/site';
 import type { Cta } from '../../lib/design';
 
@@ -28,7 +28,9 @@ const action = cta === undefined
     </a>
 
     <nav class="nav-links" aria-label="Main">
-      {links.map(item => <a href={item.href}>{item.label}</a>)}
+      {/* url() so a bare '#faq' is left alone (smooth-scroll.js needs it to
+          start with '#') while the '/#faq' form still picks up any base. */}
+      {links.map(item => <a href={url(item.href)}>{item.label}</a>)}
     </nav>
 
     {action && (

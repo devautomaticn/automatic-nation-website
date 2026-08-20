@@ -285,9 +285,11 @@ Most of the launch placeholders are filled. What is left:
 - **`public/og-image.png` exists** — a static 1200×630 card, no runtime generator. It uses the
   real wordmark, not a font-rendered title, so it does not depend on Space Grotesk being
   installed anywhere.
-- **The icons are the real brand mark.** `public/favicon.svg` was **Astro's stock logo** and is
-  gone; `Seo.astro` declares `favicon.ico` plus the PNGs. Don't re-add an SVG icon unless a
-  vector source for the lockup turns up — there isn't one in this repo.
+- **The icons are the site's own mark** — the same path `Nav.astro` renders in the header,
+  which is the **only vector source for it**. `public/favicon.svg` used to be Astro's stock
+  logo. The OG card uses the same mark plus the wordmark, so the header, the tab and the
+  social card are one lockup. Don't reintroduce the WordPress wordmark here: it is the old
+  logo, and a two-word lockup is an illegible smudge at the 16px a tab actually renders.
 - **All 55 images with no alt text are answered** in `tools/wp-migrate/alt-text.mjs`, which the
   importer reads on every run. 21 carry a real description; **34 are deliberately empty** —
   they are title cards whose only content is the post title, and `[slug].astro` renders that

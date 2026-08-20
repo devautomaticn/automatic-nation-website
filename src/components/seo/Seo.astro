@@ -42,11 +42,14 @@ const blocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 <link rel="canonical" href={canonical} />
 {noindex && <meta name="robots" content="noindex, nofollow" />}
 
-{/* The brand mark already in use on the live site. There is deliberately no
-    SVG icon: the one that shipped here was Astro's stock logo, and the real mark
-    is a raster lockup with no vector source in this repo. ico first for the
-    browsers that only probe /favicon.ico by convention, PNGs for the rest.
+{/* The site's own mark — the same path Nav.astro renders in the header, which
+    is the only vector source for it. public/favicon.svg used to be Astro's stock
+    logo; it is now this. The SVG carries a prefers-color-scheme rule so the mark
+    inverts on a dark tab strip, which a PNG cannot do — hence the ico and PNGs
+    are ink-on-paper tiles, safe on either background, and serve as the fallback
+    for browsers that ignore SVG icons.
     An HTML comment here would ship on all 140 pages; this one does not. */}
+<link rel="icon" type="image/svg+xml" href={asset('favicon.svg')} />
 <link rel="icon" href={asset('favicon.ico')} sizes="16x16 32x32 48x48" />
 <link rel="icon" type="image/png" href={asset('favicon-32.png')} sizes="32x32" />
 <link rel="icon" type="image/png" href={asset('favicon-192.png')} sizes="192x192" />

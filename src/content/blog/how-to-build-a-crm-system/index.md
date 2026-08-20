@@ -62,10 +62,10 @@ The heart of your blueprint is a clear map of how your business _actually_ works
 
 **Actionable Insight:** The best way to do this is to get your team in a room with a whiteboard or a stack of sticky notes. Ask them to walk you through their day, step-by-step.
 
-- **Lead Generation:** Where do leads come from? A website form? A booth at a trade show? A referral? **Action:** Write down each source and what happens _immediately_ after a lead comes in. _Example: “A lead from the ‘Contact Us’ form is emailed to_ [_sales@mycompany.com_](mailto:sales@mycompany.com)_.”_
+- **Lead Generation:** Where do leads come from? A website form? A booth at a trade show? A referral? **Action:** Write down each source and what happens _immediately_ after a lead comes in. _Example: “A lead from the ‘Contact Us’ form is emailed to_ [_mike@automaticnation.com_](mailto:mike@automaticnation.com)_.”_
 - **Sales Pipeline:** What are the real stages a deal moves through? Is it something like “New Lead > Qualified > Proposal Sent > Negotiation > Closed Won”? Get specific. **Action:** List every stage and the key action needed to move a deal to the next one. _Example: To move from “Qualified” to “Proposal Sent,” a sales rep must complete a discovery call and log their notes._
 - **Customer Onboarding:** Once a deal is won, who takes over? What’s the handoff process? **Action:** Document the exact handoff. _Example: “Sales rep updates deal to ‘Closed Won’ and assigns a task to the onboarding specialist.”_
-- **Ongoing Support:** How do you handle questions or problems? Is there a ticketing system or a dedicated support email? **Action:** Map the flow. _Example: “Customer emails_ [_support@mycompany.com_](mailto:support@mycompany.com)_, which creates a ticket in Help Scout.”_
+- **Ongoing Support:** How do you handle questions or problems? Is there a ticketing system or a dedicated support email? **Action:** Map the flow. _Example: “Customer emails_ [_mike@automaticnation.com_](mailto:mike@automaticnation.com)_, which creates a ticket in Help Scout.”_
 
 This exercise isn’t just about documentation; it’s about finding the exact moments where your custom CRM can add the most value through automation and clear data.
 

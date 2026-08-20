@@ -1,0 +1,13 @@
+---
+import RedirectStub from '../layouts/RedirectStub.astro';
+import { pageUrl } from '../lib/url';
+
+/**
+ * Legacy WordPress URL, indexed today with no equivalent on this site.
+ * The lead-magnet library has no equivalent; the blog is the closest thing.
+ *
+ * A stub rather than a 404 because these are in the live sitemap: a 404 throws
+ * away whatever equity they carry, and Pages cannot serve a 301.
+ */
+---
+<RedirectStub to={pageUrl('blogs/', Astro.site)} title="Resources" />

@@ -74,12 +74,12 @@ export const useCases = {
       metric: 'Customer verified before a word is sent',
     },
   ] satisfies UseCase[],
-  // FILL IN BEFORE LAUNCH
   quote: {
-    text: '[CLIENT QUOTE — to be filled in: one sentence on the time or money saved.]',
-    name: '[Name]',
-    role: '[Role]',
-    company: '[Company]',
+    text:
+      'I had the privilege of working with Mike on a project that involved automating tasks using Airtable and other automation software. From start to finish, the experience was nothing short of remarkable.',
+    name: 'Ryan Alexander',
+    role: 'CEO',
+    company: 'Permaplant',
   },
 };
 
@@ -100,8 +100,9 @@ export const faq = {
   items: [
     {
       q: 'What does a project typically cost?',
-      // FILL IN BEFORE LAUNCH
-      a: 'Pricing is fixed and scoped up front — no hourly billing, no surprises. Most first systems land in the [FILL IN RANGE] range depending on the number of integrations. You get the number before any work starts.',
+      // No public range on purpose: the number depends on how many systems
+      // are in scope, and a headline figure invites the wrong comparison.
+      a: 'Pricing is fixed and scoped up front — no hourly billing, no surprises. What it costs depends on how many systems and integrations are in scope, so we price it after the first call. You get the number in writing before any work starts.',
     },
     {
       q: 'What if we already have something half-built?',

@@ -1,0 +1,13 @@
+---
+import RedirectStub from '../layouts/RedirectStub.astro';
+import { pageUrl } from '../lib/url';
+
+/**
+ * Legacy WordPress URL, indexed today with no equivalent on this site.
+ * The company story is not a separate page here; the home page carries it.
+ *
+ * A stub rather than a 404 because these are in the live sitemap: a 404 throws
+ * away whatever equity they carry, and Pages cannot serve a 301.
+ */
+---
+<RedirectStub to={pageUrl('', Astro.site)} title="About us" />

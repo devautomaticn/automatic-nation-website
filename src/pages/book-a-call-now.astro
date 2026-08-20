@@ -1,0 +1,15 @@
+---
+import RedirectStub from '../layouts/RedirectStub.astro';
+import { pageUrl } from '../lib/url';
+
+/**
+ * Legacy WordPress URL, indexed today with no equivalent on this site.
+ * Goes to the home page's #book section, NOT straight to cal.com: an
+ * external canonical would hand the equity of an indexed page to another
+ * domain, and the CTA there opens the same booking link anyway.
+ *
+ * A stub rather than a 404 because these are in the live sitemap: a 404 throws
+ * away whatever equity they carry, and Pages cannot serve a 301.
+ */
+---
+<RedirectStub to={`${pageUrl('', Astro.site)}#book`} title="Book a call" />

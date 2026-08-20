@@ -1,0 +1,20 @@
+---
+import RedirectStub from '../../layouts/RedirectStub.astro';
+import { pageUrl } from '../../lib/url';
+
+/**
+ * The two WordPress lead magnets, which have no page here.
+ *
+ * Seven in-content links pointed at these two URLs and were dropped by the
+ * migration (tools/wp-migrate/out/links-unresolved.tsv). The stubs mean the
+ * URLs themselves still resolve for anyone arriving from search or an old
+ * link; rebuilding the actual magnets is a separate content decision.
+ */
+export function getStaticPaths() {
+  return [
+    { params: { slug: 'airtable-best-practices-checklist' } },
+    { params: { slug: 'step-by-step-guide-to-automating-project-task-creation' } },
+  ];
+}
+---
+<RedirectStub to={pageUrl('blogs/', Astro.site)} title="Resources" />

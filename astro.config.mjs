@@ -27,10 +27,19 @@ export default defineConfig({
 
   integrations: [
     sitemap({
-      // Keep the legacy /blog/{slug}/ meta-refresh stubs out: they are noindex
-      // and submitting them would ask Google to crawl 61 pages whose only job
-      // is to point at a URL already in the sitemap.
-      filter: page => !new URL(page).pathname.startsWith('/blog/'),
+      // Keep every meta-refresh stub out: they are noindex, and submitting them
+      // would ask Google to crawl pages whose only job is to point at a URL the
+      // sitemap already lists. Covers the 61 legacy /blog/{slug}/ aliases and
+      // the 14 WordPress URLs that have no equivalent here.
+      //
+      // These must stay in sync with the stub routes under src/pages/ — a stub
+      // that leaks into the sitemap is not a build error, just a bad signal.
+      filter: page => {
+        const { pathname } = new URL(page);
+        const PREFIXES = ['/blog/', '/testimonials/', '/resources/', '/category/', '/author/'];
+        const EXACT = ['/about-us/', '/book-a-call-now/', '/training-sessions/', '/resource/'];
+        return !PREFIXES.some(p => pathname.startsWith(p)) && !EXACT.includes(pathname);
+      },
     }),
   ],
 

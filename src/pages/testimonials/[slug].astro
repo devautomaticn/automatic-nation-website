@@ -1,0 +1,19 @@
+---
+import RedirectStub from '../../layouts/RedirectStub.astro';
+import { pageUrl } from '../../lib/url';
+
+/**
+ * The five WordPress testimonial pages. Each was its own indexed URL; here the
+ * social proof lives inline on the home page, so they all point at it.
+ */
+export function getStaticPaths() {
+  return [
+    { params: { slug: 'isaac-perdomo-ceo-ozer' } },
+    { params: { slug: 'gabe-salinas-cto-home-sec' } },
+    { params: { slug: 'gabe-salinas-cto-home-sec-2' } },
+    { params: { slug: 'ryan-alexander-ceo-permaplant' } },
+    { params: { slug: 'coo-jspa-office' } },
+  ];
+}
+---
+<RedirectStub to={pageUrl('', Astro.site)} title="Testimonials" />

@@ -18,9 +18,11 @@ export const RESERVED_SLUGS: ReadonlySet<string> = new Set([
   // real routes today
   'index', 'blog', 'blogs', 'lp', '404', 'rss.xml', 'robots.txt',
   'sitemap-index.xml', 'sitemap-0.xml',
-  // WordPress pages not migrated in this pass — see the plan's out-of-scope list
+  // Legacy WordPress URLs, now real routes again as redirect stubs. They were
+  // reserved before the stubs existed; now they are reserved because a static
+  // route genuinely occupies each of these names.
   'about-us', 'book-a-call', 'book-a-call-now', 'training-sessions',
-  'resource', 'resources', 'testimonials',
+  'resource', 'resources', 'testimonials', 'category', 'author',
 ]);
 
 /** Path for a post, with the trailing slash WordPress served. No leading slash — `pageUrl`/`href` add it. */

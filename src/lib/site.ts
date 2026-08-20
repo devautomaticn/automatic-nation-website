@@ -10,14 +10,15 @@ export const SITE = {
   email: 'hello@automaticnation.com',
   /** Set once a real profile exists; the footer icon is hidden while it's empty. */
   linkedin: '',
-  /** Filled in before launch — see [CITY] in the footer. */
-  city: '',
+  city: 'Buenos Aires',
 } as const;
 
-// ── FILL IN BEFORE LAUNCH ───────────────────────────────────────────────
-/** Scheduling link for every "Book a call" CTA (Calendly, Cal.com, …). */
-const BOOKING_URL = '';
-// ────────────────────────────────────────────────────────────────────────
+/**
+ * Scheduling link for every "Book a call" CTA. This is the same cal.com
+ * event the WordPress site booked into, so migrated /book-a-call-now/
+ * traffic lands exactly where it used to.
+ */
+const BOOKING_URL = 'https://cal.com/mike-simmons/45min';
 
 /**
  * One definition of where a CTA points. While BOOKING_URL is empty every CTA

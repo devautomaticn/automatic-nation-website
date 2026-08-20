@@ -14,17 +14,17 @@ Navigating Airtable’s changes log is simple.
 
 1. First, go to the desired base and table (within the Data layer -not interfaces)
 
-   ![](./01.webp)
+   ![The base header with the Data tab selected, alongside Automations, Interfaces and Forms.](./01.webp)
 
 2. Then, select the record. Expand it by clicking a field and pressing the spacebar or using the expand icon.
 
-   ![](./02.webp)
+   ![A grid row with the expand-record button highlighted — the arrows that appear on hover, just left of the record name.](./02.webp)
 
 3. Next, choose “Revision history” from the dropdown to view logs.
 
-![](./03.webp)
+![An expanded record with the activity dropdown open, listing All activity, Revision history, All comments, Record comments, Comments on attachments and Comments with attachments, with Revision history ticked.](./03.webp)
 
-![](./04.webp)
+![The revision history panel of an expanded record, showing a two-week retention notice and two edits to the Name field, the most recent replacing Test Example with Test Example 2.](./04.webp)
 
 ## Plan Limitations
 

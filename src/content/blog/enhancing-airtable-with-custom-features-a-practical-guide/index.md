@@ -5,7 +5,7 @@ description: Learn how to enhance your Airtable experience by using Tampermonkey
 published: 2025-04-08
 updated: 2025-08-05
 hero: ./hero.webp
-heroAlt: ""
+heroAlt: "Video thumbnail: a browser showing an Airtable interface page of colour-coded record panels, with the presenter's webcam inset in the corner."
 wpId: 967
 ---
 

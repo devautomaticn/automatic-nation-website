@@ -31,10 +31,10 @@ Airtable will allow you to either (i) Generate text; or (ii) Suggest records to 
 
 Whilst the latter will create a linked record field, where the AI will be suggesting what record(s) to link to the record you are working on based on the context provided from specific fields you’ll be selecting, the former will automatically generate text for you depending on a given template or prompt.\
 For suggesting records, the configuration will look like this:\
-![](./03.webp)
+![A Link to Clients field with 'Use AI to show top matches when selecting a record' switched on, which reveals field pickers for both the Contacts and the Clients table.](./03.webp)
 
 For generating text, the options will be these:\
-![](./04.webp)
+![A Long text field with 'Generate values with AI' switched on, offering a choice between starting from a template and starting from scratch.](./04.webp)
 
 If you’d like to go with a template, Airtable will provide several different options as shown below!\
 ![Pre defined Airtable prompts](./05.webp)

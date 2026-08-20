@@ -20,7 +20,7 @@ Have you ever wanted to organize your Airtable data visually, making it easier t
 3\. **Select a Field to Group By**: Choose the field whose values will determine your groups. For example, group tasks by “Status” to see tasks in categories like “To Do,” “In Progress,” and “Complete.” Or, group sales by “Region” to analyze performance geographically.
 
 4\. **Customize Your Groups (Optional)**: You can collapse groups by clicking the small arrow next to a group header, sort records within groups by clicking the sorting option, or add multiple group levels to nest groups. For instance, group by “Region” first, then by “Salesperson.”\
-![](./01.webp)
+![The Group by panel with two levels configured, Status and then Assignee, each ordered first to last.](./01.webp)
 
 **Why the Group Feature Is Useful**
 

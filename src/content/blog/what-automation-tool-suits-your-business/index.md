@@ -5,7 +5,7 @@ description: Learn about the differences between the most powerful automation
 published: 2025-04-07
 updated: 2025-08-05
 hero: ./hero.webp
-heroAlt: ""
+heroAlt: "Title card carrying the logos of the three tools the post compares: Zapier, Make and n8n."
 wpId: 952
 ---
 

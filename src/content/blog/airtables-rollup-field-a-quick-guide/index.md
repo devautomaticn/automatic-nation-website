@@ -19,13 +19,13 @@ Whether you need to total expenses for a project, calculate an average rating fo
 1\. **Ensure You Have a Linked Record Field**: Rollup Fields work by aggregating data from linked records. Start by making sure your table has a **Linked Record Field** connecting it to another table. For example, a **Projects** table linked to a **Tasks** table.
 
 2\. **Add a Rollup Field**: In your table, click the “+” button to add a new field and select **Rollup** as the field type.\
-![](./01.webp)
+![The add-field menu in a Projects table with 'roll' typed into the search box and the Rollup field type highlighted in the results.](./01.webp)
 
 3\. **Choose the Linked Field**: Select the **Linked Record Field** that connects your table to another table.\
-![](./02.webp)
+![The rollup configuration with the Tasks table chosen as the rollup source.](./02.webp)
 
 4\. **Select the Field to Roll Up**: Choose the specific field from the linked table that you want to summarize. For example, if rolling up tasks in a project, you might select a **“Task Duration”** field to calculate total time spent.\
-![](./03.webp)
+![The rollup configuration with Task Duration in hours chosen as the field to roll up.](./03.webp)
 
 5\. **Apply a Function**: Airtable offers built-in functions like:
 
@@ -38,15 +38,15 @@ Whether you need to total expenses for a project, calculate an average rating fo
 • ARRAYJOIN(values, “, “): Lists all values as a text string.
 
 • COUNTALL(values): Counts how many linked records exist.\
-![](./04.webp)
+![The rollup configuration with SUM(values) entered as the aggregation formula.](./04.webp)
 
 6\. **Add an Optional Condition**: You can filter which records get included in the rollup. For example, only sum completed tasks by setting {Status} = “Complete”.\
-![](./05.webp)
+![The rollup configuration with record conditions switched on, limiting the rollup to linked tasks whose Status is Complete.](./05.webp)
 
 7\. **Save the Field**: Airtable will automatically calculate the rollup based on the linked records.\
-![](./06.webp)
+![The Tasks table showing three completed tasks linked to projects, with durations of 15, 1 and 5 hours.](./06.webp)
 
-![](./07.webp)
+![The Projects table with the finished rollup column, totalling 15 hours for Project A, 6 for Project B and 0 for Project C.](./07.webp)
 
 #### **&#x20;Why Rollup Fields Are Useful**
 

@@ -22,7 +22,7 @@ The common challenge with the auto ‘Created Time’ field is its rigidity. Onc
   - Automatically populates today’s date in the field, simulating the behavior of the ‘Created Date’.
   - Allows manual adjustment to the date, making it possible to backdate entries or correct them as needed, thereby offering the flexibility missing in the auto created date.
 
-![](./01.webp)
+![A Date field configuration with the default option switched on and set to Current date.](./01.webp)
 
 By implementing this approach in Airtable, you provide your team with a tool that naturally adapts to the practical needs of data entry, without compromising on the ease of use and automation that Airtable’s fields typically offer.
 

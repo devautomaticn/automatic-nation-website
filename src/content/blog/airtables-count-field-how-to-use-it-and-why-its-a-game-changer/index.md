@@ -21,7 +21,7 @@ The Count field in Airtable is a simple but powerful tool. It allows you to coun
 - Count tasks where {Status} = “Complete”; AND
 - Only include records with {Priority} = “High”.
 
-![](./01.webp)
+![A Count field named Complete & High Priority Tasks, counting linked Tasks records filtered to those where Status is Complete and Priority is High.](./01.webp)
 
 The Count field updates dynamically as records change in the linked table.
 

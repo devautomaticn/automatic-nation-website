@@ -17,7 +17,7 @@ The **DATETIME\_DIFF()** function is a fundamental tool in Airtable to compute d
 
 Below you’ll find the supported units -do note that you can use the specifier or it’s abbreviation, and both will work!
 
-![](./01.webp)
+![Reference table pairing each unit specifier with its abbreviation: milliseconds is ms, seconds is s, minutes is m, hours is h, days is d, weeks is w, months is a capital M, quarters is a capital Q and years is y.](./01.webp)
 
 ## Accurate Calculations with Custom Formulas
 
@@ -32,7 +32,7 @@ These formulas can be fine-tuned depending on the specificity of your requiremen
 
 To ensure that your results display decimals for a more precise calculation, you will need to configure the formatting settings of your formula field in Airtable. Navigate to the formula field settings and select the amount of decimal places to suit your needs.
 
-![](./02.webp)
+![The Formatting tab of a Months (decimal) formula field, with Decimal places set to 2 so the result keeps two decimals instead of rounding to a whole month.](./02.webp)
 
 ## Implementing Advanced Date Calculations
 

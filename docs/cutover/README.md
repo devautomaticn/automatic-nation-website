@@ -85,7 +85,8 @@ y se hace **antes** del cutover: GitHub → Settings de la organización → Pag
 
 ## 2. Bloqueadores de contenido
 
-El build pasa, pero el sitio sale a producción diciendo cosas que no son.
+> **Estado: 6 de 7 cerrados** (commits `c0a5da0` y `9a5eb2b`). Queda solo el
+> `og-image.png`. La tabla se conserva como registro de qué se decidió.
 
 | # | Qué | Dónde | Impacto |
 |---|---|---|---|
@@ -103,6 +104,9 @@ mientras esté vacío. Es degradación intencional.
 ---
 
 ## 3. URLs que se van a romper
+
+> **Estado: cerrado** (commit `c0a5da0`). Las 14 URLs responden con `RedirectStub`
+> y están excluidas del sitemap. `/feed/` se dejó fuera a propósito — ver abajo.
 
 Los 61 posts están cubiertos (coinciden exactos). Lo que **no** tiene equivalente:
 
@@ -215,18 +219,19 @@ Mitigación, en orden de importancia:
 
 ### Fase B — Cerrar los gaps (día −7 a −1)
 
-5. Rellenar los 6 bloqueadores de contenido de §2.
-6. Crear los stubs de las 15 URLs de §3.
+5. ~~Rellenar los bloqueadores de contenido de §2~~ — hecho salvo `og-image.png`.
+6. ~~Crear los stubs de las URLs de §3~~ — hecho, 14 stubs.
 7. `npm run check && npm run build && npm run preview` — recorrer la home, un post,
    `/blogs/`, `/lp/airtable-consulting/`, el 404, y un par de stubs.
 
 ### Fase C — Push (día −1)
 
-8. Commitear **todo** lo untracked de §1.1 y pushear:
+8. ~~Commitear todo lo untracked de §1.1~~ — hecho, commit `b650233`, en la rama
+   `feat/wp-migration-cutover`. Falta **mergear a `main` y pushear**:
    ```bash
-   git add -A
-   git commit -m "feat: migrate 61 WordPress posts and prepare apex-domain cutover"
-   git push origin main
+   git checkout main
+   git merge feat/wp-migration-cutover
+   git push origin main      # esto dispara el deploy
    ```
    Ojo: la cuenta activa de `gh` es `mangoneLawFirm`; el repo es de `devautomaticn`.
    Comprobar que el push tiene permisos antes de necesitarlo.

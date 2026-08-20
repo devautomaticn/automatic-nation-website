@@ -261,29 +261,41 @@ Design intent — motion timings, tile treatment, grid pitch — is specified in
 
 ## Unfinished copy
 
-Intentional placeholders, not bugs — but they must be filled before a real launch:
+Most of the launch placeholders are filled. What is left:
 
-- `BOOKING_URL = ''` in `src/lib/site.ts`. Every CTA falls back to `#book` while it's empty —
-  which works only because nothing hardcodes `#book` on its own. Keep it that way.
-- `SITE.linkedin` and `SITE.city` in the same file. The footer hides the LinkedIn icon
-  entirely until a real URL exists, rather than linking to `#`.
-- The client quote in `src/data/landings/home.ts` (`[CLIENT QUOTE …]`, `[Name]`, `[Role]`,
-  `[Company]`) and `[FILL IN RANGE]` in the pricing FAQ.
 - `public/og-image.png` is referenced by the OG tags but **does not exist**, so every social
-  card 404s today — now across 64 pages, not 2. Ship a static 1200×630 PNG; don't add a
-  runtime OG generator.
-- **55 migrated images have no alt text** — 19 of the 79 body images, plus all 36 heroes.
-  `tools/wp-migrate/out/alt-todo.tsv` is the authoritative list; answers go in
-  `tools/wp-migrate/alt-text.mjs`, then re-run the migration. `rehype-prose.ts` also warns
-  during a build, but only on a *cold* markdown render — Astro caches rendered markdown and
-  `astro check` warms that cache, so `npm run check && npm run build` prints nothing. Trust
-  the TSV, not the build log.
-- **`how-to-build-a-crm-system` ships placeholder contact details** in live copy
-  (`sales@mycompany.com`, `support@mycompany.com`), inherited from WordPress.
+  card 404s today — across 64 pages, not 2. Ship a static 1200×630 PNG; don't add a
+  runtime OG generator. **This is the last thing blocking a clean launch.**
+- `SITE.linkedin` in `src/lib/site.ts`. The footer hides the icon entirely until a real URL
+  exists, rather than linking to `#`. Safe to leave empty.
 - **7 in-content links were dropped**, all pointing at the two `/resources/` lead magnets that
-  have no page here. See `tools/wp-migrate/out/links-unresolved.tsv`.
-- These live WordPress URLs have **no equivalent here and will 404 at cutover**: `/about-us/`,
-  `/training-sessions/`, `/book-a-call-now/`, `/resource/`, two `/resources/{slug}/` lead
-  magnets, and 5 `/testimonials/{slug}/`. They are in the live sitemap today.
+  have no page here. See `tools/wp-migrate/out/links-unresolved.tsv`. The URLs now answer with
+  a redirect stub, but the magnets themselves were not rebuilt, so the links stay unwritten.
 - `tools/wp-migrate/out/triage.md` lists the 12 posts under 400 words and the 25 with no hero
   image — a content decision, not a bug.
+
+### Settled, so don't "fix" them back
+
+- **`BOOKING_URL` is `https://cal.com/mike-simmons/45min`** — the same cal.com event the
+  WordPress site booked into. The `#book` fallback still exists and every page still renders
+  a `#book` target, because the footer's Contact link and the migrated in-content links both
+  point at it.
+- **The pricing FAQ carries no number, on purpose.** It explains that the figure comes after
+  the first call. Re-adding a public range is a business decision, not a missing value.
+- **The home quote is Ryan Alexander's**, carried over verbatim from the live
+  `/testimonials/ryan-alexander-ceo-permaplant/` page.
+- **`SITE.city` is Buenos Aires.**
+- **All 55 images with no alt text are answered** in `tools/wp-migrate/alt-text.mjs`, which the
+  importer reads on every run. 21 carry a real description; **34 are deliberately empty** —
+  they are title cards whose only content is the post title, and `[slug].astro` renders that
+  same title as the `<h1>` directly above them, so alt text would make a screen reader say it
+  twice. The long version is the comment in `alt-text.mjs`. Note `rehype-prose.ts` only warns
+  on a *cold* markdown render: `astro check` warms the cache, so verify with
+  `rm -rf .astro && npm run build`.
+- **The 14 orphaned WordPress URLs are redirect stubs**, not 404s — `/about-us/`,
+  `/book-a-call-now/`, `/training-sessions/`, `/resource/`, `/resources/` and its two lead
+  magnets, the five `/testimonials/`, `/category/blog/` and `/author/admin/`. They are
+  excluded from the sitemap by the filter in `astro.config.mjs`, which **must stay in sync
+  with the stub routes** — a stub that leaks into the sitemap is not a build error.
+  `/feed/` is deliberately NOT stubbed: a meta-refresh cannot move an RSS reader, so a stub
+  there would only look like a fix. See `docs/cutover/README.md` §3.

@@ -42,8 +42,15 @@ const blocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 <link rel="canonical" href={canonical} />
 {noindex && <meta name="robots" content="noindex, nofollow" />}
 
-<link rel="icon" type="image/svg+xml" href={asset('favicon.svg')} />
-<link rel="alternate icon" href={asset('favicon.ico')} />
+{/* The brand mark already in use on the live site. There is deliberately no
+    SVG icon: the one that shipped here was Astro's stock logo, and the real mark
+    is a raster lockup with no vector source in this repo. ico first for the
+    browsers that only probe /favicon.ico by convention, PNGs for the rest.
+    An HTML comment here would ship on all 140 pages; this one does not. */}
+<link rel="icon" href={asset('favicon.ico')} sizes="16x16 32x32 48x48" />
+<link rel="icon" type="image/png" href={asset('favicon-32.png')} sizes="32x32" />
+<link rel="icon" type="image/png" href={asset('favicon-192.png')} sizes="192x192" />
+<link rel="apple-touch-icon" href={asset('favicon-180.png')} />
 <link rel="alternate" type="application/rss+xml" title={`${SITE.name} — Blog`} href={asset('rss.xml')} />
 
 <meta property="og:type" content={ogType} />

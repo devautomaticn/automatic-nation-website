@@ -263,9 +263,6 @@ Design intent — motion timings, tile treatment, grid pitch — is specified in
 
 Most of the launch placeholders are filled. What is left:
 
-- `public/og-image.png` is referenced by the OG tags but **does not exist**, so every social
-  card 404s today — across 64 pages, not 2. Ship a static 1200×630 PNG; don't add a
-  runtime OG generator. **This is the last thing blocking a clean launch.**
 - `SITE.linkedin` in `src/lib/site.ts`. The footer hides the icon entirely until a real URL
   exists, rather than linking to `#`. Safe to leave empty.
 - **7 in-content links were dropped**, all pointing at the two `/resources/` lead magnets that
@@ -285,6 +282,12 @@ Most of the launch placeholders are filled. What is left:
 - **The home quote is Ryan Alexander's**, carried over verbatim from the live
   `/testimonials/ryan-alexander-ceo-permaplant/` page.
 - **`SITE.city` is Buenos Aires.**
+- **`public/og-image.png` exists** — a static 1200×630 card, no runtime generator. It uses the
+  real wordmark, not a font-rendered title, so it does not depend on Space Grotesk being
+  installed anywhere.
+- **The icons are the real brand mark.** `public/favicon.svg` was **Astro's stock logo** and is
+  gone; `Seo.astro` declares `favicon.ico` plus the PNGs. Don't re-add an SVG icon unless a
+  vector source for the lockup turns up — there isn't one in this repo.
 - **All 55 images with no alt text are answered** in `tools/wp-migrate/alt-text.mjs`, which the
   importer reads on every run. 21 carry a real description; **34 are deliberately empty** —
   they are title cards whose only content is the post title, and `[slug].astro` renders that

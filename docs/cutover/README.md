@@ -1,6 +1,6 @@
 # Cutover: WordPress → Astro, en automaticnation.com
 
-Estado verificado el 2026-08-20 contra el sitio en vivo y contra este repo.
+Estado verificado el 2026-08-23 contra el sitio en vivo y contra este repo.
 
 - **Hoy:** WordPress en GoDaddy Managed WP (`160.153.0.120`), detrás del Cloudflare
   de GoDaddy. DNS en GoDaddy (`ns63/ns64.domaincontrol.com`). TTL del A de apex: 3600.
@@ -20,8 +20,8 @@ Verificado, no hace falta volver a mirarlo:
 
 | Check | Resultado |
 |---|---|
-| `npm run check` | 0 errores, 0 warnings, 0 hints (54 archivos) |
-| `npm run build` | 126 páginas, sin errores |
+| `npm run check` | 0 errores, 0 warnings, 0 hints (63 archivos) |
+| `npm run build` | 140 páginas, sin errores |
 | Slugs de posts live vs `src/content/blog/` | 61 = 61, coinciden exactos, cero drift |
 | Trampa del BASE_URL (`//` en el HTML construido) | limpio, cero ocurrencias |
 | Canonicals con trailing slash | correctos en home, post, `/blogs/` y `/lp/` |
@@ -38,30 +38,28 @@ Verificado, no hace falta volver a mirarlo:
 
 Estos impiden que el sitio funcione. No son opinables.
 
-### 1.1 La migración entera está sin commitear — BLOQUEADOR #1
+### 1.1 ~~La migración entera está sin pushear~~ — CERRADO el 2026-08-23
 
-13 rutas están untracked, incluyendo todo lo que hace que esto sea el sitio nuevo:
+`feat/wp-migration-cutover` mergeada a `main` en fast-forward y pusheada:
+`dfbe815..f00bdea`. El workflow *Deploy to GitHub Pages* terminó en verde
+(run `32662222069`) y los 61 posts responden ya desde Pages.
 
+Por qué era un bloqueador, que sigue siendo cierto para cualquier cambio futuro:
+el workflow hace `actions/checkout`, o sea construye **lo que está en el remoto**,
+no lo que tienes en disco.
+
+**El push necesita la cuenta `devautomaticn`.** Comprobado: `mangoneLawFirm` tiene
+`push: false` sobre este repo y el push devuelve 403. Antes de pushear:
+
+```bash
+gh auth switch -u devautomaticn
 ```
-public/CNAME              src/content/            (los 61 posts, 5.9M)
-src/content.config.ts     src/pages/[slug].astro  (la ruta de los posts)
-src/pages/blogs.astro     src/pages/blog/         (los 61 stubs legacy)
-src/pages/404.astro       src/pages/rss.xml.ts
-src/lib/blog.ts           src/lib/rehype-prose.ts
-src/components/blog/      src/layouts/RedirectStub.astro
-tools/
-```
 
-Más 6 commits locales sin pushear.
+### 1.2 ~~El dominio custom no está puesto en GitHub Pages~~ — CERRADO el 2026-08-23
 
-El workflow hace `actions/checkout` — construye **lo que está en el remoto**, no lo
-que tienes en disco. Si hicieras push del estado actual, GitHub construiría un sitio
-sin blog, sin CNAME y sin 404. Nada de `dist/` que verificaste arriba existiría.
-
-`tools/` aporta solo 14 archivos al commit (`node_modules` está ignorado), así que
-no hay problema de tamaño.
-
-### 1.2 El dominio custom no está puesto en GitHub Pages
+Pages ya devuelve `"cname": "automaticnation.com"`. `https_enforced` pasó solo a
+`false`, que es lo correcto: el certificado no puede emitirse hasta que el DNS
+apunte a Pages. Se activa en la Fase D, paso 16.
 
 `GET /repos/devautomaticn/automatic-nation-website/pages` devuelve `"cname": null`
 y `html_url: https://devautomaticn.github.io/automatic-nation-website/`.
@@ -71,8 +69,21 @@ Es decir: Pages sirve hoy en el **subpath de proyecto**. El build nuevo no tiene
 contra la raíz del dominio y dan 404. **El sitio solo funciona con el dominio custom
 puesto.**
 
-Commitear `public/CNAME` lo configura automáticamente en el primer deploy — pero
-conviene saber por qué, y tiene una consecuencia de preview (ver §4).
+**Corrección — la versión anterior de este documento decía esto mal.** Afirmaba que
+commitear `public/CNAME` configura el dominio automáticamente en el primer deploy.
+Es **falso con `build_type: workflow`**. Comprobado el 2026-08-23: tras el deploy en
+verde, el fichero `CNAME` sí se servía (`curl …/CNAME` → `automaticnation.com`) pero
+el ajuste de Pages seguía en `"cname": null`. Ese auto-set solo ocurre con el deploy
+clásico por rama, no con GitHub Actions. Hay que ponerlo a mano, en
+**Settings → Pages → Custom domain** o por API:
+
+```bash
+gh api -X PUT repos/devautomaticn/automatic-nation-website/pages \
+  -f cname='automaticnation.com'
+```
+
+Tiene además una consecuencia de preview (ver §4): con el dominio custom puesto,
+`devautomaticn.github.io/automatic-nation-website/` pasa a devolver **301** al apex.
 
 ### 1.3 El dominio no está verificado en GitHub
 
@@ -226,19 +237,12 @@ Mitigación, en orden de importancia:
 
 ### Fase C — Push (día −1)
 
-8. ~~Commitear todo lo untracked de §1.1~~ — hecho, commit `b650233`, en la rama
-   `feat/wp-migration-cutover`. Falta **mergear a `main` y pushear**:
-   ```bash
-   git checkout main
-   git merge feat/wp-migration-cutover
-   git push origin main      # esto dispara el deploy
-   ```
-   Ojo: la cuenta activa de `gh` es `mangoneLawFirm`; el repo es de `devautomaticn`.
-   Comprobar que el push tiene permisos antes de necesitarlo.
-9. Esperar a que el workflow *Deploy to GitHub Pages* termine en verde.
-10. En **Settings → Pages** del repo, confirmar que *Custom domain* dice
-    `automaticnation.com` (el CNAME lo pone solo). El DNS check fallará todavía —
-    es lo esperado, el DNS aún apunta a GoDaddy.
+8. ~~Mergear a `main` y pushear~~ — hecho, `dfbe815..f00bdea`.
+9. ~~Esperar a que el workflow *Deploy to GitHub Pages* termine en verde~~ — hecho,
+   run `32662222069`.
+10. ~~Poner *Custom domain* = `automaticnation.com`~~ — hecho por API. **No se pone
+    solo**, ver §1.2. El DNS check falla todavía: es lo esperado, el DNS aún apunta
+    a GoDaddy.
 
 ### Fase D — Cutover DNS (día 0)
 

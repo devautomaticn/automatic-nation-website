@@ -304,3 +304,18 @@ Most of the launch placeholders are filled. What is left:
   with the stub routes** — a stub that leaks into the sitemap is not a build error.
   `/feed/` is deliberately NOT stubbed: a meta-refresh cannot move an RSS reader, so a stub
   there would only look like a fix. See `docs/cutover/README.md` §3.
+- **The host is GitHub Pages, and that was chosen with the redirect limitation known.**
+  Cloudflare Pages was evaluated on 2026-08-23 and deliberately not taken. It would buy
+  real 301s via `_redirects` — which GitHub Pages can never serve — but on this domain it
+  requires moving the **whole DNS zone** to Cloudflare, including the five Google Workspace
+  MX records, the SPF TXT and both `google-site-verification` TXTs. That is a materially
+  bigger change than pointing four A records, and its rollback is hours instead of ten
+  minutes. The deciding argument: **a host move does not change URLs, so it carries no SEO
+  cost and can be done any time.** Revisit it when the lack of a 301 actually blocks
+  something — consolidating two posts, fixing a slug, or shipping the `/resources/` lead
+  magnets as PDFs (a PDF cannot carry an HTML canonical, and Pages cannot send the header).
+- **Setting `public/CNAME` does NOT set the Pages custom domain here.** That auto-set only
+  happens with the classic branch deploy; this repo uses `build_type: workflow`. Verified
+  on 2026-08-23: the `CNAME` file was served correctly while the Pages setting still read
+  `"cname": null`. It has to be set explicitly, in Settings → Pages or via
+  `gh api -X PUT repos/devautomaticn/automatic-nation-website/pages -f cname=…`.

@@ -89,8 +89,13 @@ Tiene además una consecuencia de preview (ver §4): con el dominio custom puest
 
 `protected_domain_state: null`. Sin verificar, si alguna vez sueltas el dominio en
 Pages, otra cuenta de GitHub puede reclamarlo y servir contenido en él. Son 5 minutos
-y se hace **antes** del cutover: GitHub → Settings de la organización → Pages →
-*Add a domain* → añadir el TXT `_github-pages-challenge-*` en GoDaddy.
+y se hace **antes** del cutover.
+
+**Corrección:** `devautomaticn` es una cuenta **de usuario**, no una organización
+(`gh api users/devautomaticn` → `"type": "User"`), así que esto NO está en los
+ajustes de una organización sino en los de la cuenta:
+<https://github.com/settings/pages> → *Add a domain* → y añadir el TXT
+`_github-pages-challenge-devautomaticn` en GoDaddy.
 
 ---
 

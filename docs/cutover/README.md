@@ -269,12 +269,24 @@ En GoDaddy → DNS de `automaticnation.com`:
 14. **`www`** → CNAME a `devautomaticn.github.io.` (con el punto final). GitHub
     redirige `www` → apex automáticamente.
 
-> **NO TOCAR, bajo ninguna circunstancia:**
+> **NO TOCAR, bajo ninguna circunstancia.** Lista completa, verificada contra la zona
+> real el 2026-08-24: son **18 registros** y el cutover toca exactamente **dos**.
 > - Los **5 registros MX de Google Workspace** (`aspmx.l.google.com` y sus alts).
 >   El correo de la empresa vive ahí. Un cutover que rompe el email es un incidente.
 > - El TXT **`v=spf1 include:_spf.google.com ~all`**.
+> - El **CNAME `litesrv._domainkey` → `litesrv._domainkey.mlsend.com.`** — es la firma
+>   DKIM de MailerLite. Borrarla no rompe el correo entrante, así que no se nota en el
+>   momento: lo que hace es que la newsletter empiece a caer en spam.
 > - Los **dos TXT `google-site-verification=…`** — uno es la verificación de Search
 >   Console, y perderla justo cuando más falta hace es exactamente el peor momento.
+> - **Tres subdominios con servicio en producción**, que este documento no mencionaba
+>   hasta ahora: `norton` y `pm` (→ `46.224.159.63`, ambos responden 401) y `workflows`
+>   (→ `68.183.117.241`, responde 200). Ya están en TTL 600.
+> - El **CNAME `_acme-challenge`** → `…dcv.cloudflare.com.`, validación de certificado.
+> - **NS** y **SOA**: GoDaddy los bloquea en la propia UI.
+>
+> Lo único que cambia en la Fase D es el **`A @`** (que pasa a ser cuatro filas) y el
+> **`CNAME www`**. Las otras dieciséis filas se quedan exactamente como están.
 >
 > Antes de guardar nada, hacer captura de la zona DNS completa.
 

@@ -7,7 +7,7 @@ export const SITE = {
   name: 'Automatic Nation',
   tagline: 'Custom integrations & automated workflows for teams that want to ship.',
   founded: '2021',
-  email: 'hello@automaticnation.com',
+  email: 'mike@automaticnation.com',
   /** Set once a real profile exists; the footer icon is hidden while it's empty. */
   linkedin: '',
   city: 'Buenos Aires',

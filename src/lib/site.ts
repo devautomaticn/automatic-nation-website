@@ -10,24 +10,55 @@ export const SITE = {
   email: 'mike@automaticnation.com',
   /** Set once a real profile exists; the footer icon is hidden while it's empty. */
   linkedin: '',
-  city: 'Buenos Aires',
+  /**
+   * Where the footer says the coffee was drunk. Not a city any more: the
+   * team is distributed, so naming one office was the wrong claim.
+   */
+  place: 'planet Earth',
 } as const;
 
 /**
- * Scheduling link for every "Book a call" CTA. This is the same cal.com
- * event the WordPress site booked into, so migrated /book-a-call-now/
- * traffic lands exactly where it used to.
+ * The cal.com event every call is booked into — the same one the WordPress
+ * site used, so migrated /book-a-call-now/ traffic still lands on it.
+ *
+ * Kept as the bare handle because /book-a-call/ needs it in two shapes: the
+ * embed's `calLink`, which takes no origin, and the plain URL the <noscript>
+ * fallback links to. Deriving the second from the first is what stops them
+ * drifting apart.
  */
-const BOOKING_URL = 'https://cal.com/mike-simmons/45min';
+const CAL_LINK = 'mike-simmons/45min';
+
+export const CAL = {
+  link: CAL_LINK,
+  url: `https://cal.com/${CAL_LINK}`,
+} as const;
+
+/**
+ * Where every "Book a call" CTA points: this site's own booking page, which
+ * embeds the cal.com widget — NOT cal.com directly.
+ *
+ * The CTAs used to hand the visitor to cal.com's origin, which meant the most
+ * important step on the site had no URL here to link, rank or measure, and the
+ * visitor left the domain before booking anything. /book-a-call/ was already
+ * reserved in RESERVED_SLUGS and already linked from the wild; it just had no
+ * page. Now it does.
+ */
+const BOOKING_URL = '/book-a-call/';
 
 /**
  * One definition of where a CTA points. While BOOKING_URL is empty every CTA
  * falls back to jumping to the #book section, so the page is never broken —
  * but only because nothing hardcodes '#book' on its own.
+ *
+ * `external` is NOT `Boolean(BOOKING_URL)` any more: that was only ever right
+ * while the destination was off-site. An internal path opening in a new tab
+ * with rel=noopener is wrong, so the test is the scheme, not the presence.
  */
+const isOffsite = (u: string) => /^https?:/.test(u);
+
 export const BOOKING = {
   href: BOOKING_URL || '#book',
-  external: Boolean(BOOKING_URL),
+  external: isOffsite(BOOKING_URL),
 } as const;
 
 /** Primary nav. Duplicated into the footer sitemap, which is why it's data. */
@@ -75,5 +106,5 @@ export const FOOTER_LINKS_AWAY = FOOTER_LINKS.map(({ label, href }) => ({
 /** BOOKING for a route that does not contain the #book section. */
 export const BOOKING_AWAY = {
   href: BOOKING_URL || '/#book',
-  external: Boolean(BOOKING_URL),
+  external: isOffsite(BOOKING_URL),
 } as const;

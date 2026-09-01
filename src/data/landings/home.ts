@@ -13,7 +13,7 @@ import type { Piece } from '../../components/deco/TetrominoDeco.astro';
 export const seo = {
   title: 'Automatic Nation — Automation & Integrations Agency',
   description:
-    'We build custom integrations and automated workflows across Airtable, n8n, and 900+ apps. 50+ workflows shipped. Book a discovery call.',
+    'We build custom integrations and automated workflows across Airtable, n8n, and 900+ apps. 1,500+ workflows shipped. Book a discovery call.',
 };
 
 export const hero = {
@@ -86,7 +86,7 @@ export const useCases = {
 export const process = {
   eyebrow: 'How it works',
   title: 'Four weeks from first call to live system.',
-  stat: '50+ workflows shipped · ~22 hrs saved/week · <4 wks first delivery',
+  stat: '1,500+ workflows shipped · ~22 hrs saved/week · <4 wks first delivery',
 };
 
 export const strip = {

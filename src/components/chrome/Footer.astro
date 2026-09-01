@@ -10,7 +10,7 @@ interface Props {
 
 const { links = FOOTER_LINKS } = Astro.props as Props;
 const year = 2026;
-const place = SITE.city || '[CITY]';
+const place = SITE.place || '[PLACE]';
 ---
 <footer class="bg-ink text-dim border-t border-line-dk">
   <Container class="py-section-sm grid grid-cols-1 md:grid-cols-3 gap-10">

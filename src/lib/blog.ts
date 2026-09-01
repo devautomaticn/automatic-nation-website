@@ -16,12 +16,12 @@ export type Post = CollectionEntry<'blog'>;
  */
 export const RESERVED_SLUGS: ReadonlySet<string> = new Set([
   // real routes today
-  'index', 'blog', 'blogs', 'lp', '404', 'rss.xml', 'robots.txt',
-  'sitemap-index.xml', 'sitemap-0.xml',
+  'index', 'blog', 'blogs', 'lp', '404', 'book-a-call', 'rss.xml',
+  'robots.txt', 'sitemap-index.xml', 'sitemap-0.xml',
   // Legacy WordPress URLs, now real routes again as redirect stubs. They were
   // reserved before the stubs existed; now they are reserved because a static
   // route genuinely occupies each of these names.
-  'about-us', 'book-a-call', 'book-a-call-now', 'training-sessions',
+  'about-us', 'book-a-call-now', 'training-sessions',
   'resource', 'resources', 'testimonials', 'category', 'author',
 ]);
 

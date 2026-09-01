@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/ui/Section.astro';
+import Container from '../components/ui/Container.astro';
+import SectionHeader from '../components/ui/SectionHeader.astro';
+import Button from '../components/ui/Button.astro';
+import { NAV_AWAY, FOOTER_LINKS_AWAY, CAL } from '../lib/site';
+import { asset, pageUrl } from '../lib/url';
+import { breadcrumbs } from '../lib/jsonld';
+
+/**
+ * The booking page. Every "Book a call" CTA on the site points here — see
+ * BOOKING in src/lib/site.ts — rather than at cal.com directly, so the most
+ * important step on the site keeps a URL on this domain.
+ *
+ * The slug was already in RESERVED_SLUGS before this file existed: it is a
+ * root-level route, and the root namespace belongs to the 61 migrated posts.
+ * Nothing to add there, but nothing to remove either.
+ *
+ * navCta is '#book' rather than BOOKING: a "Book a call" button that reloads
+ * the page you are already on is a dead control. Here it scrolls to the well.
+ */
+const nav = { label: 'Book a call', href: '#book', external: false };
+const url = pageUrl('book-a-call', Astro.site);
+
+/**
+ * Mike's headshot. Already in public/ because the hero well drops it as a tile
+ * (see PHOTOS in src/lib/hero-assets.ts) — same file, no second copy. It is
+ * 400x400 on the brand yellow, so it needs no background treatment here.
+ */
+const PORTRAIT = 'image.png';
+---
+<BaseLayout
+  title="Book a call — Automatic Nation"
+  description="Pick a time for a 45-minute call. Tell us what your team does by hand and we'll tell you what it costs to stop."
+  path="book-a-call/"
+  jsonLd={breadcrumbs([
+    { name: 'Home', url: pageUrl('', Astro.site) },
+    { name: 'Book a call', url },
+  ])}
+  navLinks={NAV_AWAY}
+  footerLinks={FOOTER_LINKS_AWAY}
+  navCta={nav}
+  preloadImages={[PORTRAIT]}
+>
+  <Section size="lg" container={false}>
+    <Container width="narrow">
+      {/* Copy first in the source, on every viewport: the heading should lead
+          for a screen reader and for the crawler, and the portrait is context,
+          not the point. On mobile the row simply stacks in that order. */}
+      <div class="flex flex-col md:flex-row md:items-start gap-10">
+        <div class="flex-1 min-w-0">
+          <SectionHeader
+            eyebrow="Book a call"
+            title="Grab 45 minutes."
+            lead="Bring the process that eats the most hours. We'll map it live and tell you what it takes to automate — scope, timeline and price. No pitch deck, no obligation."
+            level={2}
+            scale="display-md"
+            width="full"
+          />
+        </div>
+
+        <figure class="book-portrait reveal">
+          <img src={asset(PORTRAIT)} alt="Mike Simmons" width="400" height="400" />
+          <figcaption>You'll be talking to Mike.</figcaption>
+        </figure>
+      </div>
+    </Container>
+  </Section>
+
+  {/* id="book" is not cosmetic. BOOKING falls back to '#book', the footer's
+      Contact link is '#book', and so are the migrated in-content booking
+      links — every page has to render this target. */}
+  <Section id="book" size="none" container={false} border="top" class="pb-section">
+    <Container class="pt-section-sm">
+      <div id="cal-embed" class="cal-embed"></div>
+
+      {/* Without JS the embed never mounts and the box stays empty, so fall
+          back to the link the CTAs used to point at. A plain anchor, not an
+          iframe: an iframe here would be a second, untested rendering path
+          for the one page that cannot afford to be broken. */}
+      <noscript>
+        <div class="text-center">
+          <p class="text-lg text-mute">The scheduler needs JavaScript. Book on cal.com instead:</p>
+          <div class="mt-block-sm">
+            <Button href={CAL.url} external size="lg" arrow>Open the calendar</Button>
+          </div>
+        </div>
+      </noscript>
+    </Container>
+  </Section>
+
+  {/* is:inline is required — define:vars implies it, and this snippet has no
+      imports for Astro to resolve anyway. calLink comes from CAL so the embed
+      and the <noscript> fallback cannot drift apart. */}
+  <script is:inline define:vars={{ calLink: CAL.link }}>
+    (function (C, A, L) {
+      let p = function (a, ar) { a.q.push(ar); };
+      let d = C.document;
+      C.Cal = C.Cal || function () {
+        let cal = C.Cal;
+        let ar = arguments;
+        if (!cal.loaded) {
+          cal.ns = {};
+          cal.q = cal.q || [];
+          d.head.appendChild(d.createElement("script")).src = A;
+          cal.loaded = true;
+        }
+        if (ar[0] === L) {
+          const api = function () { p(api, arguments); };
+          const namespace = ar[1];
+          api.q = api.q || [];
+          if (typeof namespace === "string") {
+            cal.ns[namespace] = cal.ns[namespace] || api;
+            p(cal.ns[namespace], ar);
+            p(cal, ["initNamespace", namespace]);
+          } else p(cal, ar);
+          return;
+        }
+        p(cal, ar);
+      };
+    })(window, "https://app.cal.com/embed/embed.js", "init");
+
+    Cal("init");
+    Cal("inline", {
+      elementOrSelector: "#cal-embed",
+      calLink: calLink,
+      config: { layout: "month_view" },
+    });
+    Cal("ui", { hideEventTypeDetails: false, layout: "month_view" });
+  </script>
+</BaseLayout>

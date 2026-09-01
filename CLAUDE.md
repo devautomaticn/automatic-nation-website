@@ -273,15 +273,24 @@ Most of the launch placeholders are filled. What is left:
 
 ### Settled, so don't "fix" them back
 
-- **`BOOKING_URL` is `https://cal.com/mike-simmons/45min`** — the same cal.com event the
-  WordPress site booked into. The `#book` fallback still exists and every page still renders
+- **`BOOKING_URL` is `/book-a-call/`**, this site's own page, which embeds the cal.com
+  widget for `mike-simmons/45min` — the same event the WordPress site booked into. It used
+  to be the bare `https://cal.com/…` URL; that was changed on 2026-09-01 at the client's
+  request, so the conversion step has a URL on this domain to link, rank and measure, and
+  the visitor never leaves to book. Don't point the CTAs off-site again.
+  `BOOKING.external` is now a scheme test, not `Boolean(BOOKING_URL)` — an internal path
+  must not open in a new tab. The `#book` fallback still exists and every page still renders
   a `#book` target, because the footer's Contact link and the migrated in-content links both
-  point at it.
+  point at it. `/book-a-call/` is a root-level page, so it lives in `RESERVED_SLUGS`, and
+  `/book-a-call-now/` (the WordPress orphan) now stubs to it rather than to the home page.
 - **The pricing FAQ carries no number, on purpose.** It explains that the figure comes after
   the first call. Re-adding a public range is a business decision, not a missing value.
 - **The home quote is Ryan Alexander's**, carried over verbatim from the live
   `/testimonials/ryan-alexander-ceo-permaplant/` page.
-- **`SITE.city` is Buenos Aires.**
+- **`SITE.place` is `planet Earth`**, and the key is `place`, not `city`. The footer reads
+  "Made with too much coffee in {place}." It said Buenos Aires until 2026-09-01; the client
+  asked for the change because the team is distributed and naming one office was the wrong
+  claim. The field was renamed with it so the name stops implying a city.
 - **`public/og-image.png` exists** — a static 1200×630 card, no runtime generator. It uses the
   real wordmark, not a font-rendered title, so it does not depend on Space Grotesk being
   installed anywhere.

@@ -72,6 +72,8 @@ sweeps for it.
 | `performance-log.md` | Appended by each report run. |
 | `check-links.mjs` | Build gate: fails if a live page links to a post that is not live. Runs in `npm run check`. |
 | `.claude/skills/seo-*` | The four stages. |
+| `.claude/skills/seo-voice` | The house voice, extracted from `src/data/landings/`. The editing pass. |
+| `.claude/skills/humanizer` | Vendored from github.com/blader/humanizer (MIT). 25 AI tells. Don't edit it. |
 
 ## One rule the gate enforces
 

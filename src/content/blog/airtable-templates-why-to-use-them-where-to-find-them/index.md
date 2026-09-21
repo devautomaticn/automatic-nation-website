@@ -9,13 +9,11 @@ wpId: 1174
 
 Every guide to Airtable templates tells you where to find them. You already know where to find them — they are on Airtable's own gallery, one click from the base you are staring at. That is not the question.
 
-The question is which ones survive contact with a real team, and what to change before you put real data in. Because a template is not a finished system. It is somebody else's guess about your process, built to demo well, and the gap between "looks right in the gallery" and "still works in month four" is where most Airtable projects quietly go wrong.
+The question is which ones survive contact with a real team, and what to change before you put real data in. Because a template is not a finished system. It is somebody else's guess about your process, built to demo well, and the gap between "looks right in the gallery" and "still works in month four" is where most Airtable projects go wrong.
 
 ![Airtable's template gallery, showing pre-built bases grouped by business function.](./01.webp)
 
 ## What a template is actually good for
-
-Two things, and it is worth being precise about them.
 
 **It shows you a working structure.** If you have never modelled a CRM in a relational tool, opening one that already works teaches you more in five minutes than an afternoon of documentation. The tables, the links between them, the views someone thought were worth building — that is the value.
 
@@ -27,7 +25,7 @@ What a template is *not* good for: being your system. The moment your process di
 
 Airtable groups its gallery by function, and the useful ones cluster in four places.
 
-**Project management.** The strongest category, and the safest place to start. The structural pattern — projects linked to tasks linked to people — is close to universal, so what you inherit is mostly right. You will still change the status model.
+**Project management.** The strongest category, and the safest place to start. The structural pattern (projects linked to tasks linked to people) is close to universal, so what you inherit is mostly right. You will still change the status model.
 
 **Sales and CRM.** Start here only if your sales process is genuinely simple. These templates assume a linear pipeline, and if yours branches (different stages by product, by region, by contract type) you will fight the template all the way. See below on status fields.
 
@@ -39,19 +37,19 @@ If you are not sure what you are even modelling yet, [the key concepts and termi
 
 ## What to change before you put real data in
 
-This is the part nobody writes, and it is the part that matters. These are the five things we change in almost every template-based base we are handed, in the order they cause damage.
+This is the part nobody writes, and it is the part that matters. These are the five changes we change in almost every template-based base we are handed, in the order they cause damage.
 
 ### 1. Text fields that should be linked records
 
 The single most common and most expensive one. A template stores "Client" or "Vendor" or "Owner" as a plain text field, because that demos fine with eight rows.
 
-With eight hundred rows you have "Acme Corp", "Acme Corp.", "acme corp" and "ACME" as four different clients. You cannot roll up their total spend, you cannot filter reliably, and you cannot fix it without a migration — because by then the text is in views, automations and someone's saved filter.
+With eight hundred rows you have "Acme Corp", "Acme Corp.", "acme corp" and "ACME" as four different clients. You cannot roll up their total spend, you cannot filter reliably, and you cannot fix it without a migration, because by then the text is in views, automations and someone's saved filter.
 
-**Fix it on day one.** If a value names a thing that exists elsewhere in your business, it is a linked record, not text. This is the difference between a spreadsheet and a database, and [the guide to field types](/airtable-field-types-a-friendly-guide-to-unlock-the-power-of-your-data/) covers which type belongs where.
+**Fix it on day one.** If a value names a thing that exists elsewhere in your business, make it a linked record. This is the difference between a spreadsheet and a database, and [the guide to field types](/airtable-field-types-a-friendly-guide-to-unlock-the-power-of-your-data/) covers which type belongs where.
 
 ### 2. A status field that does not match your process
 
-Templates ship with a generic status: Not started, In progress, Done. Your process has a step that matters — waiting on client, in review, blocked on supplier — and it is the step where work actually gets stuck.
+Templates ship with a generic status — Not started, In progress, Done. Your process has a step that matters: waiting on client, in review, blocked on supplier. It is also the step where work actually gets stuck.
 
 If that state is not a status option, your team will encode it somewhere else: in the notes, in a checkbox, in a naming convention. Now the information exists but nothing can filter or report on it.
 
@@ -67,7 +65,7 @@ Templates do this to keep the demo simple. It works until you need to count one 
 
 ### 4. Attachments used as the system of record
 
-A template gives you an attachment field and it feels like storage. It is not. You cannot search inside it, you cannot report on it, and you cannot tell whether the PDF someone dropped in matches the amount in the record next to it.
+A template gives you an attachment field and it feels like storage, but you cannot search inside it, you cannot report on it, and you cannot tell whether the PDF someone dropped in matches the amount in the record next to it.
 
 **Attachments are evidence, not data.** If a number in that document drives a decision, it belongs in a field.
 
@@ -89,11 +87,11 @@ Start from a blank base when any of these is true:
 
 Once you have imported a template, in this order:
 
-1. **Fix the links.** Every text field naming a thing becomes a linked record. Do this before importing data, not after.
+1. **Fix the links.** Every text field naming a thing becomes a linked record. Do this while the base is still empty.
 2. **Rewrite the status options** to match the states your work passes through.
 3. **Delete the fields you will not use.** Templates ship with optional extras, and an unused field is a question every new team member has to ask.
 4. **Delete the sample records.** All of them. A demo row that survives into production will eventually appear in a report.
-5. **Add one automation, not six.** Pick the notification or update that removes actual manual work, and get it right before adding more.
+5. **Add one automation, not six.** Pick the one notification or update that removes real manual work, and get it right before adding any others.
 
 Then use it for two weeks before changing anything else. The changes worth making are the ones your team asks for, and you cannot predict them from the gallery.
 

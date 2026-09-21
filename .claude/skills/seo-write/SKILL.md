@@ -81,11 +81,11 @@ prices, or Airtable behaviour you have not verified. If the brief calls for a
 number nobody gave you, write the mechanism without the number and flag it in
 your report as needing a real figure.
 
-**Voice:** second person, plain sentences, concrete nouns. Banned openers:
-"In today's fast-paced business landscape", "Have you ever wondered", "unlock
-the power of", "game-changer" (already overused in this corpus), "delve",
-"navigate the complexities of". Do not open with a definition of a category the
-reader already knows — they searched for it.
+**Voice:** second person, plain sentences, concrete nouns. The full
+specification with worked examples is the `seo-voice` skill — read it before
+drafting, not only when editing, because writing in the voice is cheaper than
+retrofitting it. Do not open with a definition of a category the reader already
+knows; they searched for it.
 
 **Formatting** available via `src/lib/rehype-prose.ts`: headings, lists, tables,
 blockquotes, fenced code with Shiki (`github-dark`). Body images are referenced
@@ -114,6 +114,26 @@ current top 3 for the keyword, then rewrite what is losing — usually the intro
 the structure, and the absence of anything first-hand. Keep any section that is
 genuinely good. Set `updated`. **Never rename the directory**; that discards an
 indexed URL and everything it earned.
+
+## The editing pass — not optional
+
+A first draft is not the deliverable. Before verifying, run both editing skills
+over `src/content/blog/{slug}/index.md`, in this order:
+
+1. **`humanizer`** — 25 catalogued AI tells, vendored from
+   github.com/blader/humanizer. The structural ones in its section A are the
+   ones that survive every other edit: "not X but Y", one-line dramatic closers,
+   staged run-ups, arguing with objections nobody raised.
+2. **`seo-voice`** — the house voice, extracted from `src/data/landings/`. It
+   overrides the humanizer wherever they conflict, because it is the voice
+   sample. In particular it keeps em dashes at the rate the landing copy uses
+   them rather than stripping them to zero.
+
+The order matters. Humanizer makes prose neutral; `seo-voice` makes it ours.
+Running them the other way round sands off the thing you just added.
+
+One rule governs both: **the edit must not change a single fact.** If a sentence
+got sharper by getting less true, revert it.
 
 ## Verify before you hand it over
 

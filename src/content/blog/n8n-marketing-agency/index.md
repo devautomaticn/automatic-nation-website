@@ -16,19 +16,19 @@ An n8n engagement looks like three separate things that get sold as one. It is w
 
 **The build.** Someone models your process, decides what n8n should own and what it should stay out of, and wires it. This is the part that looks like the templates, and it is usually the smallest share of the work.
 
-**The hosting.** n8n self-hosted is free the way a puppy is free. You are now running a service: a server, a database, backups, version upgrades that occasionally change node behaviour, and credentials for every system it touches sitting in one place. Someone owns that, and if nobody has been named, the answer is nobody.
+**The hosting.** n8n self-hosted is free the way a puppy is free. You are now running a service: a server, a database, backups, version upgrades that occasionally change node behaviour, and credentials for every system it touches sitting in one place. Someone owns that — and if nobody has been named, the answer is nobody.
 
-**The maintenance.** APIs change. A vendor deprecates an endpoint, a token expires, a rate limit tightens. A workflow that ran perfectly for seven months stops, and — this is the part that costs real money — it usually stops *quietly*. The records just do not appear.
+**The maintenance.** APIs change. A vendor deprecates an endpoint, a token expires, a rate limit tightens. A workflow that ran perfectly for seven months stops, and it usually stops *quietly*. That is the part that costs real money. The records just do not appear.
 
 Most teams come to an agency thinking they are buying the first thing. They are usually in trouble because of the third.
 
 ## Three systems we built with n8n
 
-Abstract descriptions of "workflow automation" are worthless for deciding anything, so here are real ones, with the part that was actually difficult.
+Three we have built, and the part of each that was actually hard.
 
 ### Product capture from any vendor site
 
-A browser extension that clips a product — vendor, price, image, specs — from any supplier page straight into a design studio's Airtable. n8n sits between the extension and the base.
+A browser extension that clips a product (vendor, price, image, specs) from any supplier page straight into a design studio's Airtable. n8n sits between the extension and the base.
 
 The clipping was not the hard part. Every vendor site marks up a price differently, and half of them load it after the page renders. The work was in the normalisation layer: deciding what counts as a price when a page shows three, and what to do with the ones that do not parse rather than silently writing a null into a project budget.
 
@@ -48,7 +48,7 @@ What all three have in common: n8n is the connective tissue, not the intelligenc
 
 ## Agency, hire, or do it yourself
 
-There is no universally right answer here, and anyone selling you one is selling.
+Which one fits depends on how much automation work you expect to have next year, not on how much you have today.
 
 | | Makes sense when | Breaks when |
 |---|---|---|
@@ -72,7 +72,7 @@ None of that is an argument against self-hosting. We run plenty of it. It is an 
 
 ## What an engagement looks like
 
-Ours is fixed scope and fixed price, with the first system live in under four weeks, and it starts with a call rather than a quote — because the honest scope is usually not the one in the initial brief. Across 1,500+ workflows the pattern is consistent: the process someone describes and the process that actually runs differ in two or three places, and those places are where the automation would have broken.
+Ours is fixed scope and fixed price, with the first system live in under four weeks, and it starts with a call rather than a quote, because the honest scope is usually not the one in the initial brief. Across 1,500+ workflows the pattern is consistent: the process someone describes and the process that actually runs differ in two or three places, and those places are where the automation would have broken.
 
 The shape:
 
@@ -83,14 +83,14 @@ The shape:
 
 ## When you do not need an agency
 
-Worth saying plainly, since nobody selling this says it:
+Four cases where hiring anyone is the wrong move:
 
 - **It is one workflow with two steps.** Use a template. Use Zapier. You will spend more time briefing an agency than building it.
 - **Your process is not settled.** Automating a process you are still arguing about hard-codes the argument. Settle it first.
-- **The real problem is your data.** If the underlying records are a mess, automation propagates the mess faster. Fix the model first — that is a different engagement, and a cheaper one.
+- **The real problem is your data.** If the underlying records are a mess, automation propagates the mess faster. Fix the model first. That is a different engagement, and a cheaper one.
 - **You want to learn n8n.** Then build it. Genuinely. The documentation is good and the community is active.
 
-If you are still reading and none of those fit, the useful next step is a conversation about what is actually breaking — [book a call](/book-a-call/) and we will tell you if it is a job worth hiring for.
+If you are still reading and none of those fit, the useful next step is a conversation about what is actually breaking. [Book a call](/book-a-call/) and we will tell you if it is a job worth hiring for.
 
 ## The honest summary
 

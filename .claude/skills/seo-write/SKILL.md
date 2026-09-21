@@ -93,11 +93,16 @@ relatively — `![alt](./01.webp)` — so Astro's pipeline resolves them; an
 absolute `/images/...` path breaks under the build. Every body image needs alt
 text; the build warns per missing one.
 
-**Internal links:** 2–4, root-relative with a trailing slash, e.g.
+**Internal links:** 2–4 **outbound**, root-relative with a trailing slash, e.g.
 `/airtable-field-types-a-friendly-guide-to-unlock-the-power-of-your-data/`.
-Verify each target directory exists before writing the link. Then do the other
-half — **edit two existing posts to link to the new one**, as the brief names.
-That edit is part of this stage, not an optional extra.
+Verify each target directory exists before writing the link.
+
+**Do not add the inbound links yet.** The brief names two existing posts that
+should link *to* this one, and that matters — a page with no inbound links is
+the last one Google reaches. But those posts are live the moment they merge,
+while this one is a draft and may be dated a week out, so adding them here puts
+a 404 on two live pages. `seo-publish` adds them on the day the post goes live.
+`npm run check` fails if you do it early; that gate is the reminder.
 
 **CTA:** one, after the first real payoff, linking `/book-a-call/`. Never the
 cal.com URL. The template renders `PostCta` on its own; don't duplicate it.
@@ -113,7 +118,9 @@ indexed URL and everything it earned.
 ## Verify before you hand it over
 
 ```bash
-npm run check    # zod frontmatter + types. A 161-char description fails here.
+npm run check    # zod frontmatter + types, then seo/check-links.mjs.
+                 # A 161-char description fails here. So does a live page
+                 # linking to a post that is not live yet.
 npm run build    # catches broken image paths and route collisions
 ```
 

@@ -63,10 +63,27 @@ Then in `src/content/blog/{slug}/index.md`:
 - **New post:** set `published:` to the assigned date
 - **Refresh:** leave `published:` alone, set `updated:` to the publish date
 
+### Activate the inbound links
+
+The brief names two existing posts that should link **to** this one. `seo-write`
+deliberately left them alone, because a live page must never carry a link to a
+post that is not live yet.
+
+Add them **only when the post goes live in this same build** — that is, when the
+publish date is today or in the past. Edit the two posts named in the brief,
+placing the link where it actually belongs in the sentence, not bolted onto the
+end.
+
+If the post is dated in the future, **skip this and leave the row `Scheduled`.**
+Do it on a later run: sweep for rows that went live since last time and add
+their inbound links then. `npm run check` fails loudly if you get this wrong, so
+the failure mode is a red build, never a silent 404.
+
 ### Verify, then merge
 
 ```bash
-npm run check
+npm run check    # includes seo/check-links.mjs — fails if a live page links
+                 # to a post that is not live in this build
 npm run build
 ```
 

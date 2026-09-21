@@ -5,6 +5,10 @@ description: The Automatic Nation house voice, extracted from the site's own lan
 
 # The house voice
 
+> Mirrored for humans in the Notion *SEO Writing Guide*
+> (https://app.notion.com/p/3e2fcf50bd628108b76ae731c3804ef4). Change a rule
+> here, change it there in the same session.
+
 Run this **after** `humanizer`. That skill removes what makes prose sound
 machine-written; this one puts back what makes it sound like Automatic Nation.
 Where the two disagree, this file wins — it is the voice sample, and the

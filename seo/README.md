@@ -30,6 +30,11 @@ the publishing; a person decides what gets written and what goes live.
 
 **The board:** https://app.notion.com/p/7fab09d9d487475590ce483e8f2979a6
 
+**The writing guide:** https://app.notion.com/p/3e2fcf50bd628108b76ae731c3804ef4
+A human-readable copy of `strategy.md`, `seo-voice` and `humanizer` in one page.
+The repo is the source of truth. **When a writing rule changes here, update that
+page in the same session**, or the team will be working from stale rules.
+
 You only ever edit one field on it: **Stage**. Everything else is filled by the
 pipeline.
 

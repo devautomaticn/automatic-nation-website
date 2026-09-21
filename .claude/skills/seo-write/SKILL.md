@@ -187,6 +187,21 @@ Two adjustments, because Notion is not the site:
 - An image referenced as `./01.webp` will not render. Replace it with an italic
   note saying where it sits and what its alt text is.
 
+**Re-syncing a draft that is already in the card? Fetch the card first.**
+People edit the draft in Notion during review — that is what the card is for.
+Before replacing it, `notion-fetch` the page and compare its draft text with the
+version you last posted. Anything that differs is a human edit: **merge it into
+the repo file first**, commit it as its own commit, and only then rebuild the
+card from the file. Say in the card which edits you merged. Overwriting a
+reviewer's edit with your own older text is the worst thing this stage can do,
+and it happened once already: a reviewer removed a client example in the card
+while the editing pass was running on the repo copy.
+
+Rebuild with `replace_content` rather than sentence-level `update_content`.
+Notion normalises text slightly (quotes, spacing, table markup), so patching
+sentence by sentence fails on the first mismatch and the whole batch is
+rejected. When rebuilding, keep the original brief below the draft verbatim.
+
 Then set `Stage` to `Content review` and add a second block with anything
 needing a human decision — a number you would not invent, a claim you could not
 verify, a tone call that is theirs to make. Be specific about what you need

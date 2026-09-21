@@ -18,7 +18,7 @@ An n8n engagement looks like three separate things that get sold as one. It is w
 
 **The hosting.** n8n self-hosted is free the way a puppy is free. You are now running a service: a server, a database, backups, version upgrades that occasionally change node behaviour, and credentials for every system it touches sitting in one place. Someone owns that — and if nobody has been named, the answer is nobody.
 
-**The maintenance.** APIs change. A vendor deprecates an endpoint, a token expires, a rate limit tightens. A workflow that ran perfectly for seven months stops, and it usually stops *quietly*. That is the part that costs real money. The records just do not appear.
+**The maintenance.** APIs change. A vendor deprecates an endpoint, a token expires, a rate limit tightens. A workflow that ran perfectly for seven months stops, and it usually stops *quietly* — the records just do not appear. That is the part that costs real money.
 
 Most teams come to an agency thinking they are buying the first thing. They are usually in trouble because of the third.
 

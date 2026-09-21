@@ -37,7 +37,7 @@ If you are not sure what you are even modelling yet, [the key concepts and termi
 
 ## What to change before you put real data in
 
-This is the part nobody writes, and it is the part that matters. These are the five changes we change in almost every template-based base we are handed, in the order they cause damage.
+This is the part nobody writes, and it is the part that matters. These are the five changes we make to almost every template-based base we are handed, in the order they cause damage.
 
 ### 1. Text fields that should be linked records
 

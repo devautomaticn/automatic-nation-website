@@ -13,12 +13,13 @@ the publishing; a person decides what gets written and what goes live.
   └──────────┬──────────┘
              │
   ┌── 3. WRITE ────────┐   /seo-write
-  │  post → repo branch │   → draft: true, Stage = Content review
-  └──────────┬──────────┘
+  │  post → repo branch │   → draft: true, AND the full text is
+  │  + text into Notion │     posted into the Notion card
+  └──────────┬──────────┘     Stage = Content review
              │
   ┌── 4. APPROVE ──────┐   ** HUMAN **
-  │  read the draft     │   Content review → approve
-  └──────────┬──────────┘
+  │  read it in Notion  │   the draft is in the card — you never
+  └──────────┬──────────┘   need the repo to approve
              │
   ┌── 5. PUBLISH ──────┐   /seo-publish
   │  date + merge main  │   → site publishes itself on the date

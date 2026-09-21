@@ -140,11 +140,38 @@ git commit    # subject: "content: {title}"
 
 Do not merge and do not push to `main`.
 
-## Hand back
+## Hand back — the draft goes IN the Notion page
 
-Set the Notion row to `Content review`, and add a comment on the page with the
-branch name, the word count, and anything needing a human decision (a missing
-real number, a claim you would not make up). Then report: what you wrote, where
-it is, and that it is waiting on a read.
+**Approval happens in Notion, so the text has to be readable in Notion.** A row
+that says "draft is on branch X" is not reviewable: it asks the approver to
+clone a repo or start a dev server to do the one job the board exists for. Do
+not do that to them.
+
+`notion-update-page` with `insert_content` at `{"type":"start"}`, so the draft
+sits above the brief. Include:
+
+- A short header: word count, the file path and branch that remain the source
+  of truth, and a line saying that if they edit in Notion they should say so and
+  you will sync it back.
+- The final title, the meta description **with its character count** (`141/160`),
+  and the URL. For a Refresh, say explicitly that the URL is unchanged.
+- The full body.
+
+Two adjustments, because Notion is not the site:
+
+- **Demote the headings one level** — `##` in the post becomes `###` here, so
+  they sit under the "Draft v1" header rather than competing with it.
+- **Internal links do not resolve in Notion.** Render the anchor text in bold
+  instead of linking it, and list the real targets in one italic line at the
+  end. A Notion page full of dead `/slug/` links reads like a broken draft.
+- An image referenced as `./01.webp` will not render. Replace it with an italic
+  note saying where it sits and what its alt text is.
+
+Then set `Stage` to `Content review` and add a second block with anything
+needing a human decision — a number you would not invent, a claim you could not
+verify, a tone call that is theirs to make. Be specific about what you need
+from them; "please review" wastes the round trip.
+
+Finally report: what you wrote, and that it is waiting on a read **in Notion**.
 
 Board: https://app.notion.com/p/7fab09d9d487475590ce483e8f2979a6

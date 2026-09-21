@@ -126,8 +126,8 @@ over `src/content/blog/{slug}/index.md`, in this order:
    staged run-ups, arguing with objections nobody raised.
 2. **`seo-voice`** — the house voice, extracted from `src/data/landings/`. It
    overrides the humanizer wherever they conflict, because it is the voice
-   sample. In particular it keeps em dashes at the rate the landing copy uses
-   them rather than stripping them to zero.
+   sample. One rule it does **not** take from the sample: no em dashes, no en
+   dashes, no spaced hyphen standing in for one. `npm run check` fails on them.
 
 The order matters. Humanizer makes prose neutral; `seo-voice` makes it ours.
 Running them the other way round sands off the thing you just added.

@@ -77,23 +77,39 @@ stop.
 
 ## Punctuation, specifically
 
-**Em dashes stay.** The landing copy uses them — "No alert, no retry — the first
-signal is…", "You do — the base, the workspace…" — at a moderate rate, roughly
-one every few paragraphs. The humanizer skill strips dashes used as a universal
-connector, which is right, but do not let it strip them to zero. That would move
-the writing away from the sample, not towards it.
+**No em dashes. None.** Also no en dashes, and no spaced hyphen (" - ") standing
+in for one. This is a hard rule, decided 2026-09-21, and `seo/check-copy.mjs`
+fails `npm run check` on any of them in pipeline copy.
 
-The test: a dash that replaces a comma or a colon out of habit goes. A dash that
-marks a genuine interruption in the sentence stays.
+This skill used to say the opposite: the landing copy uses dashes, so "keep them
+at a moderate rate". In practice a moderate rate kept reading as machine-written,
+and every pass let a few more back in. A ban is easier to hold than a ratio.
 
-**Do not match the sample's rate arithmetically.** The landing copy runs about
-one dash every 57 words, but it is punchy short-form where a blog post is not;
-transferring that rate to 1,500 words of prose would put 25 of them in a single
-article. The first pass on `n8n-marketing-agency` made the opposite mistake and
-cut from 15 to 3 — one per 489 words, which is the "stripped to zero" failure
-this section exists to prevent. **For long-form, one per 150–250 words is the
-range**, arrived at by restoring only the dashes whose removal left a comma
-pile-up. Judge each one; never count them to a target.
+The landing copy in `src/data/landings/` still has dashes. It is the voice sample
+for *what* to say, not for punctuation, and it is out of scope for the gate.
+
+**How to remove one without making the sentence worse.** Don't swap it for a
+comma; that is how you get a comma pile-up ("The agent answers from Airtable,
+the same base that verifies who they are, and every thread…"). Rewrite:
+
+- An aside in the middle → split into two sentences, or restructure so the aside
+  becomes the main clause.
+- A dash introducing a list or an explanation → a colon.
+- A dash before a punchline → a full stop. The punchline gets its own sentence.
+- A genuinely parenthetical detail → parentheses, sparingly.
+
+Worked examples, from the first two posts:
+
+> ~~Someone owns that — and if nobody has been named, the answer is nobody.~~
+> Someone owns that. If nobody has been named, the answer is nobody.
+
+> ~~The tables, the links between them, the views someone thought were worth
+> building — that is the value.~~
+> The value is in the tables, the links between them, and the views someone
+> thought were worth building.
+
+> ~~Templates ship with a generic status — Not started, In progress, Done.~~
+> Templates ship with a generic status: Not started, In progress, Done.
 
 **Straight quotes, not curly.** Both skills agree.
 

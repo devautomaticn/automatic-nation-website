@@ -97,8 +97,8 @@ did not come into existence today.
 Read three existing posts before drafting; the corpus is the specification.
 In short: second person, plain sentences, concrete nouns. Explain the mechanism,
 not the category. No "in today's fast-paced business landscape", no "unlock the
-power of", no stacked rhetorical questions, no em-dash-joined triplets of
-adjectives. Where a step is genuinely fiddly, say so.
+power of", no stacked rhetorical questions. **No em dashes at all** (enforced by
+`seo/check-copy.mjs`). Where a step is genuinely fiddly, say so.
 
 Spanish is not published. The site is English-only.
 

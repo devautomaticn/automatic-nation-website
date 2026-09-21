@@ -16,9 +16,9 @@ An n8n engagement looks like three separate things that get sold as one. It is w
 
 **The build.** Someone models your process, decides what n8n should own and what it should stay out of, and wires it. This is the part that looks like the templates, and it is usually the smallest share of the work.
 
-**The hosting.** n8n self-hosted is free the way a puppy is free. You are now running a service: a server, a database, backups, version upgrades that occasionally change node behaviour, and credentials for every system it touches sitting in one place. Someone owns that — and if nobody has been named, the answer is nobody.
+**The hosting.** n8n self-hosted is free the way a puppy is free. You are now running a service: a server, a database, backups, version upgrades that occasionally change node behaviour, and credentials for every system it touches sitting in one place. Someone owns that. If nobody has been named, the answer is nobody.
 
-**The maintenance.** APIs change. A vendor deprecates an endpoint, a token expires, a rate limit tightens. A workflow that ran perfectly for seven months stops, and it usually stops *quietly* — the records just do not appear. That is the part that costs real money.
+**The maintenance.** APIs change. A vendor deprecates an endpoint, a token expires, a rate limit tightens. A workflow that ran perfectly for seven months stops, and it usually stops *quietly*. The records just do not appear, and that is the part that costs real money.
 
 Most teams come to an agency thinking they are buying the first thing. They are usually in trouble because of the third.
 
@@ -34,7 +34,7 @@ The clipping was not the hard part. Every vendor site marks up a price different
 
 ### A WhatsApp agent that answers from your own data
 
-Customers message on WhatsApp. The agent answers from Airtable — the same base that verifies who they are before it says anything — and every thread lands in a web console where the team can watch, take over mid-conversation, and tune the responses.
+Customers message on WhatsApp. The agent answers from Airtable, using the same base to verify who they are before it says anything. Every thread lands in a web console where the team can watch, take over mid-conversation, and tune the responses.
 
 The interesting constraint was the order of operations. The agent verifies the customer *before* it generates a word, because an assistant that helpfully reads out an order status to whoever happens to message is not a feature. n8n orchestrates that sequence, and the sequence is the product.
 
@@ -47,8 +47,8 @@ Which one fits depends on how much automation work you expect to have next year,
 | | Makes sense when | Breaks when |
 |---|---|---|
 | **DIY** | One or two workflows, no compliance surface, someone on the team genuinely enjoys this | That person leaves, or gets busy, and nobody else can read the canvas |
-| **Hire in-house** | Automation is continuous and central — you will always have a queue of work | You need three skills (integration, data modelling, infrastructure) and budget for one salary |
-| **Agency** | You need a system live on a deadline, or you have one that is failing and nobody can say why | The scope is genuinely one workflow — you will pay engagement overhead for a job that is an afternoon |
+| **Hire in-house** | Automation is continuous and central, and you will always have a queue of work | You need three skills (integration, data modelling, infrastructure) and budget for one salary |
+| **Agency** | You need a system live on a deadline, or you have one that is failing and nobody can say why | The scope is genuinely one workflow. You will pay engagement overhead for a job that takes an afternoon |
 
 The most useful question is not "can we build this ourselves?" It is usually yes. The question is whether you want to be the team that owns it at 6pm on a Friday eighteen months from now.
 
@@ -88,6 +88,6 @@ If you are still reading and none of those fit, the useful next step is a conver
 
 ## The honest summary
 
-An n8n agency is not selling you workflows; the templates already gave those away. It is selling you the judgement about what to automate, the data modelling underneath it, and someone whose job it is to notice when it stops. If you have that in-house, you do not need us. If you do not, that is the gap — and it is usually cheaper to fill before the silent failure than after.
+An n8n agency is not selling you workflows; the templates already gave those away. It is selling you the judgement about what to automate, the data modelling underneath it, and someone whose job it is to notice when it stops. If you have that in-house, you do not need us. If you do not, that is the gap, and it is cheaper to fill before the silent failure than after.
 
-If you are still deciding between platforms, [our comparison of Zapier, Make and n8n](/what-automation-tool-suits-your-business/) covers where each one fits. If you are earlier than that, [what workflow automation actually is](/what-is-workflow-automation/) is the better starting point. And if your stack is Airtable-shaped rather than n8n-shaped, the questions are similar but the answers differ — [hiring an Airtable consultant](/how-to-hire-and-where-to-find-the-right-airtable-consultant/) covers that side.
+If you are still deciding between platforms, [our comparison of Zapier, Make and n8n](/what-automation-tool-suits-your-business/) covers where each one fits. If you are earlier than that, [what workflow automation actually is](/what-is-workflow-automation/) is the better starting point. And if your stack is Airtable-shaped rather than n8n-shaped, the questions are similar but the answers differ. [Hiring an Airtable consultant](/how-to-hire-and-where-to-find-the-right-airtable-consultant/) covers that side.

@@ -78,6 +78,16 @@ const {
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Montserrat:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   {preloadImages.map(src => <link rel="preload" as="image" href={asset(src)} />)}
+
+  <!-- Metricool tracking pixel. Vendor snippet, pasted verbatim.
+
+       is:inline is load-bearing: without it Astro hands the tag to Vite,
+       which bundles it as a module and defers it. The snippet declares
+       loadScript and calls beTracker on a global, so module scope breaks it.
+
+       It appends its own <script> to <head> at runtime and does not block
+       parsing, so it costs the page nothing to sit up here. -->
+  <script is:inline>function loadScript(a){var b=document.getElementsByTagName("head")[0],c=document.createElement("script");c.type="text/javascript",c.src="https://tracker.metricool.com/resources/be.js",c.onreadystatechange=a,c.onload=a,b.appendChild(c)}loadScript(function(){beTracker.t({hash:"374ed6d4a4c1299b12bff9e4f9c496d3"})});</script>
 </head>
 <body class={className}>
   {nav && <Nav links={navLinks} cta={navCta} />}

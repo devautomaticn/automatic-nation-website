@@ -78,8 +78,20 @@ const blog = defineCollection({
 
         draft: z.boolean().default(false),
 
-        /** Provenance, so a re-run of the migration can match posts up. */
-        wpId: z.number().int(),
+        /**
+         * Provenance, so a re-run of the migration can match posts up.
+         *
+         * Optional since the SEO pipeline started writing posts here directly:
+         * a post that was never in WordPress has no WordPress ID, and the only
+         * ways to satisfy a required field would be to invent a number or to
+         * reserve a sentinel — both of which make `wpId` lie about where the
+         * post came from, which is the single thing this field exists to say.
+         *
+         * Nothing reads it. It is matched against by tools/wp-migrate/ only.
+         * Its absence is therefore meaningful and costs nothing: no wpId means
+         * born here.
+         */
+        wpId: z.number().int().optional(),
       }),
 });
 

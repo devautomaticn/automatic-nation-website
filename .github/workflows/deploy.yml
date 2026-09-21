@@ -3,6 +3,24 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+
+  # The scheduled half of publishing. `isLive` in src/lib/blog.ts hides any post
+  # whose `published` date is still in the future, so a post approved today and
+  # dated next Tuesday is committed now and simply not rendered yet. Nothing
+  # else would ever make next Tuesday arrive: a static build only reflects the
+  # moment it ran, and without this cron the post would wait for whatever
+  # unrelated push happened to come next.
+  #
+  # 06:15 UTC is early in the UTC day (03:15 in Buenos Aires, before the US
+  # morning), so a post dated D is live for the whole of D in every market this
+  # site sells into. The minute is off the hour on purpose — GitHub queues the
+  # :00 slot heavily and can delay a run by tens of minutes.
+  #
+  # GitHub disables cron on a repo with no commits for 60 days and emails the
+  # owner. If posts stop appearing, check that before checking the dates.
+  schedule:
+    - cron: '15 6 * * *'
+
   workflow_dispatch:
 
 permissions:

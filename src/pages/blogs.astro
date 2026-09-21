@@ -7,7 +7,7 @@ import SectionHeader from '../components/ui/SectionHeader.astro';
 import PostCard from '../components/blog/PostCard.astro';
 import ClosingCta from '../components/sections/ClosingCta.astro';
 import { NAV_AWAY, FOOTER_LINKS_AWAY, BOOKING_AWAY } from '../lib/site';
-import { sortByDate, postPath } from '../lib/blog';
+import { sortByDate, postPath, isLive } from '../lib/blog';
 import { pageUrl } from '../lib/url';
 import { blogIndex, breadcrumbs } from '../lib/jsonld';
 
@@ -16,7 +16,7 @@ import { blogIndex, breadcrumbs } from '../lib/jsonld';
  * migrated in-content links point. `/blog` meta-refreshes here via the
  * `redirects` entry in astro.config.mjs.
  */
-const posts = sortByDate(await getCollection('blog', p => !p.data.draft));
+const posts = sortByDate(await getCollection('blog', isLive));
 
 // Newest first, then grouped by year. A year heading is free scannability and
 // costs no routes; paginating 61 posts would spread link equity across 7

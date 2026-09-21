@@ -2,10 +2,10 @@ import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 import type { APIContext } from 'astro';
 import { SITE } from '../lib/site';
-import { sortByDate, postPath } from '../lib/blog';
+import { sortByDate, postPath, isLive } from '../lib/blog';
 
 export async function GET(context: APIContext) {
-  const posts = sortByDate(await getCollection('blog', p => !p.data.draft));
+  const posts = sortByDate(await getCollection('blog', isLive));
 
   return rss({
     title: `${SITE.name} — Blog`,

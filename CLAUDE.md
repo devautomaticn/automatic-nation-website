@@ -240,6 +240,22 @@ board re-deals.
 Design intent — motion timings, tile treatment, grid pitch — is specified in
 `docs/design/tetris-hero/README.md`. Read it before changing how the well looks or moves.
 
+## The blog is written by a pipeline
+
+New posts are not hand-authored any more. `seo/README.md` describes the four
+stages; `seo/strategy.md` holds the editorial rules and `.claude/skills/seo-*`
+are the stages themselves. Two things in `src/` exist to serve it:
+
+- **`isLive` in `src/lib/blog.ts`** is the only blog filter any page may use. It
+  hides drafts *and* future-dated posts, which is what makes scheduling work.
+  Do not reintroduce a bare `p => !p.data.draft` at a call site.
+- **`wpId` is optional** (`src/content.config.ts`). Absent means the post was
+  born here rather than migrated from WordPress. Don't make it required again
+  and don't invent values for new posts.
+
+The daily `schedule:` trigger in `.github/workflows/deploy.yml` is load-bearing,
+not a keepalive: it is the only thing that makes a scheduled post's date arrive.
+
 ## Repo conventions
 
 - `public/logos/` contains files with doubled extensions (`Symbol.svg.svg`,

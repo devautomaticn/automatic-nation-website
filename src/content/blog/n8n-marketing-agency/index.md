@@ -22,21 +22,15 @@ An n8n engagement looks like three separate things that get sold as one. It is w
 
 Most teams come to an agency thinking they are buying the first thing. They are usually in trouble because of the third.
 
-## Three systems we built with n8n
+## Two systems we built with n8n
 
-Three we have built, and the part of each that was actually hard.
+Two we have built, and the part of each that was actually hard.
 
 ### Product capture from any vendor site
 
-A browser extension that clips a product (vendor, price, image, specs) from any supplier page straight into a design studio's Airtable. n8n sits between the extension and the base.
+A browser extension that clips a product (vendor, price, image, specs) from any supplier page straight into Airtable. n8n sits between the extension and the base.
 
 The clipping was not the hard part. Every vendor site marks up a price differently, and half of them load it after the page renders. The work was in the normalisation layer: deciding what counts as a price when a page shows three, and what to do with the ones that do not parse rather than silently writing a null into a project budget.
-
-### A lead database, consolidated and enriched
-
-Years of leads scattered across spreadsheets and an old CRM — 5,000 of them — pulled into one Airtable base, deduplicated, normalised, and enriched with company data.
-
-Deduplication is where this kind of project lives or dies. Two rows with the same company name and different domains might be one company or two. Get that judgement wrong at scale and you have not cleaned a database, you have corrupted it in a way that is very hard to unwind. n8n ran the pipeline; the design decision was which matches to make automatically and which to route to a human.
 
 ### A WhatsApp agent that answers from your own data
 
@@ -44,7 +38,7 @@ Customers message on WhatsApp. The agent answers from Airtable — the same base
 
 The interesting constraint was the order of operations. The agent verifies the customer *before* it generates a word, because an assistant that helpfully reads out an order status to whoever happens to message is not a feature. n8n orchestrates that sequence, and the sequence is the product.
 
-What all three have in common: n8n is the connective tissue, not the intelligence and not the system of record. The moment a project treats n8n as the database, it starts going wrong.
+What both have in common: n8n is the connective tissue, not the intelligence and not the system of record. The moment a project treats n8n as the database, it starts going wrong.
 
 ## Agency, hire, or do it yourself
 

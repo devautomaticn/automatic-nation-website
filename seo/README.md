@@ -32,9 +32,10 @@ the publishing; a person decides what gets written and what goes live.
 
 **Strategies:** https://app.notion.com/p/daecab2ed9274dd2a5b9f290d31c96f6
 The experiments. Each row is a bet with a hypothesis, one metric, a baseline and a
-target. `/seo-ideas` generates from Planned and Running rows and links each idea
-back; `/seo-report` fills in results and verdicts. Promote from Backlog to
-Planned to steer what gets written.
+target. Same gate as content: the pipeline proposes strategies at `Idea`, you
+move the ones you want to `Approved` (or `Rejected`), and only Approved and
+Running strategies produce content. `/seo-ideas` links each idea back to its
+strategy; `/seo-report` fills in results and verdicts.
 
 **Competitors:** https://app.notion.com/p/76324edf739143a28ac98722e15c9d67
 

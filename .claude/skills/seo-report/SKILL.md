@@ -54,23 +54,25 @@ early to tell" when it is.
 
 ## Judge the strategies
 
-Every row in the Strategies table
-(`collection://e3055eb4-6d92-43ce-91f4-c1b1d47b9061`) with Status `Running` or
-`Measuring` gets a verdict pass:
+Every Strategies row (`collection://e3055eb4-6d92-43ce-91f4-c1b1d47b9061`) with
+`Stage` `Running` or `Measuring` gets a verdict pass:
 
 - Measure its `Primary metric` only. The metric was chosen before the test on
   purpose; switching to whichever number moved is how a lost test gets reported
   as a win.
 - Write the current number into `Result`, dated, against the `Baseline`.
-- Status moves: `Running` → `Measuring` once all its content is live;
-  `Measuring` → `Won`, `Lost` or `Inconclusive` once the `Test window` ends.
-  SEO needs 6 to 8 weeks after publishing, so do not call a verdict earlier.
+- Stage moves you may make: `Running` → `Measuring` once all its content is
+  live; `Measuring` → `Won`, `Lost` or `Inconclusive` once the `Test window`
+  ends. SEO needs 6 to 8 weeks after publishing, so never call a verdict early.
+  You never move anything to `Approved` or `Rejected`; those are human calls.
 - A verdict requires `Learnings`: what we now believe that we did not before.
-- If a strategy's metric cannot be measured (for example booked calls, with no
-  per-post attribution), say so in `Result` rather than substituting a proxy.
+- If the metric cannot be measured (for example booked calls, with no per-post
+  attribution), say so in `Result` rather than substituting a proxy.
 
-Recommend promotions from Backlog by ICE score, but leave the promoting to a
-human.
+Then look forward: if the numbers show an opportunity no strategy covers, create
+it as a new row at `Stage = Idea` (see "Proposing new strategies" in
+`seo-ideas`). List the `Idea` rows waiting on a human, sorted by ICE score, at
+the end of the report so they don't sit unreviewed.
 
 ## Sweep the board
 

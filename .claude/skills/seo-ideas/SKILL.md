@@ -33,33 +33,54 @@ A `Rejected` row is a permanent no. Never propose that keyword again.
 
 ## Start from the Strategies table
 
-Ideas are generated **from strategies**, not from a blank page. Every idea exists
-to test a bet, and the bet decides what gets researched.
+Ideas are generated **from approved strategies**, not from a blank page. Every
+idea exists to test a bet, and the bet decides what gets researched. Strategies
+go through the same gate as content:
+
+```
+Idea → (human approves) → Approved → Running → Measuring → Won / Lost / Inconclusive
+                        ↘ Rejected (never propose again)
+```
 
 ```
 mcp__claude_ai_Notion__notion-query-data-sources
   mode: sql
   data_source_urls: ["collection://e3055eb4-6d92-43ce-91f4-c1b1d47b9061"]
-  query: SELECT url,"Name","Type","Hypothesis","Primary metric","Target","Channel" FROM "collection://e3055eb4-6d92-43ce-91f4-c1b1d47b9061" WHERE "Status" IN ('Planned','Running')
+  query: SELECT url,"Name","Stage","Type","Hypothesis","Primary metric","Target","Channel" FROM "collection://e3055eb4-6d92-43ce-91f4-c1b1d47b9061" WHERE "Stage" IN ('Approved','Running')
 ```
 
-- Split the batch across the Planned and Running rows whose `Channel` includes
-  SEO. A Running strategy with fewer than its intended posts gets priority.
+- **Generate only from `Approved` and `Running` rows** whose `Channel` includes
+  SEO. An `Idea` row has not been approved and produces nothing yet, however
+  good it looks.
+- Split the batch across them. A Running strategy short of its intended posts
+  gets priority; a freshly Approved one gets at least one idea so it can start.
+- When you generate the first idea for an `Approved` strategy, move it to
+  `Running` and set its `Test window` start to today (end = start + 90 days
+  unless its Target says otherwise).
 - Read each strategy's hypothesis before researching: an idea that would not
   move that strategy's `Primary metric` does not belong in its batch.
-- An idea that fits no strategy is still allowed if the data is strong, but say
-  so in its brief, and suggest a new strategy row rather than creating one. The
-  table is the team's to shape; propose, don't add.
-- Backlog rows are **not** generated from. They wait for a human to promote them.
 
 When you write each idea to the board, set its `Strategy` relation to the
 strategy page URL (`"Strategy": "[\"<url>\"]"`). The link is two-way, so the
-strategy row lists every post made for it, and `/seo-report` can judge the
-strategy by the posts it produced.
+strategy lists every post made for it and `/seo-report` can judge it by them.
+
+### Proposing new strategies
+
+You may **create** strategy rows, but only at `Stage = Idea`. A human approves;
+you never do. Propose one when the research shows a pattern no existing strategy
+covers (a keyword cluster, a competitor gap, a new channel). Each proposal needs
+Name, Type, Hypothesis ("If we X, then metric Y moves by Z, because W"),
+Channel, Primary metric, Baseline with its source and date, Target, and
+Impact/Confidence/Ease from 1 to 5. Link the Competitors rows it targets.
+Before proposing, check existing rows: a `Rejected` strategy is a permanent no,
+and a near-duplicate of an existing row is a comment on that row, not a new one.
+
+Report proposals separately from content ideas, so they are not approved by
+accident as part of a batch.
 
 Strategies table: https://app.notion.com/p/daecab2ed9274dd2a5b9f290d31c96f6
 Competitors table: https://app.notion.com/p/76324edf739143a28ac98722e15c9d67
-(read the rows linked to a strategy before researching it)
+(read the Competitors rows linked to a strategy before researching it)
 
 ## Research
 

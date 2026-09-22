@@ -10,7 +10,7 @@ import RelatedPosts from '../components/blog/RelatedPosts.astro';
 import PostCta from '../components/blog/PostCta.astro';
 import ClosingCta from '../components/sections/ClosingCta.astro';
 import { NAV_AWAY, FOOTER_LINKS_AWAY, BOOKING_AWAY, SITE } from '../lib/site';
-import { RESERVED_SLUGS, postPath, readingTime, related } from '../lib/blog';
+import { RESERVED_SLUGS, postPath, readingTime, related, isLive } from '../lib/blog';
 import type { Post } from '../lib/blog';
 import { pageUrl } from '../lib/url';
 import { blogPosting, breadcrumbs } from '../lib/jsonld';
@@ -23,7 +23,7 @@ import { blogPosting, breadcrumbs } from '../lib/jsonld';
  * contract — the 61 posts are flat.
  */
 export async function getStaticPaths() {
-  const posts = await getCollection('blog', p => !p.data.draft);
+  const posts = await getCollection('blog', isLive);
 
   // Astro gives a static file route priority over a dynamic one, so a page
   // named after a post slug would shadow the post with no error at all — it

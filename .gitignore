@@ -16,8 +16,15 @@ Thumbs.db
 .env.local
 .env.*
 
-# Claude Code config
-.claude/
+# Claude Code config — local settings stay local, but the SEO pipeline's skills
+# are shared work: they ARE the pipeline (see seo/README.md), and a skill that
+# only exists on one laptop is a stage nobody else can run.
+#
+# `.claude/*`, not `.claude/` — git will not re-include anything inside a
+# directory it has already excluded, so the negation below only works if the
+# directory itself is never excluded.
+.claude/*
+!.claude/skills/
 
 # Draft / prototype HTML files (not part of the Astro project)
 index.html

@@ -10,7 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check": "astro check"
+    "check": "astro check && node seo/check-links.mjs && node seo/check-copy.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",

@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import RedirectStub from '../../layouts/RedirectStub.astro';
-import { postPath } from '../../lib/blog';
+import { postPath, isLive } from '../../lib/blog';
 import { pageUrl } from '../../lib/url';
 
 /**
@@ -13,7 +13,7 @@ import { pageUrl } from '../../lib/url';
  * collection cannot drift out of sync with the posts and is greppable in dist/.
  */
 export async function getStaticPaths() {
-  const posts = await getCollection('blog', p => !p.data.draft);
+  const posts = await getCollection('blog', isLive);
   return posts.map(post => ({
     params: { slug: post.id },
     props: { slug: post.id, title: post.data.title },

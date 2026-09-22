@@ -3,6 +3,33 @@ import type { CollectionEntry } from 'astro:content';
 export type Post = CollectionEntry<'blog'>;
 
 /**
+ * Whether a post belongs in *this* build. Every `getCollection('blog', …)` in
+ * `src/pages/` takes this and nothing else, so the four call sites cannot
+ * disagree about what "published" means.
+ *
+ * Two gates:
+ *
+ * - `draft` is the manual switch — a post that is written but not signed off.
+ * - `published` in the future is the **scheduled** one, and it is what lets a
+ *   post be merged to `main` the day its content is approved while going live
+ *   on the day the calendar says. A static build can't hold a post back on a
+ *   timer; the only thing that can is a build that runs later and decides
+ *   differently. `.github/workflows/deploy.yml` has a daily cron for exactly
+ *   that reason — without it, a future-dated post stays invisible until the
+ *   next unrelated push, which is a silent missed publication.
+ *
+ * UTC, matching `formatDate` below: a post dated `2026-10-02` becomes visible
+ * to the first build at or after `2026-10-02T00:00:00Z`. `Date.now()` is read
+ * per call, so `astro dev` picks up a date change without a restart.
+ *
+ * A future-dated post generates no route at all — it is absent, not a 404 with
+ * a teaser. That is deliberate: Google must never see a stub at the URL the
+ * real article will occupy.
+ */
+export const isLive = (post: Post): boolean =>
+  !post.data.draft && post.data.published.valueOf() <= Date.now();
+
+/**
  * Root-level slugs the blog must never claim.
  *
  * The 61 posts answer at `/{slug}/`, so they share the root namespace with

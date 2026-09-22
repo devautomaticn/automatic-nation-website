@@ -27,7 +27,7 @@ One of the standout features of Make is its pricing model, which can be more aff
 
 [n8n](http://n8n.io/) is the new kid on the block, and it stands out for being open-source. This gives users full control over their automation workflows, with the ability to self-host and customize their setups extensively. n8n is perfect for developers and tech-savvy users who want the freedom to build highly customized automations without the constraints of a proprietary platform.
 
-While n8n is powerful, it also comes with challenges. Setting up and maintaining a self-hosted instance can require significant technical knowledge and resources. However, for those who need maximum flexibility and control, n8n is a compelling choice, especially for businesses with unique or highly specific automation needs.
+While n8n is powerful, it also comes with challenges. Setting up and maintaining a self-hosted instance can require significant technical knowledge and resources. However, for those who need maximum flexibility and control, n8n is a compelling choice, especially for businesses with unique or highly specific automation needs. If you get as far as weighing whether to run it yourself or hand it to someone, [what an n8n agency actually does](/n8n-marketing-agency/) breaks down what that choice commits you to.
 
 **Conclusion**
 

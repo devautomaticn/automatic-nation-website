@@ -31,6 +31,36 @@ mcp__claude_ai_Notion__notion-query-data-sources
 
 A `Rejected` row is a permanent no. Never propose that keyword again.
 
+## Start from the Strategies table
+
+Ideas are generated **from strategies**, not from a blank page. Every idea exists
+to test a bet, and the bet decides what gets researched.
+
+```
+mcp__claude_ai_Notion__notion-query-data-sources
+  mode: sql
+  data_source_urls: ["collection://e3055eb4-6d92-43ce-91f4-c1b1d47b9061"]
+  query: SELECT url,"Name","Type","Hypothesis","Primary metric","Target","Channel" FROM "collection://e3055eb4-6d92-43ce-91f4-c1b1d47b9061" WHERE "Status" IN ('Planned','Running')
+```
+
+- Split the batch across the Planned and Running rows whose `Channel` includes
+  SEO. A Running strategy with fewer than its intended posts gets priority.
+- Read each strategy's hypothesis before researching: an idea that would not
+  move that strategy's `Primary metric` does not belong in its batch.
+- An idea that fits no strategy is still allowed if the data is strong, but say
+  so in its brief, and suggest a new strategy row rather than creating one. The
+  table is the team's to shape; propose, don't add.
+- Backlog rows are **not** generated from. They wait for a human to promote them.
+
+When you write each idea to the board, set its `Strategy` relation to the
+strategy page URL (`"Strategy": "[\"<url>\"]"`). The link is two-way, so the
+strategy row lists every post made for it, and `/seo-report` can judge the
+strategy by the posts it produced.
+
+Strategies table: https://app.notion.com/p/daecab2ed9274dd2a5b9f290d31c96f6
+Competitors table: https://app.notion.com/p/76324edf739143a28ac98722e15c9d67
+(read the rows linked to a strategy before researching it)
+
 ## Research
 
 Work from the site's own data outward, not from a blank page.

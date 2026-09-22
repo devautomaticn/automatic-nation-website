@@ -30,6 +30,14 @@ the publishing; a person decides what gets written and what goes live.
 
 **The board:** https://app.notion.com/p/7fab09d9d487475590ce483e8f2979a6
 
+**Strategies:** https://app.notion.com/p/daecab2ed9274dd2a5b9f290d31c96f6
+The experiments. Each row is a bet with a hypothesis, one metric, a baseline and a
+target. `/seo-ideas` generates from Planned and Running rows and links each idea
+back; `/seo-report` fills in results and verdicts. Promote from Backlog to
+Planned to steer what gets written.
+
+**Competitors:** https://app.notion.com/p/76324edf739143a28ac98722e15c9d67
+
 **The writing guide:** https://app.notion.com/p/3e2fcf50bd628108b76ae731c3804ef4
 A human-readable copy of `strategy.md`, `seo-voice` and `humanizer` in one page.
 The repo is the source of truth. **When a writing rule changes here, update that

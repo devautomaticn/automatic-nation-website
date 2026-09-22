@@ -3,7 +3,7 @@ title: "Airtable Templates: Which Ones Are Worth It, and What to Change First"
 description: Which Airtable templates are worth starting from, and the five
   things to fix in any of them before you put real data in.
 published: 2025-10-18
-updated: 2026-09-21
+updated: 2026-09-22
 wpId: 1174
 ---
 

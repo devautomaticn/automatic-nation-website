@@ -2,8 +2,7 @@
 title: "What an n8n Marketing Agency Actually Does (and When You Need One)"
 description: What an n8n agency really builds, what an engagement costs you in
   scope and time, and the honest test for whether you should hire one at all.
-published: 2026-09-21
-draft: true
+published: 2026-09-22
 ---
 
 Search for an n8n marketing agency and you mostly get template galleries. Thousands of pre-built workflows, free to import, each one a screenshot of somebody else's stack. They are genuinely useful. They are also the reason the question keeps coming up: if the templates are free, what exactly is an agency for?

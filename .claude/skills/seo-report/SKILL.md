@@ -52,6 +52,45 @@ Be honest about lag: nothing published inside 6–8 weeks has had time to rank,
 and reporting early movement as success teaches the wrong lesson. Say "too
 early to tell" when it is.
 
+## AI visibility
+
+Search is splitting: some buyers ask Google, some ask an assistant. Check both.
+
+**1. The recommendation prompt.** Re-run this **verbatim** every month, because a
+changed prompt is a changed test:
+
+```
+ai_optimization_llm_response
+  llm_type: chat_gpt, model_name: gpt-5.4, web_search: true
+  user_prompt: "I run a small business and want to hire an agency to build our
+  Airtable and n8n automations. Which agencies should I consider? Name specific
+  companies and their websites."
+```
+
+Record whether Automatic Nation is named, who else is, and **what each
+recommendation was sourced from**. On 22 Sep 2026 it named 8 agencies, all of
+them from ecosystem.airtable.com or experts.n8n.io, and cited no blog post.
+Add any new agency it names to the Competitors table.
+
+**2. Citation share.** `ai_opt_llm_ment_agg_metrics` for automaticnation.com and
+the top competitors, and `ai_opt_llm_ment_top_domains` for `airtable` and `n8n`,
+to see which domains get cited on the informational questions.
+
+Two facts from the first run that shape what is worth doing:
+
+- On Google's AI answers for n8n, **YouTube is 59% of all citations** (28,059 of
+  47,417), then Reddit, then n8n.io. Blogs barely feature.
+- On ChatGPT for Airtable, citations go to Reddit, airtable.com and Wikipedia;
+  among non-vendor sites only **softr.io** appears at any scale.
+
+So do not report AI visibility as something blog posts alone can fix. Directory
+listings win the hiring question; YouTube and Reddit win the informational ones.
+Say that plainly when the numbers say it.
+
+**What this does not prove:** one prompt, one model, one day. Answers vary run to
+run. Report it as direction, never as a ranking, and never claim a booked call
+came from an AI answer without attribution that shows it.
+
 ## Judge the strategies
 
 Every Strategies row (`collection://e3055eb4-6d92-43ce-91f4-c1b1d47b9061`) with

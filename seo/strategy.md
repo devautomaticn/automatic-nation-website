@@ -81,6 +81,24 @@ and everything it earned.
 A Refresh sets `updated:` to today and **leaves `published:` alone**. The post
 did not come into existence today.
 
+## Where the audience actually is
+
+Measured 22 Sep 2026, and it qualifies rule 1 rather than replacing it.
+
+- Asked which agency to hire for Airtable and n8n, ChatGPT named 8 agencies and
+  **every one came from the Airtable or n8n partner directory**. No blog post was
+  cited. A post cannot win that question; a directory listing can.
+- On Google's AI answers about n8n, **YouTube carries 59% of citations**, then
+  Reddit, then n8n.io.
+- On ChatGPT about Airtable, citations go to Reddit, airtable.com and Wikipedia.
+  The only non-vendor site cited at scale is softr.io.
+
+This does not change what we write, it bounds what writing can achieve.
+Commercial "who should I hire" intent is won in directories. Informational
+intent increasingly resolves inside an AI answer that cites video and forums.
+The blog still earns classic organic clicks, which is why it exists, but do not
+promise it will move AI visibility on its own.
+
 ## What not to write
 
 - **Anything about Airtable's own pricing, plans, or limits as the main

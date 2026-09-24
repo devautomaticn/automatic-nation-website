@@ -4,6 +4,37 @@ import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 import { unified } from '@astrojs/markdown-remark';
 import { rehypeProse } from './src/lib/rehype-prose.ts';
+import { readdirSync, readFileSync, existsSync } from 'node:fs';
+
+// Post dates for the sitemap's <lastmod>. Read straight off the frontmatter
+// because the config runs before content collections exist — same flat-scalar
+// parse as seo/check-links.mjs. Only posts get a lastmod: Google ignores the
+// field site-wide once it catches it lying, so a page with no real date gets
+// none rather than the build time.
+const BLOG = 'src/content/blog';
+/** @param {string} src @param {string} name */
+const field = (src, name) => {
+  const m = src.match(new RegExp(`^${name}:\\s*(.+)$`, 'm'));
+  return m ? m[1].trim().replace(/^["']|["']$/g, '') : undefined;
+};
+const LASTMOD = new Map();
+for (const dir of readdirSync(BLOG, { withFileTypes: true }).filter(d => d.isDirectory())) {
+  const file = `${BLOG}/${dir.name}/index.md`;
+  if (!existsSync(file)) continue;
+  const src = readFileSync(file, 'utf8');
+  const published = field(src, 'published');
+  if (!published) continue;
+  LASTMOD.set(`/${dir.name}/`, {
+    date: field(src, 'updated') ?? published,
+    // Mirrors isLive() in src/lib/blog.ts. If that changes, change this.
+    live: field(src, 'draft') !== 'true' && new Date(published).valueOf() <= Date.now(),
+    published,
+  });
+}
+// The index changes exactly when a post goes live, so its lastmod is the
+// newest live post's publish date — a real date, not the build time.
+const newestLive = [...LASTMOD.values()].filter(p => p.live).map(p => p.published).sort().at(-1);
+if (newestLive) LASTMOD.set('/blogs/', { date: newestLive });
 
 // https://astro.build/config
 export default defineConfig({
@@ -39,6 +70,13 @@ export default defineConfig({
         const PREFIXES = ['/blog/', '/testimonials/', '/resources/', '/category/', '/author/'];
         const EXACT = ['/about-us/', '/book-a-call-now/', '/training-sessions/', '/resource/'];
         return !PREFIXES.some(p => pathname.startsWith(p)) && !EXACT.includes(pathname);
+      },
+      // A draft or future post is never built, so it never reaches here — the
+      // sitemap already only lists live URLs. seo/indexnow.mjs diffs these
+      // lastmods against the deployed sitemap to find what changed.
+      serialize: item => {
+        const hit = LASTMOD.get(new URL(item.url).pathname);
+        return hit ? { ...item, lastmod: hit.date } : item;
       },
     }),
   ],

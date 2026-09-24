@@ -125,7 +125,9 @@ the URL actually answers.
 - Verify the URL returns 200 and its `<title>` and meta description are right.
 - Check it is in `https://automaticnation.com/sitemap-0.xml`.
 - Submit the URL in Google Search Console. This is manual and worth doing —
-  discovery is otherwise days slower.
+  discovery is otherwise days slower. Bing needs nothing: the deploy's
+  `indexnow` job announces the post on the day it goes live
+  (`seo/indexnow.mjs`), and Google reads the sitemap's `<lastmod>`.
 - Record the publish in the Notion row so the next report can measure from it.
 
 ## If something is wrong after publishing

@@ -261,6 +261,11 @@ not a keepalive: it is the only thing that makes a scheduled post's date arrive.
 - `public/logos/` contains files with doubled extensions (`Symbol.svg.svg`,
   `Google Gemini.svg.svg`). These names are referenced verbatim from `src/lib/hero-assets.ts`.
   **Don't "fix" them.**
+- `public/67ccedfb6e17b115a8a3a520ccef730a.txt` is the IndexNow key file, not
+  stray junk — Bing fetches it to verify every submission. It must match `KEY` in
+  `seo/indexnow.mjs`; the build fails if it doesn't. Google's side is the
+  sitemap's `<lastmod>` (`astro.config.mjs`), and it only goes on URLs that have
+  a real date — never stamp the build time on every URL.
 - `.gitignore` anchors root-level asset duplicates with a **leading slash** (`/logos/`,
   `/image.png`) so the patterns don't also match the real assets under `public/`. Those
   `public/` copies must stay committed or the deployed build 404s.

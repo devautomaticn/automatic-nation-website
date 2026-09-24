@@ -35,6 +35,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      indexnow: ${{ steps.indexnow.outputs.urls }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -43,6 +45,14 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      # Must run here, before the deploy: it diffs the new sitemap against the
+      # one still live. After deploy-pages the two are the same file.
+      # The assignment is its own line on purpose: inside `echo "$(…)"` a
+      # failing diff (missing key file) would be swallowed and the build pass.
+      - id: indexnow
+        run: |
+          urls=$(node seo/indexnow.mjs diff)
+          echo "urls=$urls" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
@@ -56,3 +66,17 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # Bing and the other IndexNow engines; Google is not one of them (see the
+  # header of seo/indexnow.mjs). A failure here is a warning, never a failed
+  # deploy — the site is already live by the time this runs.
+  indexnow:
+    needs: [build, deploy]
+    if: needs.build.outputs.indexnow != '[]'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - run: node seo/indexnow.mjs submit
+        env:
+          URLS: ${{ needs.build.outputs.indexnow }}

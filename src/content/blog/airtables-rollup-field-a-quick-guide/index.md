@@ -83,13 +83,13 @@ Project C above has no tasks linked, and the rollup shows 0. On a report, 0 hour
 
 The same thing happens with money. A client with no invoices linked and a client whose invoices add up to nothing both show 0 in a `SUM(values)` rollup, and whoever reads the dashboard treats them as the same client.
 
-The fix is to make "unknown" look different from "zero". Add a formula field next to the rollup:
+The fix is to make "unknown" look different from "zero". It takes two fields. First, add a Count field on the Tasks link and call it **Task count**. Then add a formula field next to the rollup:
 
 ```
-IF({Tasks}, {Total Duration for Tasks})
+IF({Task count}, {Total Duration for Tasks})
 ```
 
-When the link field is empty, the formula returns nothing and the cell stays blank. When tasks are linked, it shows the rollup's total, including a real 0. Report on the formula field and hide the raw rollup.
+When no tasks are linked, Task count is 0, Airtable treats 0 as false, and with no third argument the formula returns nothing, so the cell stays blank. When tasks are linked, it shows the rollup's total, including a real 0. Report on the formula field and hide the raw rollup.
 
 Then add a view filtered to records where the link field is empty. That view is the list of missing links, and someone should own emptying it.
 

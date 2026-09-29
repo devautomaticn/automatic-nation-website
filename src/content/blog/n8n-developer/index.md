@@ -1,5 +1,5 @@
 ---
-title: "Hiring an n8n Developer: What to Ask, What It Costs, and When You Need an Agency Instead"
+title: "Hiring an n8n Developer: Questions, Red Flags and Cost"
 description: "How to hire an n8n developer: six screening questions, the red flags we find in inherited workflows, what drives the price, and when an agency fits."
 published: 2026-09-29
 draft: true
@@ -85,11 +85,11 @@ We are an agency, so weigh this accordingly.
 
 A freelancer is the right hire more often than agencies admit. If the work is contained and the six questions get good answers, that is a fine outcome. You need an agency when the project is really three jobs (modelling the data, building the workflows, running and watching them) and you want one party responsible for all of it. The longer comparison is in [what an n8n agency actually does](/n8n-marketing-agency/).
 
-As for where to look: the n8n community forum has job posts, the freelance marketplaces list plenty of n8n profiles, and n8n runs its own directory of service partners. The six questions work the same on all of them. If your project is mostly on the Airtable side, we wrote that version in [how to hire an Airtable consultant](/how-to-hire-and-where-to-find-the-right-airtable-consultant/).
+As for where to look: the n8n community forum has job posts, and the freelance marketplaces list plenty of n8n profiles. The six questions work the same on both. If your project is mostly on the Airtable side, we wrote that version in [how to hire an Airtable consultant](/how-to-hire-and-where-to-find-the-right-airtable-consultant/).
 
 ## What an n8n developer costs, and what drives the price
 
-We do not publish a price, and we are not going to make up a market rate here. Rates for n8n work swing too much with region, experience and scope for one number to help you. What you can see is what goes into a quote:
+For a reference point, Upwork puts freelance n8n experts at [roughly $40 to $100 an hour](https://www.upwork.com/hire/n8n-experts/). Use that to sanity check a quote, not to predict one. Rates swing with region and experience, and an hourly number means little until you know what is in scope. What you can compare is what goes into a quote:
 
 - **How many systems are in scope.** Each connected app brings its own auth, data model and quirks. This is the biggest driver, and it is what our own pricing is based on.
 - **Whether each app has a built-in n8n node.** If one exists and covers what you need, that step is quick. If not, the developer is working from API docs and writing HTTP requests.

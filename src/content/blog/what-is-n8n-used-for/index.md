@@ -40,6 +40,8 @@ It replaced copying a spec from a vendor page into a spreadsheet and hoping it l
 
 The clipping was the easy half. Every vendor site marks up a price differently, and half of them load it after the page renders. The work was the normalisation step in the middle: deciding what counts as the price when a page shows three, and what to do with a price that will not parse, instead of silently writing a blank into a project budget.
 
+![Illustration of an n8n workflow for product capture: a Webhook receives a product clipped with a browser extension, a Code node normalises the price, and an If node checks whether the price parsed. Only a parsed price goes on to create the product in Airtable; a price that will not parse is never written as a blank.](./02.webp)
+
 ### 3. A lead database, migrated and enriched
 
 There is no trigger in the usual sense here. It was a batch job over years of existing records: leads spread across spreadsheets and an old CRM, pulled into one Airtable base, deduplicated, normalised, and enriched with company data so the list was worth working. The stack was n8n, Claude and Airtable, and 5,000 leads came out the other side consolidated and deduplicated.
@@ -55,6 +57,8 @@ A customer sends a message on WhatsApp. n8n receives it, checks who the sender i
 It replaced a team answering every message by hand.
 
 The work was in the order of operations. The agent verifies the customer before it generates a word, because an assistant that reads an order status to whoever happens to message is a data leak. n8n runs that sequence, and the rest of the system depends on it running in that order every time.
+
+![Illustration of an n8n workflow for a WhatsApp agent: a WhatsApp trigger receives the customer's message, an Airtable node checks who the sender is, and an If node lets Claude write a reply from that customer's own records only after the sender is verified. An unverified sender never reaches Claude.](./03.webp)
 
 If one of these looks like your week, that is the quickest conversation to have. [Book a call](/book-a-call/) and tell us which one, and what your version of it involves.
 

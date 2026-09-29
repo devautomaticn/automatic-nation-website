@@ -1,0 +1,52 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of an n8n workflow for product capture: a Webhook receives a product clipped with a browser extension, a Code node normalises the price, and an If node checks whether the price parsed. Only a parsed price goes on to create the product in Airtable; a price that will not parse is never written as a blank.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 700px; --bg: var(--yellow-soft); }
+  .window { width: 1100px; }
+  .bar { display: flex; align-items: center; gap: 16px; background: var(--ink); color: var(--paper); padding: 14px 22px; font-weight: 500; }
+  .bar .crumb { opacity: .7; }
+  .bar .pill { margin-left: auto; background: var(--green); color: var(--ink); border: 2px solid var(--paper); border-radius: 20px; padding: 3px 14px; font-size: 16px; font-weight: 700; }
+  .canvas { height: 500px; }
+  .dash .box { border-style: dashed; box-shadow: none; background: transparent; color: var(--mute); }
+  .lbl { position: absolute; font-size: 15px; font-weight: 700; background: var(--paper); padding: 1px 6px; border-radius: 6px; }
+  .clip { position: absolute; left: 30px; top: 22px; width: 250px; background: var(--paper); border: var(--stroke); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); font-size: 15px; }
+  .clip .t { background: var(--blue); border-bottom: var(--stroke); border-radius: 11px 11px 0 0; padding: 7px 12px; font-weight: 700; }
+  .clip .r { display: flex; justify-content: space-between; padding: 5px 12px; }
+  .clip .r span:last-child { font-family: 'JetBrains Mono', monospace; }
+</style></head>
+<body>
+<div class="window">
+  <div class="bar"><span class="crumb">Workflows /</span><span>Product capture</span><span class="pill">Active</span></div>
+  <div class="canvas">
+    <svg class="wires">
+      <path d="M278 238 H327" style="stroke-dasharray: 8 8"/>
+      <path d="M423 238 H527"/>
+      <path d="M623 238 H727"/>
+      <path d="M823 238 C 885 238, 885 88, 947 88"/>
+      <path d="M823 238 C 885 238, 885 368, 947 368" style="stroke-dasharray: 8 8"/>
+    </svg>
+
+    <div class="clip" style="top: 158px;">
+      <div class="t">Clipped from vendor page</div>
+      <div class="r"><span>Vendor</span><span>Example Supply</span></div>
+      <div class="r"><span>Price</span><span>$640 · $590 · $720</span></div>
+      <div class="r"><span>Image</span><span>✓</span></div>
+      <div class="r"><span>Specs</span><span>✓</span></div>
+    </div>
+
+    <div class="node trigger" style="left: 300px; top: 190px;"><div class="box yellow mono">↯</div><div class="name">Webhook</div><div class="sub">click in the extension</div></div>
+    <div class="node" style="left: 500px; top: 190px;"><div class="box orange mono">{ }</div><div class="name">Normalise price</div><div class="sub">Code</div></div>
+    <div class="node" style="left: 700px; top: 190px;"><div class="box blue mono">?</div><div class="name">Price parsed?</div><div class="sub">If</div></div>
+    <div class="node" style="left: 920px; top: 40px;"><div class="box green mono">▦</div><div class="name">Create product</div><div class="sub">Airtable, in the right project</div></div>
+    <div class="node dash" style="left: 920px; top: 320px;"><div class="box mono">∅</div><div class="name">No blank written</div><div class="sub">to the project budget</div></div>
+
+    <span class="lbl" style="left: 858px; top: 125px;">true</span>
+    <span class="lbl" style="left: 855px; top: 312px;">false</span>
+
+    <div class="note" style="left: 385px; top: 100px; transform: rotate(-2deg);">3 prices on the page: which one counts?</div>
+  </div>
+</div>
+</div>
+</body></html>

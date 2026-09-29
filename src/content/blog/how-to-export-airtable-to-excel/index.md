@@ -2,7 +2,7 @@
 title: "How to Export Airtable to Excel (and What Breaks When You Do)"
 description: Export Airtable to Excel in three clicks, then fix what the CSV loses on the way out, from linked records and attachment links to dates and formulas.
 published: 2025-10-27
-updated: 2026-09-28
+updated: 2026-09-29
 wpId: 1219
 ---
 

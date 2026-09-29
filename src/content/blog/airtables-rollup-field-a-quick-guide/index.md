@@ -2,7 +2,7 @@
 title: "Airtable Rollups: The Field That Fixes Counting, and the Three Ways It Goes Wrong"
 description: How to set up an Airtable rollup, which formula to pick, and the three rollup mistakes we fix most in real bases, with the fix for each.
 published: 2025-02-13
-updated: 2026-09-28
+updated: 2026-09-29
 hero: ./hero.webp
 heroAlt: ""
 wpId: 257

@@ -40,7 +40,7 @@ Not all Airtable consulting services are equal. Look for providers who:
 - Provide documentation and user training
 - Stay updated on Airtable’s latest features
 
-Review portfolios and testimonials to gauge reliability and results.
+Review portfolios and testimonials to gauge reliability and results. If the work is mostly automation between tools rather than the base itself, the same checks apply to [hiring an n8n developer](/n8n-developer/).
 
 ### How much do Airtable Consultants Cost?
 

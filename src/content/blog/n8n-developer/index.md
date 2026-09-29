@@ -2,7 +2,6 @@
 title: "Hiring an n8n Developer: Questions, Red Flags and Cost"
 description: "How to hire an n8n developer: six screening questions, the red flags we find in inherited workflows, what drives the price, and when an agency fits."
 published: 2026-09-29
-draft: true
 ---
 
 A workflow runs fine for five months. Then a token expires, one node starts returning an error, and nothing tells anyone. Orders keep arriving in the shop and stop arriving in the accounting system, and the first person to notice is whoever closes the books at month end. When you hire an n8n developer, that is the failure you are hiring against. Getting a workflow to run once is the easy part. You want someone whose workflows tell you when they stop.

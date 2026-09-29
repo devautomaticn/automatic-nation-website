@@ -49,7 +49,7 @@ Which one fits depends on how much automation work you expect to have next year,
 | **Hire in-house** | Automation is continuous and central, and you will always have a queue of work | You need three skills (integration, data modelling, infrastructure) and budget for one salary |
 | **Agency** | You need a system live on a deadline, or you have one that is failing and nobody can say why | The scope is genuinely one workflow. You will pay engagement overhead for a job that takes an afternoon |
 
-The most useful question is not "can we build this ourselves?" It is usually yes. The question is whether you want to be the team that owns it at 6pm on a Friday eighteen months from now.
+The most useful question is not "can we build this ourselves?" It is usually yes. The question is whether you want to be the team that owns it at 6pm on a Friday eighteen months from now. If you decide to hire someone, [what to ask an n8n developer before you hire them](/n8n-developer/) turns that into six screening questions.
 
 ## What self-hosting actually commits you to
 

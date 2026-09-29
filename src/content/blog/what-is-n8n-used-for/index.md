@@ -1,6 +1,6 @@
 ---
-title: "What Is n8n Used For? 5 Systems We've Actually Built With It"
-description: "What n8n is used for in practice: five systems we built with it, the nodes inside each one, and the jobs where n8n is the wrong tool."
+title: "What Is n8n Used For? 4 Systems We've Actually Built With It"
+description: "What n8n is used for in practice: four systems we built with it, the nodes inside each one, and the jobs where n8n is the wrong tool."
 published: 2026-09-28
 draft: true
 ---
@@ -11,9 +11,9 @@ Someone closes an order in Airtable, then opens QuickBooks and types the same or
 
 n8n is used to move data between the systems a business already runs on, and to act on it along the way. A workflow starts from a trigger (a webhook, a schedule, a new row, an incoming message), then runs a chain of nodes that read from one app, transform or check the data, and write to another. You can self-host it or use n8n's cloud. When a built-in node does not cover what you need, you call the API directly with an HTTP Request node or write the step in JavaScript or Python. In practice, n8n ends up as the layer between your database, your accounting, your CRM and your inbox.
 
-What that looks like depends on what you connect it to, so the rest of this page is five systems we have built with it. For each one: what starts it, what runs inside, what it replaced, and where the real work was.
+What that looks like depends on what you connect it to, so the rest of this page is four systems we have built with it. For each one: what starts it, what runs inside, what it replaced, and where the real work was.
 
-## Five systems, and what each one replaced
+## Four systems, and what each one replaced
 
 ### 1. Airtable orders into QuickBooks invoices and purchase orders
 
@@ -58,17 +58,11 @@ A customer sends a message on WhatsApp. n8n receives it, checks who the sender i
 
 The work was in the order of operations. The agent verifies the customer before it generates a word, because an assistant that reads an order status to whoever happens to message is a data leak. n8n runs that sequence, and the rest of the system depends on it running in that order every time.
 
-### 5. An Airtable schema rebuilt and migrated
-
-A base redesigned with a proper linked-record structure, and its existing data moved into the new shape. The stack was Airtable, n8n and Postgres.
-
-The work was the cutover. The base was rebuilt in place, without downtime, and nobody on the team had to re-enter anything.
-
 If one of these looks like your week, that is the quickest conversation to have. [Book a call](/book-a-call/) and tell us which one, and what your version of it involves.
 
-## The pattern behind all five
+## The pattern behind all four
 
-Put the five side by side and n8n plays the same part in every one: it is the connective tissue. The data lives somewhere else, in Airtable, QuickBooks or Postgres. The judgement, where there is any, also comes from somewhere else: Claude reading a message, or a matching rule someone wrote for deciding when two companies are one. n8n carries the data between them, in the right order.
+Put the four side by side and n8n plays the same part in every one: it is the connective tissue. The data lives somewhere else, in Airtable or QuickBooks. The judgement, where there is any, also comes from somewhere else: Claude reading a message, or a matching rule someone wrote for deciding when two companies are one. n8n carries the data between them, in the right order.
 
 That is the most useful way to think about what n8n is for. It is very good at sequence: fetch this, check that, branch, write back. It is a poor place to keep anything. When a project starts treating n8n as the database, storing state in it or making it the only place a number exists, it starts going wrong.
 

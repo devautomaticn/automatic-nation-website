@@ -1,0 +1,22 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of the Projects table with the finished rollup column, totalling 15 hours for Project A, 6 for Project B and 0 for Project C, which has no tasks linked.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 520px; --bg: var(--blue-soft); }
+  .window { width: 1080px; }
+  .grid { grid-template-columns: 56px 240px 320px 1fr; }
+  .grid .hi { background: var(--yellow-soft); } .grid .h.hi { background: var(--yellow); }
+</style></head>
+<body>
+<div class="window">
+  <div class="tabs"><div class="tab on">Projects</div><div class="tab">Tasks</div></div>
+  <div class="toolbar"><span>☰ Views</span><span class="view"><span class="ico">▦</span> Grid view ▾</span><span class="muted">Hide fields</span><span class="muted">Filter</span><span class="muted">Group</span><span class="muted">Sort</span></div>
+  <div class="grid">
+    <div class="h n"></div><div class="h"><span class="ico">A</span>Name</div><div class="h"><span class="ico">⇥</span>Tasks</div><div class="h hi"><span class="ico">◎</span>Total Duration for Tasks</div>
+    <div class="n">1</div><div>Project A</div><div><span class="chip">Task A</span></div><div class="num hi">15</div>
+    <div class="n">2</div><div>Project B</div><div><span class="chip">Task B</span><span class="chip">Task C</span></div><div class="num hi">6</div>
+    <div class="n">3</div><div>Project C</div><div></div><div class="num hi">0</div>
+  </div>
+</div>
+</body></html>

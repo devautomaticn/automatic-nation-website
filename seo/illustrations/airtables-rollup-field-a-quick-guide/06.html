@@ -1,0 +1,23 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of the Tasks table: three completed tasks linked to Project A and Project B, with durations of 15, 1 and 5 hours.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 520px; --bg: var(--blue-soft); }
+  .window { width: 1080px; }
+  .grid { grid-template-columns: 56px 220px 220px 240px 1fr; }
+  .grid .hi { background: var(--yellow-soft); } .grid .h.hi { background: var(--yellow); }
+  .ok { background: color-mix(in srgb, var(--green) 45%, var(--paper)); border: 2px solid var(--ink); border-radius: 9px; padding: 3px 10px; font-size: 17px; }
+</style></head>
+<body>
+<div class="window">
+  <div class="tabs"><div class="tab">Projects</div><div class="tab on">Tasks</div></div>
+  <div class="toolbar"><span>☰ Views</span><span class="view"><span class="ico">▦</span> Grid view ▾</span><span class="muted">Hide fields</span><span class="muted">Filter</span><span class="muted">Group</span><span class="muted">Sort</span></div>
+  <div class="grid">
+    <div class="h n"></div><div class="h"><span class="ico">A</span>Name</div><div class="h"><span class="ico">◉</span>Status</div><div class="h"><span class="ico">⇥</span>Projects</div><div class="h hi"><span class="ico">#</span>Task Duration (hs)</div>
+    <div class="n">1</div><div>Task A</div><div><span class="ok">Complete</span></div><div><span class="chip">Project A</span></div><div class="num hi">15</div>
+    <div class="n">2</div><div>Task B</div><div><span class="ok">Complete</span></div><div><span class="chip">Project B</span></div><div class="num hi">1</div>
+    <div class="n">3</div><div>Task C</div><div><span class="ok">Complete</span></div><div><span class="chip">Project B</span></div><div class="num hi">5</div>
+  </div>
+</div>
+</body></html>

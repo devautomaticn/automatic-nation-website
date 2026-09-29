@@ -1,0 +1,32 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of a Projects table with the add field menu open, roll typed into the search box and the Rollup field type highlighted.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 580px; --bg: var(--blue-soft); }
+  .window { width: 1060px; height: 460px; }
+  .grid { grid-template-columns: 56px 260px 260px 90px 1fr; }
+  .grid .plus { justify-content: center; background: var(--yellow); font-size: 26px; }
+  .field { border: 2px solid var(--line); border-radius: 10px; padding: 11px 14px; color: var(--faint); margin: 6px 8px 10px; }
+  .field.search { color: var(--ink); border-color: var(--ink); }
+  .menu .res { margin: 0 0 4px; }
+  .foot { display: flex; justify-content: space-between; padding: 10px 16px 6px; color: var(--mute); border-top: 2px solid var(--line); margin-top: 8px; }
+</style></head>
+<body>
+<div class="window">
+  <div class="tabs"><div class="tab on">Projects</div><div class="tab">Tasks</div></div>
+  <div class="toolbar"><span>☰ Views</span><span class="view"><span class="ico">▦</span> Grid view ▾</span><span class="muted">Hide fields</span><span class="muted">Filter</span><span class="muted">Group</span><span class="muted">Sort</span></div>
+  <div class="grid">
+    <div class="h n"></div><div class="h"><span class="ico">A</span>Name</div><div class="h"><span class="ico">⇥</span>Tasks</div><div class="h plus">+</div><div class="h"></div>
+    <div class="n">1</div><div>Project A</div><div></div><div></div><div></div>
+    <div class="n">2</div><div>Project B</div><div></div><div></div><div></div>
+    <div class="n">3</div><div>Project C</div><div></div><div></div><div></div>
+  </div>
+  <div class="menu" style="left: 560px; top: 180px; width: 420px;">
+    <div class="field">Field name (optional)</div>
+    <div class="field search">⌕ roll<span style="border-left:2px solid var(--ink); margin-left:2px;">&nbsp;</span></div>
+    <div class="hi res"><span class="ico">◎</span> Rollup</div>
+    <div class="foot"><span>+ Add description</span><span>Cancel</span></div>
+  </div>
+</div>
+</body></html>

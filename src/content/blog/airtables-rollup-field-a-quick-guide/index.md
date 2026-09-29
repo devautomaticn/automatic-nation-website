@@ -20,19 +20,19 @@ Step by step:
 
 1. **Make sure the tables are linked.** A rollup can only read from a table your current table already links to. If Projects has no "Link to another record" field pointing at Tasks, the rollup has nothing to read.
 2. **Add a field and choose Rollup.** Click "+" at the end of the table and search for it.
-   ![The add-field menu in a Projects table with 'roll' typed into the search box and the Rollup field type highlighted in the results.](./01.webp)
+   ![Illustration of a Projects table with the add field menu open, roll typed into the search box and the Rollup field type highlighted.](./01.webp)
 3. **Pick the link field.** This decides which table the values come from.
 4. **Pick the field to roll up.** Here, Task Duration in hours.
 5. **Write the aggregation formula.** `values` stands for the list of values pulled from the linked records.
 6. **Add conditions if you need them.** Switch on "Only include linked records that meet certain conditions" to, for example, sum only tasks whose Status is Complete. Conditions work like view filters: a field, an operator, a value.
-   ![The rollup configuration with record conditions switched on, limiting the rollup to linked tasks whose Status is Complete.](./05.webp)
+   ![Illustration of the rollup configuration: Task Duration chosen as the field to roll up, a condition limiting it to tasks whose Status is Complete, and SUM(values) as the aggregation formula.](./05.webp)
 7. **Save.** Every project now carries its own total.
 
-![The Tasks table showing three completed tasks linked to projects, with durations of 15, 1 and 5 hours.](./06.webp)
+![Illustration of the Tasks table: three completed tasks linked to Project A and Project B, with durations of 15, 1 and 5 hours.](./06.webp)
 
-![The Projects table with the finished rollup column, totalling 15 hours for Project A, 6 for Project B and 0 for Project C.](./07.webp)
+![Illustration of the Projects table with the finished rollup column, totalling 15 hours for Project A, 6 for Project B and 0 for Project C, which has no tasks linked.](./07.webp)
 
-Look at Project C in that last screenshot. It has no tasks linked at all, and the rollup says 0. That is the second failure below.
+Look at Project C in that last table. It has no tasks linked at all, and the rollup says 0. That is the second failure below.
 
 View filters do not touch a rollup, which surprises people. If you hide cancelled tasks in the Tasks grid, the rollup still counts them. Only the conditions inside the field configuration decide which linked records are included.
 

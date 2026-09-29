@@ -1,0 +1,39 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of an Airtable grid view with the view menu open and Download CSV highlighted.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 640px; --bg: var(--blue-soft); }
+  .window { width: 1060px; height: 500px; }
+  .grid { grid-template-columns: 56px 250px 440px 150px 1fr; }
+  .toolbar .view.open { background: var(--yellow); border: 2px solid var(--ink); }
+  .cursor { position: absolute; left: 340px; top: 262px; width: 30px; }
+</style></head>
+<body>
+<div class="window">
+  <div class="tabs"><div class="tab">Clients</div><div class="tab on">Projects</div><div class="tab">Invoices</div></div>
+  <div class="toolbar">
+    <span>☰ Views</span>
+    <span class="view open"><span class="ico">▦</span> Export: Finance ▾</span>
+    <span class="muted">Hide fields</span><span class="muted">Filter</span><span class="muted">Group</span><span class="muted">Sort</span>
+  </div>
+  <div class="grid">
+    <div class="h n"></div><div class="h"><span class="ico">A</span>Name</div><div class="h"><span class="ico">⇥</span>Client</div><div class="h"><span class="ico">◉</span>Status</div><div class="h"><span class="ico">$</span>Budget</div>
+    <div class="n">1</div><div>Website rebuild</div><div><span class="chip">Acme Corp</span></div><div>Active</div><div class="num">$12,000</div>
+    <div class="n">2</div><div>Onboarding flow</div><div><span class="chip">Northwind</span></div><div>Done</div><div class="num">$4,500</div>
+    <div class="n">3</div><div>CRM cleanup</div><div><span class="chip">Globex</span></div><div>Active</div><div class="num">$7,800</div>
+    <div class="n">4</div><div>Quarterly report</div><div><span class="chip">Acme Corp</span></div><div>Planned</div><div class="num">$2,000</div>
+    <div class="n">5</div><div>Inventory sync</div><div><span class="chip">Initech</span></div><div>Active</div><div class="num">$9,300</div>
+  </div>
+  <div class="menu" style="left: 150px; top: 112px; width: 290px;">
+    <div>✎ Rename view</div>
+    <div>⧉ Duplicate view</div>
+    <hr>
+    <div class="hi">⤓ Download CSV</div>
+    <div>⎙ Print view</div>
+    <hr>
+    <div style="color: var(--red)">✕ Delete view</div>
+  </div>
+  <svg class="cursor" viewBox="0 0 24 30"><path d="M2 2 L2 24 L8 18 L12 28 L16 26 L12 17 L20 17 Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/></svg>
+</div>
+</body></html>

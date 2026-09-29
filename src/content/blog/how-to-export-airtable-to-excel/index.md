@@ -16,6 +16,8 @@ That covers the mechanics. The rest of this page is about what the file leaves b
 2. **Click the down arrow next to the view name**, or right-click the view in the sidebar, and choose **Download CSV**.
 3. **Open the file in Excel**, then use File > Save As and pick Excel Workbook (`.xlsx`) if you need a real workbook rather than a CSV.
 
+![Illustration of an Airtable grid view with the view menu open and Download CSV highlighted.](./01.webp)
+
 If **Download CSV** is missing, you are probably in a shared view whose creator has turned off copying data out of it. That setting disables the download too. Ask whoever owns the base.
 
 For a handful of rows there is a faster route: select the cells in the grid, copy, and paste straight into Excel. That is fine for twenty records. For anything you will need again, use the CSV.
@@ -49,6 +51,8 @@ A CSV holds text, and a lot of what an Airtable base does is not text.
 Record comments, field descriptions, the base guide, and anything an extension stores without writing it back to a field are not in the file at all.
 
 **Linked records are the expensive one.** If a Projects table links to a Clients table, the CSV gives you the text "Acme Corp" in the Client column. It does not tell you which Acme Corp, and if two clients share a name, the file cannot tell them apart. Load it somewhere else and you have the names of things that used to be connected, without the connections.
+
+![Illustration of two Airtable rows linked to two different Acme Corp client records, and the same rows in the downloaded CSV, where both clients are just the text Acme Corp and the record IDs are gone.](./02.webp)
 
 If the relationships need to survive, add them yourself before exporting. Create a formula field in the linked table with `RECORD_ID()`, then add a lookup of that field in the table you are exporting. Every row now carries the IDs of the records it links to, and a VLOOKUP in Excel, or a script on the other end, can join them back up. [The guide to field types](/airtable-field-types-a-friendly-guide-to-unlock-the-power-of-your-data/) covers why the link is worth more than the text in the first place.
 

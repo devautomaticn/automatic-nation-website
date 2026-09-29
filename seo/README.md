@@ -86,6 +86,7 @@ sweeps for it.
 | `performance-log.md` | Appended by each report run. |
 | `check-copy.mjs` | Build gate: fails on any em dash, en dash or spaced hyphen in pipeline copy. |
 | `check-links.mjs` | Build gate: fails if a live page links to a post that is not live. Runs in `npm run check`. |
+| `illustrations/` | Blog illustrations: an app's real structure (Airtable, n8n) drawn in our tokens. One HTML source per image, `{slug}/NN.html`, rendered to `src/content/blog/{slug}/NN.webp` by `node seo/illustrations/render.mjs`. Alt text lives in the source's `<meta name="alt">`. Use one where a screenshot is missing or cannot be shown. |
 | `.claude/skills/seo-*` | The four stages. |
 | `.claude/skills/seo-voice` | The house voice, extracted from `src/data/landings/`. The editing pass. |
 | `.claude/skills/humanizer` | Vendored from github.com/blader/humanizer (MIT). 25 AI tells. Don't edit it. |

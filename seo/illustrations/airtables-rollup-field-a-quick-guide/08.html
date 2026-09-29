@@ -1,0 +1,40 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of a Projects table with a Task count field, the Total Duration rollup and a Reported hours formula. Project C has no tasks linked, so its Reported hours cell is blank, while Project D has a linked task with 0 hours and shows a real 0.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 640px; --bg: var(--blue-soft); }
+  .window { width: 1100px; }
+  .grid { grid-template-columns: 50px 160px 240px 175px 210px 1fr; font-size: 18px; }
+  .grid .h { font-size: 17px; }
+  .grid .hi { background: var(--yellow-soft); }
+  .grid .h.hi { background: var(--yellow); }
+  .blank { outline: 3px dashed var(--ink); outline-offset: -8px; border-radius: 12px; }
+  .zero { outline: 3px solid var(--ink); outline-offset: -8px; border-radius: 12px; }
+  .formula { padding: 12px 20px; border-top: var(--stroke); font-size: 17px; display: flex; gap: 12px; align-items: center; }
+  .formula code { background: var(--yellow-soft); border: 2px solid var(--ink); border-radius: 8px; padding: 4px 10px; }
+  .legend { display: flex; gap: 36px; padding: 0 20px 16px; font-size: 17px; font-weight: 500; }
+  .legend span { display: flex; align-items: center; gap: 10px; }
+  .sw { display: inline-block; width: 34px; height: 22px; background: var(--yellow-soft); }
+  .sw.blank { border: 3px dashed var(--ink); border-radius: 7px; } .sw.zero { border: 3px solid var(--ink); border-radius: 7px; }
+</style></head>
+<body>
+<div class="window">
+  <div class="tabs"><div class="tab on">Projects</div><div class="tab">Tasks</div></div>
+  <div class="grid">
+    <div class="h n"></div>
+    <div class="h"><span class="ico">A</span>Name</div>
+    <div class="h"><span class="ico">⇥</span>Tasks</div>
+    <div class="h"><span class="ico">#</span>Task count</div>
+    <div class="h"><span class="ico">◎</span>Total Duration</div>
+    <div class="h hi"><span class="ico">ƒ</span>Reported hours</div>
+
+    <div class="n">1</div><div>Project A</div><div><span class="chip">Task A</span></div><div class="num">1</div><div class="num">15</div><div class="num hi">15</div>
+    <div class="n">2</div><div>Project B</div><div><span class="chip">Task B</span><span class="chip">Task C</span></div><div class="num">2</div><div class="num">6</div><div class="num hi">6</div>
+    <div class="n">3</div><div>Project C</div><div></div><div class="num">0</div><div class="num">0</div><div class="num hi blank"></div>
+    <div class="n">4</div><div>Project D</div><div><span class="chip">Task D</span></div><div class="num">1</div><div class="num">0</div><div class="num hi zero">0</div>
+  </div>
+  <div class="formula"><span class="ico">ƒ</span> Reported hours = <code class="mono">IF({Task count}, {Total Duration for Tasks})</code></div>
+  <div class="legend"><span><i class="sw blank"></i>Project C: nothing linked, so it stays blank</span><span><i class="sw zero"></i>Project D: a task with 0 hours, so a real 0</span></div>
+</div>
+</body></html>

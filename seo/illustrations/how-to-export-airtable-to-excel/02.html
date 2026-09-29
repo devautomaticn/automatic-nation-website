@@ -1,0 +1,42 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of two Airtable rows linked to two different Acme Corp client records, and the same rows in the downloaded CSV, where both clients are just the text Acme Corp and the record IDs are gone.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 600px; --bg: var(--yellow-soft); }
+  .row { display: flex; align-items: center; gap: 28px; }
+  .window.at { width: 490px; }
+  .grid { grid-template-columns: 200px 1fr; }
+  .id { font-size: 14px; color: var(--mute); }
+  .cell { flex-direction: column; align-items: flex-start !important; gap: 4px !important; }
+  .arrow { display: flex; flex-direction: column; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; }
+  .file { width: 410px; }
+  .file .bar { background: var(--ink); color: var(--paper); padding: 12px 18px; font-size: 16px; }
+  .file pre { padding: 22px 20px; font-size: 17px; line-height: 2; font-family: 'JetBrains Mono', monospace; }
+  .file mark { background: var(--yellow); border-radius: 6px; padding: 2px 4px; }
+  .file .dim { color: var(--faint); }
+  .cap { position: absolute; bottom: 36px; width: 100%; text-align: center; font-weight: 700; font-size: 22px; }
+</style></head>
+<body>
+<div class="row">
+  <div class="window at">
+    <div class="tabs"><div class="tab on">Projects</div><div class="tab">Clients</div></div>
+    <div class="grid">
+      <div class="h"><span class="ico">A</span>Name</div><div class="h"><span class="ico">⇥</span>Client</div>
+      <div>Website rebuild</div><div class="cell"><span class="chip">Acme Corp</span><span class="id mono">recA7Kx2… Acme Corp, Ohio</span></div>
+      <div>Quarterly report</div><div class="cell"><span class="chip">Acme Corp</span><span class="id mono">recQ93mB… Acme Corp, Texas</span></div>
+    </div>
+  </div>
+  <div class="arrow">
+    <span>Download CSV</span>
+    <svg width="90" height="30" viewBox="0 0 90 30"><path d="M2 15 H80 M66 3 L84 15 L66 27" fill="none" stroke="var(--ink)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <div class="window file">
+    <div class="bar mono">projects.csv</div>
+<pre><span class="dim">Name,Client</span>
+Website rebuild,<mark>Acme Corp</mark>
+Quarterly report,<mark>Acme Corp</mark></pre>
+  </div>
+</div>
+<div class="cap">Two different clients in Airtable. One name in the file.</div>
+</body></html>

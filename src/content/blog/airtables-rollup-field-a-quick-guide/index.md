@@ -91,6 +91,8 @@ IF({Task count}, {Total Duration for Tasks})
 
 When no tasks are linked, Task count is 0, Airtable treats 0 as false, and with no third argument the formula returns nothing, so the cell stays blank. When tasks are linked, it shows the rollup's total, including a real 0. Report on the formula field and hide the raw rollup.
 
+![Illustration of a Projects table with a Task count field, the Total Duration rollup and a Reported hours formula. Project C has no tasks linked, so its Reported hours cell is blank, while Project D has a linked task with 0 hours and shows a real 0.](./08.webp)
+
 Then add a view filtered to records where the link field is empty. That view is the list of missing links, and someone should own emptying it.
 
 For blanks inside the linked records (a task linked to the project but with no duration entered), compare `COUNTALL(values)` with `COUNTA(values)` as described above.

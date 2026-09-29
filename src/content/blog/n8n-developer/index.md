@@ -29,6 +29,8 @@ Ask these on the first call. None of them needs you to know n8n. You are listeni
 
 A good answer names a mechanism. In n8n that is usually an error workflow: a separate workflow that starts with an Error Trigger node and is selected as the error workflow in each production workflow's settings. A failure anywhere then posts to Slack or email with the workflow name and a link to the execution. For calls that fail for boring reasons, like a timeout, they should mention the node's Retry On Fail setting.
 
+![Illustration of n8n workflow settings for an Orders to accounting workflow, with Error Workflow set to Error alerts, next to the Error alerts workflow: an Error Trigger node connected to a Slack node that posts the failed workflow's name and a link to the execution.](./01.webp)
+
 "I test everything thoroughly" is a weak answer. Testing catches the failures you can predict, and the expired token five months later is one you can't.
 
 ### 2. "Where will the credentials live, and whose accounts are they?"
@@ -36,6 +38,8 @@ A good answer names a mechanism. In n8n that is usually an error workflow: a sep
 n8n has a credential store. API keys and OAuth connections go there, encrypted, and nodes reference them by name. You want to hear that, and you want to hear that every connection runs on an account your company owns.
 
 The red flag is an API key pasted into an HTTP Request node's header or typed into a Code node. It works. It also puts the key in plain text in every export of that workflow, and rotating it means hunting through nodes.
+
+![Illustration of two n8n HTTP Request node panels side by side. On the left, authentication is set to None and an API key is typed into the Authorization header in plain text. On the right, authentication uses a Header Auth credential picked by name from the credential store.](./02.webp)
 
 ### 3. "How will I know what ran yesterday?"
 
@@ -46,6 +50,8 @@ n8n keeps execution history, but only what each workflow's settings tell it to s
 Describe your process in two sentences and ask how many workflows it becomes. You are listening for sub-workflows: small workflows with one job each, called from a parent through the Execute Sub-workflow node, so each piece can be tested and changed on its own.
 
 "One workflow" for anything past a handful of steps is the answer that turns into a canvas nobody wants to touch.
+
+![Illustration of two n8n canvases. On the left, one giant workflow with crossing branches and nodes still named HTTP Request7, IF3 and Set12. On the right, a short parent workflow whose New order trigger calls three small sub-workflows, Map customer, Create invoice and Log run, through Execute Sub-workflow nodes.](./03.webp)
 
 ### 5. "When you leave, what do I have?"
 

@@ -1,0 +1,85 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of two n8n canvases. On the left, one giant workflow with crossing branches and nodes still named HTTP Request7, IF3 and Set12. On the right, a short parent workflow whose New order trigger calls three small sub-workflows, Map customer, Create invoice and Log run, through Execute Sub-workflow nodes.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 700px; --bg: var(--blue-soft); }
+  body { display: flex; align-items: center; justify-content: center; gap: 34px; }
+  .col { display: flex; flex-direction: column; gap: 18px; align-items: flex-start; }
+  .tag { border: var(--stroke); border-radius: 12px; padding: 6px 14px; font-weight: 700; font-size: 18px; box-shadow: 4px 4px 0 var(--ink); }
+  .tag.bad { background: var(--red); } .tag.good { background: var(--green); }
+  .bar { padding: 14px 20px; border-bottom: var(--stroke); font-weight: 700; }
+  .canvas { height: 470px; }
+  .messy { width: 440px; } .clean { width: 600px; }
+  .node.mini { width: 110px; gap: 7px; }
+  .node.mini .box { width: 64px; height: 64px; border-radius: 14px; font-size: 22px; box-shadow: 3px 3px 0 var(--ink); }
+  .node.mini.trigger .box { border-radius: 32px 14px 14px 32px; }
+  .node.mini .name { font-size: 14px; background: var(--paper); padding: 0 4px; border-radius: 4px; position: relative; white-space: nowrap; }
+  .canvas > svg.wires path.dash { stroke-dasharray: 2 8; stroke-width: 3; }
+  .sub { position: absolute; top: 262px; width: 136px; height: 188px; border: 3px dashed var(--ink); border-radius: 16px; background: color-mix(in srgb, var(--yellow) 18%, var(--paper)); padding: 12px; }
+  .sub .t { font-size: 13px; color: var(--mute); font-weight: 500; }
+  .sub .n { font-size: 16px; font-weight: 700; margin-top: 2px; }
+  .sub .row { display: flex; align-items: center; margin-top: 14px; }
+  .sub .row i { display: block; width: 34px; height: 34px; border: 3px solid var(--ink); border-radius: 9px; background: var(--paper); flex: none; }
+  .sub .row i.tr { border-radius: 17px 9px 9px 17px; }
+  .sub .row b { display: block; flex: 1; height: 3px; background: var(--ink); }
+  .sub .one { font-size: 13px; font-weight: 700; margin-top: 14px; line-height: 1.25; }
+</style></head>
+<body>
+<div class="col">
+  <div class="tag bad">✕ One giant workflow</div>
+  <div class="window messy">
+    <div class="bar">Orders sync (everything)</div>
+    <div class="canvas" id="messy"><svg class="wires"></svg></div>
+  </div>
+</div>
+<div class="col">
+  <div class="tag good">✓ A parent calling sub-workflows</div>
+  <div class="window clean">
+    <div class="bar">Orders sync</div>
+    <div class="canvas">
+      <svg class="wires">
+        <path d="M116 88 L170 88"/>
+        <path d="M266 88 L315 88"/>
+        <path d="M411 88 L460 88"/>
+        <path class="dash" d="M218 196 L218 262"/>
+        <path class="dash" d="M363 196 L363 262"/>
+        <path class="dash" d="M508 196 L508 262"/>
+      </svg>
+      <div class="node trigger" style="left: -7px; top: 40px;"><div class="box yellow">▶</div><div class="name">New order</div></div>
+      <div class="node" style="left: 143px; top: 40px;"><div class="box blue">↪</div><div class="name">Map customer</div><div class="sub" style="all: unset; font-size: 13px; color: var(--mute);">Execute Sub-workflow</div></div>
+      <div class="node" style="left: 288px; top: 40px;"><div class="box blue">↪</div><div class="name">Create invoice</div><div class="sub" style="all: unset; font-size: 13px; color: var(--mute);">Execute Sub-workflow</div></div>
+      <div class="node" style="left: 433px; top: 40px;"><div class="box blue">↪</div><div class="name">Log run</div><div class="sub" style="all: unset; font-size: 13px; color: var(--mute);">Execute Sub-workflow</div></div>
+      <div class="sub" style="left: 150px;"><div class="t">Sub-workflow</div><div class="n">Map customer</div><div class="row"><i class="tr"></i><b></b><i></i><b></b><i></i></div><div class="one">One job, tested alone</div></div>
+      <div class="sub" style="left: 295px;"><div class="t">Sub-workflow</div><div class="n">Create invoice</div><div class="row"><i class="tr"></i><b></b><i></i><b></b><i></i></div><div class="one">One job, tested alone</div></div>
+      <div class="sub" style="left: 440px;"><div class="t">Sub-workflow</div><div class="n">Log run</div><div class="row"><i class="tr"></i><b></b><i></i></div><div class="one">One job, tested alone</div></div>
+    </div>
+  </div>
+</div>
+<script>
+const N = [
+  ['Webhook',0,0,'▶','trigger yellow'],['HTTP Request7',1,0,'↗'],['IF3',2,0,'◇'],['HTTP Request2',3,0,'↗'],
+  ['Code2',0,1,'{ }'],['Set12',1,1,'✎'],['HTTP Request4',2,1,'↗'],['Merge1',3,1,'⋈'],
+  ['HTTP Request',0,2,'↗'],['IF',1,2,'◇'],['Code',2,2,'{ }'],['Set3',3,2,'✎'],
+];
+const X = c => 24 + c * 108, Y = r => 40 + r * 135;
+const E = [[0,1],[1,2],[2,3],[2,10],[1,7],[0,4],[4,9],[8,6],[9,11],[10,5],[6,3],[5,11],[4,6]];
+const cv = document.getElementById('messy'), svg = cv.querySelector('svg');
+for (const [a,b] of E) {
+  const [, ca, ra] = N[a], [, cb, rb] = N[b];
+  const x1 = X(ca)+64, y1 = Y(ra)+32, x2 = X(cb), y2 = Y(rb)+32;
+  const k = x2 > x1 ? Math.max(40, (x2-x1)*0.5) : 40;
+  const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+  p.setAttribute('d', `M${x1} ${y1} C ${x1+k} ${y1}, ${x2-k} ${y2}, ${x2} ${y2}`);
+  svg.appendChild(p);
+}
+for (const [name,c,r,g,cls=''] of N) {
+  const d = document.createElement('div');
+  const trig = cls.includes('trigger');
+  d.className = 'node mini' + (trig ? ' trigger' : '');
+  d.style.left = (X(c) - 23) + 'px'; d.style.top = Y(r) + 'px';
+  d.innerHTML = `<div class="box${trig ? ' yellow' : ''}">${g}</div><div class="name">${name}</div>`;
+  cv.appendChild(d);
+}
+</script>
+</body></html>

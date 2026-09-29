@@ -1,0 +1,88 @@
+/* Shared skin for blog illustrations: a real app's structure, drawn in the
+   site's own tokens. Hex values mirror @theme in src/styles/global.css;
+   keep them in sync by hand (this file is rendered outside the Astro build). */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --yellow: #F7DB55;
+  --blue:   #8699F7;
+  --red:    #E3662E;
+  --orange: #EEAF79;
+  --green:  #7BB784;
+  --ink:    #2c2c2c;
+  --paper:  #FFFBF9;
+  --mute:   #525252;
+  --faint:  #818181;
+  --line:   #e5e5e5;
+  --blue-soft:   color-mix(in srgb, var(--blue) 22%, var(--paper));
+  --yellow-soft: color-mix(in srgb, var(--yellow) 35%, var(--paper));
+  --stroke: 3px solid var(--ink);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { width: var(--w); height: var(--h); overflow: hidden; }
+
+body {
+  background: var(--bg, var(--blue-soft));
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  color: var(--ink);
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+}
+
+.mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+/* The app window: thick ink stroke, hard offset shadow, big radius. */
+.window {
+  background: var(--paper);
+  border: var(--stroke);
+  border-radius: 22px;
+  box-shadow: 8px 8px 0 var(--ink);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Airtable chrome */
+.tabs { display: flex; gap: 6px; background: var(--ink); padding: 10px 14px 0; }
+.tab { color: var(--paper); padding: 10px 20px; border-radius: 12px 12px 0 0; font-weight: 500; opacity: .75; }
+.tab.on { background: var(--paper); color: var(--ink); opacity: 1; }
+.toolbar { display: flex; align-items: center; gap: 26px; padding: 14px 20px; border-bottom: var(--stroke); font-weight: 500; }
+.toolbar .view { display: flex; align-items: center; gap: 10px; padding: 6px 12px; border-radius: 10px; }
+.toolbar .muted { color: var(--mute); }
+
+.grid { display: grid; }
+.grid > div { padding: 13px 16px; border-bottom: 2px solid var(--line); border-right: 2px solid var(--line); display: flex; align-items: center; gap: 8px; min-height: 56px; }
+.grid .h { font-weight: 700; background: color-mix(in srgb, var(--ink) 4%, var(--paper)); border-bottom: var(--stroke); }
+.grid .n { color: var(--faint); justify-content: center; }
+.grid .num { justify-content: flex-end; font-family: 'JetBrains Mono', monospace; }
+.ico { font-family: 'JetBrains Mono', monospace; font-size: 16px; width: 24px; height: 24px; border: 2px solid var(--ink); border-radius: 7px; display: inline-grid; place-items: center; flex: none; }
+
+.chip { background: var(--blue-soft); border: 2px solid var(--ink); border-radius: 9px; padding: 3px 10px; font-size: 17px; white-space: nowrap; }
+
+.menu { position: absolute; background: var(--paper); border: var(--stroke); border-radius: 16px; box-shadow: 6px 6px 0 var(--ink); padding: 8px; }
+.menu div { padding: 11px 16px; border-radius: 10px; display: flex; gap: 12px; align-items: center; }
+.menu .hi { background: var(--yellow); font-weight: 700; }
+.menu hr { border: 0; border-top: 2px solid var(--line); margin: 6px 8px; }
+
+.note { position: absolute; background: var(--yellow); border: var(--stroke); border-radius: 12px; padding: 8px 14px; font-weight: 700; font-size: 18px; box-shadow: 4px 4px 0 var(--ink); white-space: nowrap; }
+
+/* n8n chrome: a dotted canvas, square nodes with the name underneath,
+   connectors drawn as an inline <svg> behind the nodes. */
+.canvas {
+  position: relative;
+  background-color: var(--paper);
+  background-image: radial-gradient(color-mix(in srgb, var(--ink) 22%, transparent) 1.5px, transparent 1.5px);
+  background-size: 22px 22px;
+}
+.canvas > svg.wires { position: absolute; inset: 0; width: 100%; height: 100%; }
+.canvas > svg.wires path { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; }
+.node { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 150px; }
+.node .box { width: 96px; height: 96px; background: var(--paper); border: var(--stroke); border-radius: 20px; box-shadow: 4px 4px 0 var(--ink); display: grid; place-items: center; font-size: 34px; font-weight: 700; }
+.node.trigger .box { border-radius: 48px 20px 20px 48px; }
+.node .name { font-size: 16px; font-weight: 700; text-align: center; line-height: 1.2; }
+.node .sub { font-size: 13px; color: var(--mute); text-align: center; margin-top: -6px; }
+.node .box.yellow { background: var(--yellow); } .node .box.blue { background: var(--blue); }
+.node .box.red { background: var(--red); } .node .box.orange { background: var(--orange); } .node .box.green { background: var(--green); }
+.node.error .box { border-color: var(--red); box-shadow: 4px 4px 0 var(--red); }

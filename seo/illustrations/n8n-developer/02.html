@@ -1,0 +1,63 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of two n8n HTTP Request node panels side by side. On the left, authentication is set to None and an API key is typed into the Authorization header in plain text. On the right, authentication uses a Header Auth credential picked by name from the credential store.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 680px; --bg: var(--blue-soft); }
+  body { display: flex; align-items: center; justify-content: center; gap: 48px; }
+  .col { display: flex; flex-direction: column; gap: 18px; align-items: flex-start; }
+  .tag { border: var(--stroke); border-radius: 12px; padding: 6px 14px; font-weight: 700; font-size: 18px; box-shadow: 4px 4px 0 var(--ink); }
+  .tag.bad { background: var(--red); } .tag.good { background: var(--green); }
+  .panel { width: 520px; }
+  .head { background: var(--ink); color: var(--paper); padding: 14px 20px; font-weight: 700; display: flex; gap: 12px; align-items: center; }
+  .head .ico { border-color: var(--paper); color: var(--paper); }
+  .ptabs { display: flex; gap: 22px; padding: 10px 20px 0; border-bottom: 2px solid var(--line); font-size: 16px; font-weight: 500; color: var(--mute); }
+  .ptabs span { padding-bottom: 8px; } .ptabs .on { color: var(--ink); border-bottom: 3px solid var(--ink); font-weight: 700; }
+  .rows { padding: 14px 20px 20px; display: flex; flex-direction: column; gap: 12px; height: 440px; }
+  .lbl { font-size: 15px; font-weight: 700; margin-bottom: 5px; }
+  .fld { border: 2px solid var(--line); border-radius: 10px; padding: 8px 12px; font-size: 16px; display: flex; justify-content: space-between; align-items: center; color: var(--mute); }
+  .fld.mono { font-size: 15px; }
+  .fld.hot { border: var(--stroke); background: color-mix(in srgb, var(--red) 25%, var(--paper)); color: var(--ink); font-weight: 500; }
+  .fld.ok { border: var(--stroke); background: var(--yellow); color: var(--ink); font-weight: 700; }
+  .pair { display: grid; grid-template-columns: 150px 1fr; gap: 10px; }
+  .toggle { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 700; }
+  .sw { width: 38px; height: 22px; border-radius: 11px; border: 2px solid var(--ink); background: var(--green); position: relative; }
+  .sw::after { content: ''; position: absolute; right: 2px; top: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--paper); border: 2px solid var(--ink); }
+  .sw.off { background: var(--line); } .sw.off::after { right: auto; left: 2px; }
+  .hint { font-size: 15px; font-weight: 500; margin-top: 2px; }
+</style></head>
+<body>
+<div class="col">
+  <div class="tag bad">✕ Key typed into the header</div>
+  <div class="window panel">
+    <div class="head"><span class="ico">↗</span>HTTP Request</div>
+    <div class="ptabs"><span class="on">Parameters</span><span>Settings</span></div>
+    <div class="rows">
+      <div><div class="lbl">Method</div><div class="fld"><span>POST</span><span>▾</span></div></div>
+      <div><div class="lbl">URL</div><div class="fld mono"><span>https://api.example.com/invoices</span></div></div>
+      <div><div class="lbl">Authentication</div><div class="fld"><span>None</span><span>▾</span></div></div>
+      <div class="toggle"><i class="sw"></i>Send Headers</div>
+      <div class="pair">
+        <div><div class="lbl">Name</div><div class="fld mono"><span>Authorization</span></div></div>
+        <div><div class="lbl">Value</div><div class="fld mono hot"><span>Bearer 7f3a91c0e2b4d8…</span></div></div>
+      </div>
+      <div class="hint">In plain text in every export of this workflow</div>
+    </div>
+  </div>
+</div>
+<div class="col">
+  <div class="tag good">✓ Credential from the store</div>
+  <div class="window panel">
+    <div class="head"><span class="ico">↗</span>HTTP Request</div>
+    <div class="ptabs"><span class="on">Parameters</span><span>Settings</span></div>
+    <div class="rows">
+      <div><div class="lbl">Method</div><div class="fld"><span>POST</span><span>▾</span></div></div>
+      <div><div class="lbl">URL</div><div class="fld mono"><span>https://api.example.com/invoices</span></div></div>
+      <div><div class="lbl">Authentication</div><div class="fld"><span>Generic Credential Type</span><span>▾</span></div></div>
+      <div><div class="lbl">Generic Auth Type</div><div class="fld"><span>Header Auth</span><span>▾</span></div></div>
+      <div><div class="lbl">Header Auth</div><div class="fld ok"><span>Accounting API (company account)</span><span>▾</span></div></div>
+      <div class="hint">Stored encrypted, referenced by name, rotated in one place</div>
+    </div>
+  </div>
+</div>
+</body></html>

@@ -17,6 +17,7 @@
   .node.mini .name { font-size: 14px; background: var(--paper); padding: 0 4px; border-radius: 4px; position: relative; white-space: nowrap; }
   .canvas > svg.wires path.dash { stroke-dasharray: 2 8; stroke-width: 3; }
   .sub { position: absolute; top: 262px; width: 136px; height: 188px; border: 3px dashed var(--ink); border-radius: 16px; background: color-mix(in srgb, var(--yellow) 18%, var(--paper)); padding: 12px; }
+  .kind { font-size: 13px; color: var(--mute); text-align: center; line-height: 1.25; margin-top: -6px; }
   .sub .t { font-size: 13px; color: var(--mute); font-weight: 500; }
   .sub .n { font-size: 16px; font-weight: 700; margin-top: 2px; }
   .sub .row { display: flex; align-items: center; margin-top: 14px; }
@@ -47,9 +48,9 @@
         <path class="dash" d="M508 196 L508 262"/>
       </svg>
       <div class="node trigger" style="left: -7px; top: 40px;"><div class="box yellow">▶</div><div class="name">New order</div></div>
-      <div class="node" style="left: 143px; top: 40px;"><div class="box blue">↪</div><div class="name">Map customer</div><div class="sub" style="all: unset; font-size: 13px; color: var(--mute);">Execute Sub-workflow</div></div>
-      <div class="node" style="left: 288px; top: 40px;"><div class="box blue">↪</div><div class="name">Create invoice</div><div class="sub" style="all: unset; font-size: 13px; color: var(--mute);">Execute Sub-workflow</div></div>
-      <div class="node" style="left: 433px; top: 40px;"><div class="box blue">↪</div><div class="name">Log run</div><div class="sub" style="all: unset; font-size: 13px; color: var(--mute);">Execute Sub-workflow</div></div>
+      <div class="node" style="left: 143px; top: 40px;"><div class="box blue">↪</div><div class="name">Map customer</div><div class="kind">Execute<br>Sub-workflow</div></div>
+      <div class="node" style="left: 288px; top: 40px;"><div class="box blue">↪</div><div class="name">Create invoice</div><div class="kind">Execute<br>Sub-workflow</div></div>
+      <div class="node" style="left: 433px; top: 40px;"><div class="box blue">↪</div><div class="name">Log run</div><div class="kind">Execute<br>Sub-workflow</div></div>
       <div class="sub" style="left: 150px;"><div class="t">Sub-workflow</div><div class="n">Map customer</div><div class="row"><i class="tr"></i><b></b><i></i><b></b><i></i></div><div class="one">One job, tested alone</div></div>
       <div class="sub" style="left: 295px;"><div class="t">Sub-workflow</div><div class="n">Create invoice</div><div class="row"><i class="tr"></i><b></b><i></i><b></b><i></i></div><div class="one">One job, tested alone</div></div>
       <div class="sub" style="left: 440px;"><div class="t">Sub-workflow</div><div class="n">Log run</div><div class="row"><i class="tr"></i><b></b><i></i></div><div class="one">One job, tested alone</div></div>

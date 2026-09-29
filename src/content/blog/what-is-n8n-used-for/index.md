@@ -17,11 +17,7 @@ What that looks like depends on what you connect it to, so the rest of this page
 
 ### 1. Airtable orders into QuickBooks invoices and purchase orders
 
-A webhook receives the order's Airtable record ID, and the workflow takes it from there. This is the actual workflow, open in the n8n editor:
-
-![The Airtable to QuickBooks workflow in the n8n editor: a webhook, a chain of Airtable lookups, an If node, and two branches that create either a purchase order or an invoice in QuickBooks, then update the Airtable record.](./01.webp)
-
-Read it left to right:
+A webhook receives the order's Airtable record ID, and the workflow takes it from there. In order, it runs:
 
 1. The **Webhook** node receives the order.
 2. **get transaction order** (Airtable) fetches the order record.
@@ -55,6 +51,8 @@ n8n also works for one-off jobs like this, which people tend to forget. A migrat
 ### 4. A WhatsApp agent that answers from your own data
 
 A customer sends a message on WhatsApp. n8n receives it, checks who the sender is against Airtable, and only then lets Claude write a reply from that customer's own records. Every thread lands in a web console where the team can watch, take over mid-conversation, and tune the responses.
+
+It replaced a team answering every message by hand.
 
 The work was in the order of operations. The agent verifies the customer before it generates a word, because an assistant that reads an order status to whoever happens to message is a data leak. n8n runs that sequence, and the rest of the system depends on it running in that order every time.
 

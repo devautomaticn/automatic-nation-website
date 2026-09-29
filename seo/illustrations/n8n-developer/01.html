@@ -1,0 +1,52 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of n8n workflow settings for an Orders to accounting workflow, with Error Workflow set to Error alerts, next to the Error alerts workflow: an Error Trigger node connected to a Slack node that posts the failed workflow's name and a link to the execution.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 680px; --bg: var(--blue-soft); }
+  body { display: flex; align-items: center; justify-content: center; gap: 56px; }
+  .settings { width: 500px; }
+  .head { background: var(--ink); color: var(--paper); padding: 16px 22px; font-weight: 700; display: flex; justify-content: space-between; }
+  .head .x { opacity: .7; font-weight: 500; }
+  .rows { padding: 12px 22px 20px; display: flex; flex-direction: column; gap: 14px; }
+  .row .lbl { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .row .sel { border: 2px solid var(--line); border-radius: 10px; padding: 9px 14px; font-size: 17px; display: flex; justify-content: space-between; color: var(--mute); }
+  .row.hi .sel { border: var(--stroke); background: var(--yellow); color: var(--ink); font-weight: 700; }
+  .row.hi .lbl { font-size: 17px; }
+  .alerts { width: 560px; }
+  .bar { padding: 14px 20px; border-bottom: var(--stroke); font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  .bar .on { font-size: 15px; font-weight: 500; border: 2px solid var(--ink); border-radius: 20px; padding: 3px 12px; background: var(--green); }
+  .canvas { height: 420px; }
+  .msg { position: absolute; left: 40px; right: 40px; bottom: 26px; background: var(--paper); border: var(--stroke); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); padding: 12px 16px; font-size: 16px; line-height: 1.45; }
+  .msg b { display: block; margin-bottom: 2px; }
+  .msg .mono { font-size: 14px; color: var(--mute); }
+  .msg a { color: var(--ink); font-weight: 700; text-decoration: underline; }
+  .hop { position: absolute; left: 508px; top: 194px; z-index: 2; font-size: 16px; padding: 6px 12px; }
+</style></head>
+<body>
+<div class="window settings">
+  <div class="head"><span>Settings for "Orders to accounting"</span><span class="x">✕</span></div>
+  <div class="rows">
+    <div class="row hi"><div class="lbl">Error Workflow (to notify when this one errors)</div><div class="sel"><span>Error alerts</span><span>▾</span></div></div>
+    <div class="row"><div class="lbl">Timezone</div><div class="sel"><span>Default</span><span>▾</span></div></div>
+    <div class="row"><div class="lbl">Save failed production executions</div><div class="sel"><span>Save</span><span>▾</span></div></div>
+    <div class="row"><div class="lbl">Save successful production executions</div><div class="sel"><span>Save</span><span>▾</span></div></div>
+    <div class="row"><div class="lbl">Timeout Workflow</div><div class="sel"><span>Off</span><span>▾</span></div></div>
+  </div>
+</div>
+
+<div class="note hop">on failure →</div>
+<div class="window alerts">
+  <div class="bar"><span>Error alerts</span><span class="on">Active</span></div>
+  <div class="canvas">
+    <svg class="wires"><path d="M186 138 L336 138"/></svg>
+    <div class="node trigger" style="left: 54px; top: 90px;"><div class="box red">!</div><div class="name">Error Trigger</div></div>
+    <div class="node" style="left: 318px; top: 90px;"><div class="box yellow">#</div><div class="name">Slack</div><div class="sub">Send message</div></div>
+    <div class="msg">
+      <b>⚠ Workflow failed: Orders to accounting</b>
+      <span class="mono">Node: HTTP Request · 03:12</span><br>
+      <a>View execution →</a>
+    </div>
+  </div>
+</div>
+</body></html>

@@ -56,6 +56,8 @@ Record comments, field descriptions, the base guide, and anything an extension s
 
 If the relationships need to survive, add them yourself before exporting. Create a formula field in the linked table with `RECORD_ID()`, then add a lookup of that field in the table you are exporting. Every row now carries the IDs of the records it links to, and a VLOOKUP in Excel, or a script on the other end, can join them back up. [The guide to field types](/airtable-field-types-a-friendly-guide-to-unlock-the-power-of-your-data/) covers why the link is worth more than the text in the first place.
 
+![Illustration of the RECORD_ID workaround: a Record ID formula field in the Clients table, a lookup of it in the Projects table, and the downloaded CSV where each project now carries the ID of the client it links to.](./03.webp)
+
 **Attachment links are not a backup.** The URLs in the CSV stop working after a few hours, and Airtable only promises at least two. A CSV saved as the archive of a table full of contracts or photos is, a week later, a list of filenames and dead links. Download the files while the links are live, or use Airtable's scripting extension to pull them in bulk.
 
 ## Exporting a view rather than a table

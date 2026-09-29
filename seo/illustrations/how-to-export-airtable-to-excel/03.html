@@ -1,0 +1,54 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of the RECORD_ID workaround: a Record ID formula field in the Clients table, a lookup of it in the Projects table, and the downloaded CSV where each project now carries the ID of the client it links to.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 700px; --bg: var(--green); --bg: color-mix(in srgb, var(--green) 30%, var(--paper)); }
+  .stage { display: grid; grid-template-columns: 1fr 1fr; gap: 34px 40px; width: 1100px; }
+  .lbl { font-weight: 700; font-size: 18px; margin-bottom: 12px; display: flex; gap: 10px; align-items: center; }
+  .step { width: 30px; height: 30px; border-radius: 15px; background: var(--ink); color: var(--paper); display: grid; place-items: center; font-size: 15px; }
+  .grid { font-size: 17px; }
+  .g2 { grid-template-columns: 170px 1fr; }
+  .g3 { grid-template-columns: 170px 150px 1fr; }
+  .grid .h.hi, .grid .hi { background: var(--yellow-soft); }
+  .grid .h.hi { background: var(--yellow); }
+  .id { font-family: 'JetBrains Mono', monospace; font-size: 15px; }
+  .file { grid-column: 1 / -1; }
+  .file .bar { background: var(--ink); color: var(--paper); padding: 11px 18px; font-size: 15px; }
+  .file pre { padding: 16px 20px; font-size: 17px; line-height: 1.9; font-family: 'JetBrains Mono', monospace; }
+  .file mark { background: var(--yellow); border-radius: 6px; padding: 1px 4px; }
+  .file .dim { color: var(--faint); }
+</style></head>
+<body>
+<div class="stage">
+  <div>
+    <div class="lbl"><span class="step">1</span>Clients: add a formula field, RECORD_ID()</div>
+    <div class="window">
+      <div class="grid g2">
+        <div class="h"><span class="ico">A</span>Name</div><div class="h hi"><span class="ico">ƒ</span>Record ID</div>
+        <div>Acme Corp</div><div class="hi id">recA7Kx2LmP4qZ9tW</div>
+        <div>Acme Corp</div><div class="hi id">recQ93mBv0Hs2kLpX</div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="lbl"><span class="step">2</span>Projects: add a lookup of that field</div>
+    <div class="window">
+      <div class="grid g3">
+        <div class="h"><span class="ico">A</span>Name</div><div class="h"><span class="ico">⇥</span>Client</div><div class="h hi"><span class="ico">↗</span>Client ID</div>
+        <div>Website rebuild</div><div><span class="chip">Acme Corp</span></div><div class="hi id">recA7Kx2LmP4qZ9tW</div>
+        <div>Quarterly report</div><div><span class="chip">Acme Corp</span></div><div class="hi id">recQ93mBv0Hs2kLpX</div>
+      </div>
+    </div>
+  </div>
+  <div class="file">
+    <div class="lbl"><span class="step">3</span>Download CSV: the link survives as an ID you can join on</div>
+    <div class="window">
+      <div class="bar mono">projects.csv</div>
+<pre><span class="dim">Name,Client,Client ID</span>
+Website rebuild,Acme Corp,<mark>recA7Kx2LmP4qZ9tW</mark>
+Quarterly report,Acme Corp,<mark>recQ93mBv0Hs2kLpX</mark></pre>
+    </div>
+  </div>
+</div>
+</body></html>

@@ -22,11 +22,8 @@ Step by step:
 2. **Add a field and choose Rollup.** Click "+" at the end of the table and search for it.
    ![The add-field menu in a Projects table with 'roll' typed into the search box and the Rollup field type highlighted in the results.](./01.webp)
 3. **Pick the link field.** This decides which table the values come from.
-   ![The rollup configuration with the Tasks table chosen as the rollup source.](./02.webp)
 4. **Pick the field to roll up.** Here, Task Duration in hours.
-   ![The rollup configuration with Task Duration in hours chosen as the field to roll up.](./03.webp)
 5. **Write the aggregation formula.** `values` stands for the list of values pulled from the linked records.
-   ![The rollup configuration with SUM(values) entered as the aggregation formula.](./04.webp)
 6. **Add conditions if you need them.** Switch on "Only include linked records that meet certain conditions" to, for example, sum only tasks whose Status is Complete. Conditions work like view filters: a field, an operator, a value.
    ![The rollup configuration with record conditions switched on, limiting the rollup to linked tasks whose Status is Complete.](./05.webp)
 7. **Save.** Every project now carries its own total.

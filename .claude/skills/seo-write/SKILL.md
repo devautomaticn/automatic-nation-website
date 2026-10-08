@@ -31,7 +31,7 @@ description of a voice substitutes for reading it.
 
 ```
 src/content/blog/{slug}/index.md      ← the directory name IS the URL
-src/content/blog/{slug}/hero.webp     ← optional, referenced as ./hero.webp
+src/content/blog/{slug}/hero.webp     ← always, referenced as ./hero.webp
 ```
 
 The post answers at `https://automaticnation.com/{slug}/` — root level, trailing
@@ -56,8 +56,33 @@ draft: true
 - `draft: true` on every post you write. Stage 4 clears it.
 - `wpId` — **omit it.** It is optional, and it means "came from WordPress". A
   post born here has no WordPress ID and must not invent one.
-- `hero` / `heroAlt` — only if a real image exists. `heroAlt` empty is allowed
-  but a written one is better; 55 were backfilled by hand, don't add to the pile.
+- `hero: ./hero.webp` and a written `heroAlt` — **every post gets a hero**, new
+  posts and Refreshes alike. A Refresh whose hero is an old WordPress title card
+  (just the old post title on a coloured background) gets a new one.
+
+## The hero image
+
+Draw it in the same illustration style as the body images, from
+`seo/illustrations/{slug}/hero.html`, rendered by `node seo/illustrations/render.mjs {slug}`.
+The worked example is
+`seo/illustrations/best-practices-for-building-airtable-interfaces/hero.html`;
+copy its setup.
+
+- **Size:** `--w: 768px; --h: 512px` on `:root`. render.mjs renders at 2x, so the
+  output is 1536x1024 (3:2), the size every migrated hero has.
+- **Safe area:** keep everything that matters inside the middle 16:9 band.
+  `PostCard` crops heroes to 16:9 with object-cover on the blog index, so the
+  top and bottom of a 3:2 image get cut there.
+- **What it shows:** the post's subject as the real thing, a few small windows
+  of the app (Airtable pages, n8n canvas nodes, a cost stack) arranged as one
+  composition. Demo data only. **No title text**: the page renders the title as
+  the `<h1>` right above the hero, and a title card says it twice.
+- **Alt text** in `<meta name="alt">` and the same text in `heroAlt`.
+- Look at the render with the Read tool before committing: labels must not
+  collide and nothing important may sit outside the 16:9 band.
+
+The OG image is the static `public/og-image.png`, so the hero does not affect
+social cards.
 
 ## Writing
 
@@ -184,8 +209,18 @@ Two adjustments, because Notion is not the site:
 - **Internal links do not resolve in Notion.** Render the anchor text in bold
   instead of linking it, and list the real targets in one italic line at the
   end. A Notion page full of dead `/slug/` links reads like a broken draft.
-- An image referenced as `./01.webp` will not render. Replace it with an italic
-  note saying where it sits and what its alt text is.
+- An image referenced as `./01.webp` will not render, and the reviewer has to
+  see every image to approve the post. **Upload each one to Notion and place it
+  where it sits in the post**, the hero included (at the top, under the URL):
+  `mcp__claude_ai_Notion__notion-create-file-upload` with a filename like
+  `{slug}-01.webp`, then one `curl -X POST {upload_url}` with the returned
+  `authorization` header and `-F "file=@src/content/blog/{slug}/01.webp;type=image/webp"`,
+  then put `<image src="file-upload://{file_upload_id}"></image>` in the card.
+  The upload URL expires in about 15 minutes and an unplaced upload is
+  discarded, so upload and place in the same pass. When an image changes in a
+  later round, upload the new render and replace the old block. Only if an
+  upload fails, fall back to an italic note with where it sits and its alt text,
+  and say so in the decisions block.
 
 **Re-syncing a draft that is already in the card? Fetch the card first.**
 People edit the draft in Notion during review — that is what the card is for.

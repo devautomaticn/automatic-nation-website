@@ -4,7 +4,7 @@ description: Five Airtable interface examples, each built around one job, from r
 published: 2025-03-09
 updated: 2026-10-08
 hero: ./hero.webp
-heroAlt: ""
+heroAlt: "Illustration of three small Airtable interface pages built around one job each: an Approve requests queue with Approve and Send back buttons, a My work list showing only the viewer's open tasks, and a What is late dashboard tile counting 4 overdue requests."
 wpId: 280
 ---
 
@@ -70,7 +70,11 @@ If you have many clients who each log in and see only their own records, a porta
 
 This is for the manager or founder who wants to know whether anything needs them today. It replaces asking around, or a Monday meeting spent reading statuses out loud.
 
-Build a Dashboard page with two or three number elements: open requests past their due date, tasks waiting on a client, approvals sitting for more than a few days. Add one chart if a trend actually matters. Someone should be able to glance at it and know where to look, and a dashboard with twelve charts fails that. The [guide to Airtable dashboards](/airtable-dashboard-guide-build-powerful-visual-data-pages/) covers the elements in more detail.
+Build a Dashboard page with two or three number elements: open requests past their due date, tasks waiting on a client, approvals sitting for more than a few days. Add one chart if a trend actually matters.
+
+![Illustration of an Airtable dashboard page called What is late, with three number elements: 4 requests past their due date, 7 tasks waiting on a client and 2 approvals older than three days, above one bar chart of overdue requests by team.](./05.webp)
+
+Someone should be able to glance at it and know where to look, and a dashboard with twelve charts fails that. The [guide to Airtable dashboards](/airtable-dashboard-guide-build-powerful-visual-data-pages/) covers the elements in more detail.
 
 If your team still works in the grid and you want interfaces like these on your base, [book a call](/book-a-call/). We look at the base first, because an interface is only as clear as the tables under it.
 

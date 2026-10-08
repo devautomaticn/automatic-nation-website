@@ -1,0 +1,55 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of three small Airtable interface pages built around one job each: an Approve requests queue with Approve and Send back buttons, a My work list showing only the viewer's open tasks, and a What is late dashboard tile counting 4 overdue requests.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  /* Rendered at 2x by render.mjs, so 768x512 CSS px gives the 1536x1024 the
+     migrated hero had. Content stays inside the middle 16:9 band, because
+     PostCard crops heroes with object-cover at aspect 16/9. */
+  :root { --w: 768px; --h: 512px; --bg: var(--blue-soft); }
+  body { font-size: 13px; display: block; position: relative; }
+  .window { position: absolute; border-width: 2.5px; border-radius: 16px; box-shadow: 6px 6px 0 var(--ink); }
+  .bar { padding: 10px 14px; border-bottom: 2.5px solid var(--ink); font-weight: 700; font-size: 15px; display: flex; justify-content: space-between; align-items: center; }
+  .f { font-size: 10px; font-weight: 500; border: 1.5px solid var(--ink); border-radius: 12px; padding: 1px 7px; background: var(--yellow-soft); }
+
+  .queue { left: 30px; top: 70px; width: 310px; height: 300px; }
+  .item { padding: 9px 14px; border-bottom: 1.5px solid var(--line); }
+  .item b { display: block; font-size: 13px; }
+  .item span { font-size: 11px; color: var(--mute); }
+  .item.on { background: var(--yellow-soft); border-left: 5px solid var(--ink); padding-left: 9px; }
+  .btns { position: absolute; left: 14px; right: 14px; bottom: 14px; display: flex; gap: 10px; }
+  .b { flex: 1; text-align: center; border: 2px solid var(--ink); border-radius: 9px; padding: 7px; font-weight: 700; font-size: 13px; box-shadow: 3px 3px 0 var(--ink); }
+  .b.ok { background: var(--green); } .b.back { background: var(--orange); }
+
+  .work { left: 362px; top: 212px; width: 370px; height: 196px; z-index: 2; }
+  .row { display: grid; grid-template-columns: 1fr 140px; border-bottom: 1.5px solid var(--line); }
+  .row > div { padding: 9px 14px; display: flex; align-items: center; }
+  .row > div + div { background: var(--yellow-soft); border-left: 1.5px solid var(--line); }
+  .s { border: 1.5px solid var(--ink); border-radius: 7px; padding: 1px 7px; font-size: 11px; white-space: nowrap; }
+  .s.a { background: var(--blue-soft); } .s.b { background: color-mix(in srgb, var(--orange) 45%, var(--paper)); }
+
+  .late { left: 548px; top: 54px; width: 184px; height: 136px; z-index: 3; padding: 12px 16px; }
+  .late .k { font-size: 12px; color: var(--mute); font-weight: 700; }
+  .late .v { font-size: 52px; font-weight: 700; color: var(--red); line-height: 1.05; margin-top: 6px; }
+  .late .d { font-size: 12px; color: var(--mute); }
+</style></head>
+<body>
+<div class="window queue">
+  <div class="bar"><span>Approve requests</span><span class="f">Status is Submitted</span></div>
+  <div class="item on"><b>New laptop for onboarding</b><span>Needed by 14 Oct · Northwind</span></div>
+  <div class="item"><b>Renew design tool licence</b><span>Needed by 16 Oct · Internal</span></div>
+  <div class="item"><b>Courier samples to client</b><span>Needed by 17 Oct · Globex</span></div>
+  <div class="btns"><div class="b ok">✓ Approve</div><div class="b back">↩ Send back</div></div>
+</div>
+<div class="window work">
+  <div class="bar"><span>My work</span><span class="f">Assignee is Current user</span></div>
+  <div class="row"><div>Send kickoff agenda</div><div><span class="s b">Waiting on client</span></div></div>
+  <div class="row"><div>Review contract draft</div><div><span class="s a">In progress</span></div></div>
+  <div class="row"><div>Book venue walkthrough</div><div><span class="s">Not started</span></div></div>
+</div>
+<div class="window late">
+  <div class="k">What is late</div>
+  <div class="v">4</div>
+  <div class="d">requests past their due date</div>
+</div>
+</body></html>

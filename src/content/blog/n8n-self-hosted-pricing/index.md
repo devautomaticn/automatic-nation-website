@@ -1,6 +1,6 @@
 ---
 title: "n8n Self-Hosted Pricing: What Running It Really Costs"
-description: "n8n self-hosted pricing past the free licence: server, backups, monitoring and upkeep hours, a cost table to fill in, and when Cloud or Business wins."
+description: "n8n self-hosted pricing past the free licence: server, backups, monitoring, maintenance hours, what our instances cost, and when Cloud or Business wins."
 published: 2026-10-08
 draft: true
 ---
@@ -21,7 +21,7 @@ The current prices for Cloud and Business are on [n8n's pricing page](https://n8
 
 So the real cost of each option is:
 
-- **Community Edition:** server + database + backups + monitoring + your upkeep hours.
+- **Community Edition:** server + database + backups + monitoring + your maintenance hours.
 - **Business:** the same, plus the licence.
 - **Cloud:** the plan, plus the hours you still spend on the workflows themselves.
 
@@ -70,7 +70,7 @@ That covers "is it running". It does not cover "did the workflows succeed", whic
 
 n8n's own update guide asks you to update at least once a month, so you never jump several versions at once, and to check the release notes for breaking changes first. It also says to test the update on a separate instance before production, and the feature it suggests for that is Environments. Environments is a Business feature. On Community Edition, the test instance is a second server you build and keep in sync yourself.
 
-So one month of upkeep on a self-hosted instance looks like this:
+So one month of maintenance on a self-hosted instance looks like this:
 
 ![Illustration of a monthly n8n update routine as five steps in a row: read the release notes for breaking changes, back up the database and encryption key, update the test instance and run the key workflows, update production, then watch the first executions.](./02.webp)
 
@@ -82,21 +82,21 @@ On top of that routine:
 
 To price this, count it. Log every minute spent on the instance for one quarter: updates, restores, resizes, the afternoon after a bad update. Divide by three. Multiply by what that person's hour costs the business. That is the line most price comparisons leave out.
 
-For the instances we run for clients, it comes to [REAL FIGURE NEEDED: monthly upkeep hours per client instance, as a range] a month.
+On the instances we run for clients, it is typically about 5 hours a month or less. How much depends on the workflows running on it.
 
-## Cloud vs Community vs Business: cost at three team sizes
+## Cloud vs Community vs Business: the monthly cost side by side
 
-Here is the whole calculation in one table. The n8n plan fees are on [the pricing page](https://n8n.io/pricing/). The infrastructure and hours are ours, from instances we run.
+Here is the whole calculation in one table. The n8n plan fees are on [the pricing page](https://n8n.io/pricing/). The infrastructure and hours come from the instances we run for clients. They are typical figures, not a guarantee, and they move with what your workflows do.
 
-| | One builder, a few workflows | A team building across departments | A team that needs SSO and separate environments |
+| | n8n Cloud | Community Edition, self-hosted | Business, self-hosted |
 |---|---|---|---|
-| **What usually fits** | Cloud, or Community on one small server | Community on a sized server with Postgres, or Cloud | Business, self-hosted |
-| **n8n licence or plan** | Cloud plan fee, or €0 on Community | €0 on Community, or Cloud plan fee | Business licence fee |
-| **Server, database, backups, monitoring** | [REAL FIGURE NEEDED: monthly infra cost, small client instance] | [REAL FIGURE NEEDED: monthly infra cost, mid client instance] | [REAL FIGURE NEEDED: monthly infra cost, large client instance, with test instance] |
-| **Upkeep hours a month** | [REAL FIGURE NEEDED: hours, small instance] | [REAL FIGURE NEEDED: hours, mid instance] | [REAL FIGURE NEEDED: hours, large instance] |
-| **Monthly total** | plan or infra + hours × hourly cost | plan or infra + hours × hourly cost | licence + infra + hours × hourly cost |
+| **What usually fits** | One builder or a small team, with volume inside a plan's quota | A team where someone already runs servers | A team that needs SSO, environments and Git on its own servers |
+| **n8n licence or plan** | Cloud plan fee | €0 | Business licence fee |
+| **Server, database, backups, monitoring** | Included in the plan | On our instances, up to about $30 to $40 a month on DigitalOcean, and usually no more than a standard n8n Cloud subscription | The same lines as Community, plus a second server for the test instance |
+| **Maintenance hours a month** | Workflow fixes only | About 5 hours or less, depending on the workflows | The Community figure, plus the time to keep the test instance in step |
+| **Monthly total** | Plan fee + workflow fixes | Infra + hours × hourly cost | Licence + infra + hours × hourly cost |
 
-Two things change the picture more than the column you pick. The first is whether someone on your team already runs servers. If they do, the upkeep hours cost you less, because the routine is one they already have. The second is whether your volume fits a Cloud plan's execution quota. n8n counts one execution per workflow run, however many steps it has, so a workflow that runs every five minutes uses about 8,600 executions a month on its own.
+Two things change the picture more than the column you pick. The first is whether someone on your team already runs servers. If they do, the maintenance hours cost you less, because the routine is one they already have. The second is whether your volume fits a Cloud plan's execution quota. n8n counts one execution per workflow run, however many steps it has, so a workflow that runs every five minutes uses about 8,600 executions a month on its own.
 
 If you want those numbers worked out for your own workflows, [book a call](/book-a-call/). We will tell you which column you are in, including when the answer is the cheapest Cloud plan and no work from us.
 
@@ -104,11 +104,11 @@ If you want those numbers worked out for your own workflows, [book a call](/book
 
 We run self-hosted instances for clients and like it, so take that into account. These are the cases where we tell them to pay n8n anyway.
 
-![Illustration of a decision flow for choosing how to run n8n. If the data must stay on infrastructure you control and you need SSO or environments with Git, the answer is Business, self-hosted; without those needs, a registered Community Edition. If the data can live with n8n and nobody will own the monthly update, the answer is n8n Cloud; if someone will, compare the Cloud plan fee with server costs plus upkeep hours times their hourly cost.](./03.webp)
+![Illustration of a decision flow for choosing how to run n8n. If the data must stay on infrastructure you control and you need SSO or environments with Git, the answer is Business, self-hosted; without those needs, a registered Community Edition. If the data can live with n8n and nobody will own the monthly update, the answer is n8n Cloud; if someone will, compare the Cloud plan fee with server costs plus maintenance hours times their hourly cost.](./03.webp)
 
 **Nobody will own the monthly update.** Self-hosting is cheap only if someone does the routine above, every month. If the honest answer to "who updates it?" is a name followed by "when they get time", the instance falls behind, and the update that finally happens jumps several versions at once. Cloud is the cheaper option for that team, whatever the table says.
 
-**The volume fits a Cloud plan.** If your runs fit inside a plan's quota, compare the plan fee with your upkeep hours times the hourly cost. [REAL FIGURE NEEDED: our rule of thumb for the point where we recommend Cloud, as executions a month or hours of upkeep]
+**The volume fits a Cloud plan.** If your runs fit inside a plan's quota, compare the plan fee with your maintenance hours times the hourly cost. [REAL FIGURE NEEDED: our rule of thumb for the point where we recommend Cloud, as executions a month or hours of maintenance]
 
 **The only reason for Business is folders.** Register Community Edition instead. It is free and folders come with it.
 
@@ -119,7 +119,7 @@ Self-hosting still wins in some cases:
 - You need things only a self-hosted instance gives you, such as your own custom nodes or the `/metrics` endpoint.
 - Someone already runs servers as part of their job.
 
-**Business is worth paying for** when you have to self-host and you also need SSO for your team, or a proper development to production path with environments and Git. At that size the licence is usually the easier line to justify, and the upkeep hours from the table still apply on top of it.
+**Business is worth paying for** when you have to self-host and you also need SSO for your team, or a proper development to production path with environments and Git. At that size the licence is usually the easier line to justify, and the maintenance hours from the table still apply on top of it.
 
 One licence point before you plan anything: the Sustainable Use License covers your own internal use. If the plan is to host n8n and charge your own customers for access to it, that is outside what the licence allows. Read it before you build on it.
 

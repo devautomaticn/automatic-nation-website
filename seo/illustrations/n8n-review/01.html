@@ -1,0 +1,52 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of the On Error setting on an n8n HTTP Request node. With Continue, the failed call passes the last valid data on and the run ends as Succeeded with no alert. With Continue (using error output), the node gets a second output that routes the failure to a Slack alert.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 700px; --bg: var(--blue-soft); }
+  body { display: flex; align-items: center; justify-content: center; gap: 40px; }
+  .col { display: flex; flex-direction: column; gap: 18px; align-items: flex-start; }
+  .tag { border: var(--stroke); border-radius: 12px; padding: 6px 14px; font-weight: 700; font-size: 18px; box-shadow: 4px 4px 0 var(--ink); }
+  .tag.bad { background: var(--red); } .tag.good { background: var(--green); }
+  .win { width: 540px; }
+  .set { padding: 14px 20px; border-bottom: var(--stroke); }
+  .lbl { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .fld { border: var(--stroke); border-radius: 10px; padding: 8px 12px; font-size: 17px; display: flex; justify-content: space-between; background: var(--yellow); font-weight: 700; }
+  .canvas { height: 340px; }
+  .status { position: absolute; left: 20px; right: 20px; bottom: 18px; border: var(--stroke); border-radius: 12px; padding: 10px 14px; font-size: 16px; background: var(--paper); box-shadow: 4px 4px 0 var(--ink); }
+  .pill { display: inline-block; border: 2px solid var(--ink); border-radius: 20px; padding: 1px 10px; font-size: 14px; font-weight: 700; margin-right: 8px; }
+  .pill.ok { background: var(--green); } .pill.alert { background: var(--yellow); }
+  .out { position: absolute; font-size: 13px; font-weight: 700; background: var(--paper); padding: 0 4px; }
+  .node.sm .box { width: 64px; height: 64px; font-size: 22px; border-radius: 14px; }
+</style></head>
+<body>
+<div class="col">
+  <div class="tag bad">✕ On Error: Continue</div>
+  <div class="window win">
+    <div class="set"><div class="lbl">On Error</div><div class="fld"><span>Continue</span><span>▾</span></div></div>
+    <div class="canvas">
+      <svg class="wires"><path d="M124 88 L196 88"/><path d="M296 88 L368 88"/></svg>
+      <div class="node trigger" style="left: 0px; top: 40px;"><div class="box yellow">▶</div><div class="name">Schedule</div></div>
+      <div class="node error" style="left: 171px; top: 40px;"><div class="box">↗</div><div class="name">HTTP Request</div><div class="sub">401 Unauthorized</div></div>
+      <div class="node" style="left: 343px; top: 40px;"><div class="box blue">◎</div><div class="name">CRM</div><div class="sub">gets the last valid data</div></div>
+      <div class="status"><span class="pill ok">Succeeded</span>No alert. The error workflow never runs.</div>
+    </div>
+  </div>
+</div>
+<div class="col">
+  <div class="tag good">✓ Continue (using error output)</div>
+  <div class="window win">
+    <div class="set"><div class="lbl">On Error</div><div class="fld"><span>Continue (using error output)</span><span>▾</span></div></div>
+    <div class="canvas">
+      <svg class="wires"><path d="M124 88 L196 88"/><path d="M296 72 C 340 72, 340 46, 386 46"/><path d="M296 104 C 340 104, 340 176, 386 176"/></svg>
+      <div class="node trigger" style="left: 0px; top: 40px;"><div class="box yellow">▶</div><div class="name">Schedule</div></div>
+      <div class="node error" style="left: 171px; top: 40px;"><div class="box">↗</div><div class="name">HTTP Request</div><div class="sub">401 Unauthorized</div></div>
+      <div class="out" style="left: 314px; top: 36px;">Success</div>
+      <div class="out" style="left: 320px; top: 150px;">Error</div>
+      <div class="node sm" style="left: 345px; top: 14px;"><div class="box blue">◎</div><div class="name">CRM</div></div>
+      <div class="node sm" style="left: 345px; top: 144px;"><div class="box yellow">#</div><div class="name">Slack alert</div></div>
+      <div class="status"><span class="pill alert">Alert sent</span>The failure goes somewhere a person reads.</div>
+    </div>
+  </div>
+</div>
+</body></html>

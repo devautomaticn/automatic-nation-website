@@ -1,0 +1,38 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of an Airtable Orders table where the fields an n8n workflow depends on are marked: their names start with a gear prefix, and an open field description reads: Read by n8n in the workflow Orders to accounting. Ask before renaming or changing the type. The other fields are the team's to change freely.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 700px; --bg: var(--yellow-soft); }
+  body { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; }
+  .win { width: 1080px; }
+  .grid { grid-template-columns: 60px 200px 210px 230px 230px 150px; }
+  .grid .auto { background: color-mix(in srgb, var(--blue) 22%, var(--paper)); }
+  .grid .h.auto { background: color-mix(in srgb, var(--blue) 40%, var(--paper)); }
+  .menu { left: 470px; top: 248px; width: 580px; padding: 16px 18px; }
+  .menu .t { font-weight: 700; font-size: 18px; margin-bottom: 8px; }
+  .menu .d { font-size: 16px; line-height: 1.45; border: 2px solid var(--line); border-radius: 10px; padding: 10px 12px; display: block; }
+  .menu .d b { display: block; }
+  .legend { display: flex; gap: 18px; font-size: 16px; font-weight: 500; }
+  .legend span { display: flex; align-items: center; gap: 8px; }
+  .legend i { width: 22px; height: 22px; border: 2px solid var(--ink); border-radius: 6px; display: inline-block; }
+</style></head>
+<body>
+<div class="window win">
+  <div class="tabs"><div class="tab on">Orders</div><div class="tab">Customers</div><div class="tab">Products</div></div>
+  <div class="toolbar"><span class="view"><span class="ico">▦</span>Grid view</span><span class="muted">Hide fields</span><span class="muted">Filter</span><span class="muted">Sort</span></div>
+  <div class="grid">
+    <div class="h n"></div><div class="h">Order ID</div><div class="h">Customer</div><div class="h auto">⚙ Sync status</div><div class="h auto">⚙ Invoice number</div><div class="h">Notes</div>
+    <div class="n">1</div><div>R-1042</div><div>Hollis &amp; Co</div><div class="auto"><span class="chip">Invoiced</span></div><div class="auto num">INV-2207</div><div></div>
+    <div class="n">2</div><div>R-1043</div><div>Marlow Studio</div><div class="auto"><span class="chip">Pending</span></div><div class="auto"></div><div>Call first</div>
+    <div class="n">3</div><div>R-1044</div><div>Pine Street</div><div class="auto"><span class="chip">Invoiced</span></div><div class="auto num">INV-2208</div><div></div>
+    <div class="n">4</div><div>R-1045</div><div>Okafor Ltd</div><div class="auto"><span class="chip">Pending</span></div><div class="auto"></div><div></div>
+    <div class="n">5</div><div>R-1046</div><div>Brightwell</div><div class="auto"><span class="chip">Pending</span></div><div class="auto"></div><div></div>
+  </div>
+  <div class="menu">
+    <div class="t">⚙ Sync status · field description</div>
+    <span class="d"><b>Read by n8n in the workflow Orders to accounting.</b>Ask before renaming this field or changing its type.</span>
+  </div>
+</div>
+<div class="legend"><span><i style="background: color-mix(in srgb, var(--blue) 40%, var(--paper))"></i>Belongs to the automation</span><span><i style="background: var(--paper)"></i>The team's to change</span></div>
+</body></html>

@@ -1,0 +1,30 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of an Airtable interface page called My work, filtered to tasks where Assignee is the current user and Status is not Done. Each row shows the task, client and due date, and the Status column, the one field this job changes, is highlighted.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 600px; --bg: var(--blue-soft); }
+  .window { width: 1080px; }
+  .bar { padding: 18px 22px; border-bottom: var(--stroke); display: flex; gap: 14px; align-items: center; }
+  .bar b { font-size: 22px; margin-right: 10px; }
+  .f { font-size: 15px; border: 2px solid var(--ink); border-radius: 20px; padding: 3px 12px; background: var(--yellow-soft); }
+  .grid { grid-template-columns: 56px 340px 190px 170px 1fr; }
+  .grid .ed { background: var(--yellow-soft); }
+  .grid .h.ed { background: var(--yellow); }
+  .s { border: 2px solid var(--ink); border-radius: 9px; padding: 3px 10px; font-size: 16px; }
+  .s.a { background: var(--blue-soft); } .s.b { background: color-mix(in srgb, var(--orange) 45%, var(--paper)); }
+  .late { color: var(--red); font-weight: 700; }
+  .tag { font-size: 13px; color: var(--faint); font-weight: 500; }
+</style></head>
+<body>
+<div class="window">
+  <div class="bar"><b>My work</b><span class="f">Assignee is Current user</span><span class="f">Status is not Done</span></div>
+  <div class="grid">
+    <div class="h n"></div><div class="h">Task</div><div class="h">Client</div><div class="h">Due</div><div class="h ed">Status <span class="tag" style="color:var(--ink)">the one field you change</span></div>
+    <div class="n">1</div><div>Send kickoff agenda</div><div><span class="chip">Northwind</span></div><div class="late">Yesterday</div><div class="ed"><span class="s b">Waiting on client</span> ▾</div>
+    <div class="n">2</div><div>Review contract draft</div><div><span class="chip">Globex</span></div><div>Today</div><div class="ed"><span class="s a">In progress</span> ▾</div>
+    <div class="n">3</div><div>Book venue walkthrough</div><div><span class="chip">Acme Corp</span></div><div>Thursday</div><div class="ed"><span class="s">Not started</span> ▾</div>
+    <div class="n">4</div><div>Update onboarding checklist</div><div><span class="chip">Initech</span></div><div>Next week</div><div class="ed"><span class="s">Not started</span> ▾</div>
+  </div>
+</div>
+</body></html>

@@ -1,0 +1,66 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of what running n8n yourself costs: a server window holding a reverse proxy, the n8n container, a Postgres database and the encryption key, a monthly bill with infrastructure at about $30 to $40 and maintenance at 5 hours or less, and a calendar with one update day marked for the monthly update, backup and check.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  /* Rendered at 2x by render.mjs, so 768x512 CSS px gives 1536x1024.
+     Content stays inside the middle 16:9 band (y 40 to 472), because
+     PostCard crops heroes with object-cover at aspect 16/9. */
+  :root { --w: 768px; --h: 512px; --bg: var(--blue-soft); }
+  body { font-size: 13px; display: block; position: relative; }
+  .window { position: absolute; border-width: 2.5px; border-radius: 16px; box-shadow: 6px 6px 0 var(--ink); }
+  .bar { padding: 10px 14px; border-bottom: 2.5px solid var(--ink); font-weight: 700; font-size: 15px; display: flex; justify-content: space-between; align-items: center; }
+  .f { font-size: 10px; font-weight: 500; border: 1.5px solid var(--ink); border-radius: 12px; padding: 1px 7px; background: var(--yellow-soft); }
+
+  .server { left: 30px; top: 66px; width: 300px; height: 360px; }
+  .server .bar { background: var(--ink); color: var(--paper); }
+  .server .bar .f { color: var(--ink); }
+  .part { margin: 14px 16px 0; border: 2px solid var(--ink); border-radius: 11px; padding: 10px 12px; box-shadow: 3px 3px 0 var(--ink); }
+  .part b { display: block; font-size: 14px; }
+  .part span { font-size: 11px; color: var(--ink); }
+  .p1 { background: var(--yellow-soft); } .p2 { background: var(--blue); } .p3 { background: var(--paper); margin-left: 34px; } .p4 { background: var(--green); }
+
+  .bill { left: 362px; top: 48px; width: 250px; height: 198px; z-index: 2; }
+  .ln { display: flex; justify-content: space-between; padding: 8px 14px; border-bottom: 1.5px solid var(--line); font-size: 12.5px; }
+  .ln .v { white-space: nowrap; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; }
+  .ln.tot { border-bottom: 0; border-top: 2.5px solid var(--ink); font-weight: 700; }
+  .ln.tot .v { background: var(--yellow); border: 1.5px solid var(--ink); border-radius: 7px; padding: 1px 6px; }
+  .hrs .v { background: var(--orange); border: 1.5px solid var(--ink); border-radius: 7px; padding: 1px 6px; }
+
+  .cal { left: 446px; top: 262px; width: 292px; height: 202px; z-index: 3; }
+  .grid7 { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; padding: 10px 14px 0; }
+  .grid7 div { height: 17px; border-radius: 5px; background: color-mix(in srgb, var(--ink) 7%, var(--paper)); font-size: 9.5px; color: var(--faint); display: grid; place-items: center; }
+  .grid7 .hd { background: none; font-weight: 700; color: var(--mute); height: 14px; }
+  .grid7 .on { background: var(--yellow); border: 2px solid var(--ink); color: var(--ink); font-weight: 700; }
+  .cap { padding: 9px 14px 0; font-size: 11px; white-space: nowrap; color: var(--mute); }
+  .cap b { color: var(--ink); }
+</style></head>
+<body>
+<div class="window server">
+  <div class="bar"><span>Your server</span><span class="f">self-hosted</span></div>
+  <div class="part p1"><b>Reverse proxy + TLS</b><span>your domain</span></div>
+  <div class="part p2"><b>n8n container</b><span>updated once a month</span></div>
+  <div class="part p3"><b class="mono" style="font-size:13px">.n8n/config</b><span>the encryption key</span></div>
+  <div class="part p4"><b>Postgres</b><span>workflows, credentials, history</span></div>
+</div>
+
+<div class="window bill">
+  <div class="bar"><span>This month</span><span class="f">per instance</span></div>
+  <div class="ln"><span>n8n licence</span><span class="v">€0</span></div>
+  <div class="ln"><span>Server, database, backups</span><span class="v">✓</span></div>
+  <div class="ln tot"><span>Infra</span><span class="v">about $30 to $40</span></div>
+  <div class="ln hrs"><span>Maintenance</span><span class="v">5 h or less</span></div>
+</div>
+
+<div class="window cal">
+  <div class="bar"><span>Maintenance</span><span class="f">once a month</span></div>
+  <div class="grid7">
+    <div class="hd">M</div><div class="hd">T</div><div class="hd">W</div><div class="hd">T</div><div class="hd">F</div><div class="hd">S</div><div class="hd">S</div>
+    <div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div>
+    <div>8</div><div>9</div><div>10</div><div>11</div><div>12</div><div>13</div><div>14</div>
+    <div>15</div><div>16</div><div>17</div><div>18</div><div>19</div><div>20</div><div>21</div>
+    <div>22</div><div>23</div><div class="on">24</div><div>25</div><div>26</div><div>27</div><div>28</div>
+  </div>
+  <div class="cap"><b>Update day:</b> release notes, backup, test, update</div>
+</div>
+</body></html>

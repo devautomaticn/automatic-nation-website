@@ -1,0 +1,38 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of an n8n workflow guarding against an empty result: a Schedule Trigger, an HTTP Request that searches for new leads with Always Output Data turned on, and an If node that checks whether the item has an ID. Items go on to the CRM node. The empty branch goes to a Stop and Error node, which fails the run and hands it to the error workflow.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 640px; --bg: var(--blue-soft); }
+  .win { width: 1060px; }
+  .bar { padding: 14px 20px; border-bottom: var(--stroke); font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  .bar .on { font-size: 15px; font-weight: 500; border: 2px solid var(--ink); border-radius: 20px; padding: 3px 12px; background: var(--green); }
+  .canvas { height: 470px; }
+  .out { position: absolute; font-size: 14px; font-weight: 700; background: var(--paper); padding: 0 4px; }
+  .hop { position: absolute; z-index: 2; font-size: 16px; padding: 6px 12px; }
+  .cond { position: absolute; left: 300px; top: 340px; background: var(--paper); border: var(--stroke); border-radius: 12px; padding: 10px 14px; font-size: 16px; box-shadow: 4px 4px 0 var(--ink); }
+  .cond .mono { font-size: 15px; }
+</style></head>
+<body>
+<div class="window win">
+  <div class="bar"><span>New leads to CRM</span><span class="on">Published</span></div>
+  <div class="canvas">
+    <svg class="wires">
+      <path d="M154 140 L254 140"/>
+      <path d="M350 140 L450 140"/>
+      <path d="M546 120 C 610 120, 610 72, 674 72"/>
+      <path d="M546 160 C 610 160, 610 240, 674 240"/>
+    </svg>
+    <div class="node trigger" style="left: 30px; top: 92px;"><div class="box yellow">▶</div><div class="name">Schedule Trigger</div><div class="sub">every hour</div></div>
+    <div class="node" style="left: 227px; top: 92px;"><div class="box">↗</div><div class="name">HTTP Request</div><div class="sub">search new leads</div></div>
+    <div class="node" style="left: 423px; top: 92px;"><div class="box orange">◇</div><div class="name">If</div><div class="sub">has an ID?</div></div>
+    <div class="out" style="left: 596px; top: 64px;">true</div>
+    <div class="out" style="left: 594px; top: 222px;">false</div>
+    <div class="node" style="left: 647px; top: 24px;"><div class="box blue">◎</div><div class="name">CRM</div><div class="sub">create leads</div></div>
+    <div class="node error" style="left: 647px; top: 192px;"><div class="box red">■</div><div class="name">Stop and Error</div><div class="sub">"No leads returned"</div></div>
+    <div class="note hop" style="left: 820px; top: 222px;">→ error workflow</div>
+    <div class="note hop" style="left: 196px; top: 248px; background: var(--paper);">Always Output Data: on</div>
+    <div class="cond"><b>If condition:</b> <span class="mono">{{ $json.id }}</span> is not empty</div>
+  </div>
+</div>
+</body></html>

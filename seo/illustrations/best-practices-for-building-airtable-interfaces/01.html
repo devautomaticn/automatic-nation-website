@@ -1,0 +1,44 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of an Airtable interface form page called Request something from Ops, with five fields: what you need, needed by, who is asking, which client it is for, and attachments. Status, owner and priority are not on the form.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 720px; --bg: var(--blue-soft); }
+  .window { width: 1060px; height: 600px; display: grid; grid-template-columns: 250px 1fr; }
+  .side { background: color-mix(in srgb, var(--ink) 5%, var(--paper)); border-right: var(--stroke); padding: 22px 14px; display: flex; flex-direction: column; gap: 6px; }
+  .side .app { font-weight: 700; padding: 0 10px 14px; }
+  .side .pg { padding: 10px 12px; border-radius: 10px; color: var(--mute); font-weight: 500; }
+  .side .pg.on { background: var(--yellow); color: var(--ink); border: 2px solid var(--ink); font-weight: 700; }
+  .main { padding: 30px 46px; position: relative; }
+  h1 { font-size: 30px; margin-bottom: 6px; }
+  .sub { color: var(--mute); font-size: 17px; margin-bottom: 20px; }
+  .lbl { font-weight: 700; font-size: 17px; margin: 14px 0 6px; }
+  .in { border: 2px solid var(--line); border-radius: 10px; padding: 11px 14px; color: var(--faint); font-size: 17px; }
+  .in.tall { height: 70px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+  .btn { position: absolute; right: 46px; bottom: 28px; background: var(--ink); color: var(--paper); border-radius: 10px; padding: 12px 24px; font-weight: 700; }
+  .callout { position: absolute; left: 820px; top: 40px; white-space: normal; width: 300px; font-size: 16px; line-height: 1.35; }
+</style></head>
+<body>
+<div class="window">
+  <div class="side">
+    <div class="app">Ops requests</div>
+    <div class="pg on">Request something</div>
+    <div class="pg">My requests</div>
+  </div>
+  <div class="main">
+    <h1>Request something from Ops</h1>
+    <div class="sub">You will see it under My requests. No need to message anyone.</div>
+    <div class="lbl">What do you need?</div>
+    <div class="in tall">Describe it in a sentence or two</div>
+    <div class="row2">
+      <div><div class="lbl">Needed by</div><div class="in">Pick a date</div></div>
+      <div><div class="lbl">Who is asking?</div><div class="in">+ Choose a person</div></div><div><div class="lbl">Which client is it for?</div><div class="in">+ Choose a client</div></div>
+    </div>
+    <div class="lbl">Attachments (optional)</div>
+    <div class="in">Drop files here</div>
+    <div class="btn">Submit request</div>
+  </div>
+</div>
+<div class="note callout">Status, owner and priority are not on the form. The base sets them after submit.</div>
+</body></html>

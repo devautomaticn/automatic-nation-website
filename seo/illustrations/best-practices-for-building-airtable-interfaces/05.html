@@ -1,0 +1,55 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of an Airtable dashboard page called What is late, with three number elements: 4 requests past their due date, 7 tasks waiting on a client and 2 approvals older than three days, above one bar chart of overdue requests by team.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 720px; --bg: var(--blue-soft); }
+  .window { width: 1060px; height: 600px; display: grid; grid-template-columns: 270px 1fr; }
+  .side { background: color-mix(in srgb, var(--ink) 5%, var(--paper)); border-right: var(--stroke); padding: 22px 14px; display: flex; flex-direction: column; gap: 6px; }
+  .side .app { font-weight: 700; padding: 0 10px 14px; }
+  .side .pg { padding: 10px 12px; border-radius: 10px; color: var(--mute); font-weight: 500; }
+  .side .pg.on { background: var(--yellow); color: var(--ink); border: 2px solid var(--ink); font-weight: 700; }
+  .main { padding: 26px 34px; display: flex; flex-direction: column; gap: 20px; }
+  h1 { font-size: 28px; }
+  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .tile { border: var(--stroke); border-radius: 16px; padding: 16px 18px; box-shadow: 4px 4px 0 var(--ink); }
+  .tile .v { font-size: 46px; font-weight: 700; line-height: 1; }
+  .tile .k { font-size: 16px; color: var(--mute); margin-top: 8px; line-height: 1.3; }
+  .tile .go { font-size: 14px; font-weight: 700; margin-top: 10px; }
+  .tile.red .v { color: var(--red); }
+  .chart { border: 2px solid var(--line); border-radius: 16px; padding: 16px 20px; flex: 1; display: flex; flex-direction: column; }
+  .chart .t { font-weight: 700; font-size: 17px; margin-bottom: 12px; }
+  .bars { flex: 1; display: flex; align-items: flex-end; gap: 34px; padding: 0 10px; border-bottom: 2px solid var(--ink); }
+  .bar { flex: 1; border: 2px solid var(--ink); border-bottom: 0; border-radius: 8px 8px 0 0; background: var(--blue); }
+  .lbls { display: flex; gap: 34px; padding: 6px 10px 0; font-size: 14px; color: var(--mute); }
+  .lbls span { flex: 1; text-align: center; }
+</style></head>
+<body>
+<div class="window">
+  <div class="side">
+    <div class="app">Ops requests</div>
+    <div class="pg">Request something</div>
+    <div class="pg">Approve requests</div>
+    <div class="pg">My work</div>
+    <div class="pg on">What is late</div>
+  </div>
+  <div class="main">
+    <h1>What is late</h1>
+    <div class="tiles">
+      <div class="tile red"><div class="v">4</div><div class="k">Requests past their due date</div></div>
+      <div class="tile"><div class="v">7</div><div class="k">Tasks waiting on a client</div></div>
+      <div class="tile"><div class="v">2</div><div class="k">Approvals older than 3 days</div></div>
+    </div>
+    <div class="chart">
+      <div class="t">Overdue requests by team</div>
+      <div class="bars">
+        <div class="bar" style="height: 40%"></div>
+        <div class="bar" style="height: 95%; background: var(--red)"></div>
+        <div class="bar" style="height: 20%"></div>
+        <div class="bar" style="height: 0%"></div>
+      </div>
+      <div class="lbls"><span>Finance</span><span>Ops</span><span>Sales</span><span>Design</span></div>
+    </div>
+  </div>
+</div>
+</body></html>

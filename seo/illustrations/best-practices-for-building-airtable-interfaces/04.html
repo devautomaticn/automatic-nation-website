@@ -1,0 +1,41 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of a Projects table with forty fields, three of them highlighted: Stage, Next delivery and Waiting on you. Beside it, the client-facing interface page shows only those three fields for the client's project.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 640px; --bg: var(--blue-soft); }
+  body { display: flex; align-items: center; justify-content: center; gap: 80px; }
+  .base { width: 460px; }
+  .base .bar { padding: 14px 18px; border-bottom: var(--stroke); font-weight: 700; display: flex; justify-content: space-between; }
+  .base .bar span { font-weight: 500; color: var(--mute); font-size: 15px; }
+  .fields { padding: 14px 18px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .fd { font-size: 14px; border: 2px solid var(--line); border-radius: 8px; padding: 3px 8px; color: var(--faint); }
+  .fd.k { border: 2px solid var(--ink); background: var(--yellow); color: var(--ink); font-weight: 700; }
+  .client { width: 500px; }
+  .client .bar { background: var(--ink); color: var(--paper); padding: 16px 22px; font-weight: 700; }
+  .client .body { padding: 24px 26px 28px; }
+  .client h1 { font-size: 26px; margin-bottom: 20px; }
+  .card { border: var(--stroke); border-radius: 14px; padding: 14px 18px; margin-bottom: 14px; box-shadow: 4px 4px 0 var(--ink); }
+  .card .k { font-size: 15px; color: var(--mute); }
+  .card .v { font-size: 21px; font-weight: 700; margin-top: 2px; }
+  .card.w { background: var(--yellow-soft); }
+  .hop { position: absolute; left: 545px; top: 296px; z-index: 2; font-size: 16px; padding: 6px 12px; }
+</style></head>
+<body>
+<div class="window base">
+  <div class="bar">Projects table<span>40 fields</span></div>
+  <div class="fields">
+    <span class="fd">Name</span><span class="fd">Client</span><span class="fd k">Stage</span><span class="fd">Owner</span><span class="fd">Budget</span><span class="fd">Margin</span><span class="fd">Hours logged</span><span class="fd">Rate</span><span class="fd">Internal notes</span><span class="fd k">Next delivery</span><span class="fd">Invoice status</span><span class="fd">PO number</span><span class="fd">Risk</span><span class="fd">Kickoff date</span><span class="fd k">Waiting on you</span><span class="fd">Supplier</span><span class="fd">Supplier cost</span><span class="fd">Contract</span><span class="fd">Last contact</span><span class="fd">Account manager</span><span class="fd">Priority</span><span class="fd">Tasks</span><span class="fd">Open tasks</span><span class="fd">Created</span><span class="fd">Modified by</span><span class="fd">Record ID</span><span class="fd">+14 more</span>
+  </div>
+</div>
+<div class="note hop">3 of 40</div>
+<div class="window client">
+  <div class="bar">Northwind · Your project</div>
+  <div class="body">
+    <h1>Website rebuild</h1>
+    <div class="card"><div class="k">Stage</div><div class="v">Design review</div></div>
+    <div class="card"><div class="k">Next delivery</div><div class="v">Homepage draft, 17 Oct</div></div>
+    <div class="card w"><div class="k">Waiting on you</div><div class="v">Final logo files</div></div>
+  </div>
+</div>
+</body></html>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of an Airtable record review page called Approve requests: a list of submitted requests on the left, and on the right the selected request with its details shown view only, a Reviewer note field, and two buttons, Approve and Send back.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 740px; --bg: var(--blue-soft); }
+  .window { width: 1100px; height: 590px; display: grid; grid-template-columns: 380px 1fr; margin-top: -50px; }
+  .list { border-right: var(--stroke); }
+  .list .top { padding: 18px 20px; border-bottom: var(--stroke); font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  .list .top .f { font-size: 14px; font-weight: 500; border: 2px solid var(--ink); border-radius: 20px; padding: 2px 10px; background: var(--yellow-soft); }
+  .item { padding: 14px 20px; border-bottom: 2px solid var(--line); }
+  .item b { display: block; font-size: 18px; }
+  .item span { font-size: 15px; color: var(--mute); }
+  .item.on { background: var(--yellow-soft); border-left: 6px solid var(--ink); padding-left: 14px; }
+  .detail { padding: 24px 34px; position: relative; }
+  h1 { font-size: 26px; margin-bottom: 18px; }
+  .kv { display: grid; grid-template-columns: 170px 1fr; row-gap: 12px; font-size: 18px; margin-bottom: 18px; }
+  .kv .k { color: var(--mute); }
+  .lbl { font-weight: 700; font-size: 16px; margin-bottom: 6px; }
+  .in { border: var(--stroke); border-radius: 10px; padding: 12px 14px; color: var(--faint); font-size: 17px; height: 70px; }
+  .btns { position: absolute; left: 34px; right: 34px; bottom: 26px; display: flex; gap: 16px; }
+  .b { flex: 1; text-align: center; border: var(--stroke); border-radius: 12px; padding: 13px; font-weight: 700; box-shadow: 4px 4px 0 var(--ink); }
+  .b.ok { background: var(--green); } .b.back { background: var(--orange); }
+  .ro { font-size: 13px; color: var(--faint); margin-left: 8px; }
+  .callout { position: absolute; left: 470px; top: 668px; }
+</style></head>
+<body>
+<div class="window">
+  <div class="list">
+    <div class="top"><span>Approve requests</span><span class="f">Status is Submitted</span></div>
+    <div class="item on"><b>New laptop for onboarding</b><span>Needed by 14 Oct · Northwind</span></div>
+    <div class="item"><b>Renew design tool licence</b><span>Needed by 16 Oct · Internal</span></div>
+    <div class="item"><b>Courier samples to client</b><span>Needed by 17 Oct · Globex</span></div>
+    <div class="item"><b>Extra seat on CRM</b><span>Needed by 21 Oct · Internal</span></div>
+    <div class="item"><b>Print event banners</b><span>Needed by 24 Oct · Acme Corp</span></div>
+  </div>
+  <div class="detail">
+    <h1>New laptop for onboarding</h1>
+    <div class="kv">
+      <span class="k">Requested by</span><span>Dana R. <span class="ro">view only</span></span>
+      <span class="k">Needed by</span><span>14 Oct <span class="ro">view only</span></span>
+      <span class="k">Client</span><span><span class="chip">Northwind</span></span>
+      <span class="k">Estimated cost</span><span class="mono">$1,400</span>
+    </div>
+    <div class="lbl">Reviewer note</div>
+    <div class="in">Only needed if you send it back</div>
+    <div class="btns"><div class="b ok">✓ Approve</div><div class="b back">↩ Send back</div></div>
+  </div>
+</div>
+<div class="note callout">Each button updates Status, then moves to the next record</div>
+</body></html>

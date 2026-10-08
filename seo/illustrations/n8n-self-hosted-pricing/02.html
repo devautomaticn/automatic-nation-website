@@ -1,0 +1,28 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of a monthly n8n update routine as five steps in a row: read the release notes for breaking changes, back up the database and encryption key, update the test instance and run the key workflows, update production, then watch the first executions.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 520px; --bg: var(--yellow-soft); }
+  body { display: block; position: relative; }
+  .title { position: absolute; left: 60px; top: 50px; font-size: 28px; font-weight: 700; }
+  .title span { font-weight: 500; color: var(--mute); font-size: 20px; margin-left: 12px; }
+  .step { position: absolute; top: 150px; width: 192px; height: 290px; padding: 18px 16px; }
+  .step .n { width: 44px; height: 44px; border: var(--stroke); border-radius: 12px; display: grid; place-items: center; font-weight: 700; font-size: 22px; margin-bottom: 16px; }
+  .step b { display: block; font-size: 20px; line-height: 1.2; margin-bottom: 10px; }
+  .step p { font-size: 15px; color: var(--mute); line-height: 1.4; }
+  .step.hi .n { background: var(--yellow); }
+  .arrow { position: absolute; top: 275px; font-size: 26px; font-weight: 700; }
+</style></head>
+<body>
+<div class="title">Once a month, per instance<span>what n8n's update guide asks for</span></div>
+<div class="window step" style="left:60px"><div class="n">1</div><b>Read the release notes</b><p>every version since the last update, looking for breaking changes</p></div>
+<div class="arrow" style="left:262px">→</div>
+<div class="window step" style="left:290px"><div class="n">2</div><b>Back up</b><p>the database and the <span class="mono" style="font-size:13px">.n8n</span> folder with the encryption key</p></div>
+<div class="arrow" style="left:492px">→</div>
+<div class="window step hi" style="left:520px"><div class="n">3</div><b>Update the test instance</b><p>and run the workflows that matter. On Community Edition it is a second server you keep</p></div>
+<div class="arrow" style="left:722px">→</div>
+<div class="window step" style="left:750px"><div class="n">4</div><b>Update production</b><p>pull the new image, restart, check the editor loads</p></div>
+<div class="arrow" style="left:952px">→</div>
+<div class="window step" style="left:980px"><div class="n">5</div><b>Watch the first runs</b><p>open the executions list and check the busy workflows behave as before</p></div>
+</body></html>

@@ -7,7 +7,7 @@ draft: true
 
 Every execution in the list is green. The workflow ran at 06:00, 07:00 and 08:00, and each run says Succeeded. The CRM still has no new leads since Tuesday, because a vendor renamed a status and the search node has been returning an empty list ever since. An empty list is a valid answer, so n8n never saw anything wrong. Most n8n reviews skip this kind of failure, and it is the one that costs money.
 
-This n8n review is written from the other side of the trial. We are an automation agency, and we build and run n8n workflows for clients: [CLIENT WORKFLOW COUNT NEEDED: approximate number of client workflows in production on n8n, and across how many instances]. Below is what holds up, the four things that go wrong in production and what each takes to fix, what running it takes each month, and who should pick something else.
+This n8n review is written from the other side of the trial. We are an automation agency, and we build and run n8n workflows for clients. Below is what holds up, the four things that go wrong in production and what each takes to fix, what running it takes each month, and who should pick something else.
 
 ## n8n review: the short verdict
 
@@ -33,7 +33,7 @@ It also decides the order of operations. Our WhatsApp agent answers customers fr
 
 n8n's cloud plans are priced on executions, and n8n defines an execution as "a single run of your entire workflow", however many steps it has. A 20 node workflow costs the same per run as a 2 node one. Zapier bills by task, and a task is counted for each action step that runs, so a long Zap multiplies its own cost on every trigger.
 
-For short, high volume jobs the gap is small. For the workflows we usually build, which spend more nodes translating IDs and statuses between systems than on the task itself, it is the difference that makes n8n the cheaper option. The self-hosted Community Edition has no licence fee at all. The server still costs money: on DigitalOcean it tops out around $30 to $40 a month, which is usually no more than a standard n8n Cloud subscription. Someone's time comes on top of that.
+For short, high volume jobs the gap is small. For the workflows we usually build, which spend more nodes translating IDs and statuses between systems than on the task itself, it is the difference that makes n8n the cheaper option. The self-hosted Community Edition has no licence fee at all. The server still costs money: on DigitalOcean it usually runs about $30 to $40 a month, in the same range as an n8n Cloud subscription. Someone's time comes on top of that.
 
 ## What goes wrong in production, and what it costs to fix
 
@@ -88,12 +88,16 @@ How it breaks depends on what the workflow does with the field. When you pick th
 
 Reads fail quietly. Airtable returns each record's fields keyed by name and leaves empty fields out of the response. An expression that still reads the old name gets nothing back, which looks exactly like an empty cell. An If node sends every record down the "empty" branch, or a blank gets copied into the next system, and the execution says Succeeded.
 
+![Illustration of an Airtable field renamed from Status to Stage, and what it does to two n8n nodes. The Airtable Update node still maps a column called Status, so Airtable rejects the write and the run fails with an alert. The Airtable Search node returns records with Stage and no Status, so the expression that reads Status gets nothing, the If node sends every record down the empty branch, and the run says Succeeded.](./03.webp)
+
 The fixes, in the order we would apply them:
 
 - **The error workflow from the first failure** catches the writes that fail loudly.
 - **A guard on the reads.** After the Airtable node, check that the fields the workflow depends on are present on records that must have them, and send anything else to a Stop and Error node. It is the same pattern as the empty result guard above.
 - **Agree which fields belong to the automation.** Make it visible in the base: a prefix on those field names, a line in the field description saying which workflow reads it, or a section of the base the team knows to leave alone. A rename then becomes a question before it happens.
 - **Field IDs where it matters most.** Airtable's API accepts field IDs in place of names, and an ID survives a rename. The Airtable node's column mapping uses names, so this means calling the API with an HTTP Request node for the steps a rename must not break.
+
+![Illustration of an Airtable Orders table where the fields an n8n workflow depends on are marked: their names start with a gear prefix, and an open field description reads: Read by n8n in the workflow Orders to accounting. Ask before renaming or changing the type. The other fields are the team's to change freely.](./04.webp)
 
 If you have a set of n8n workflows that nobody has looked at since launch, that is a good use of a call. [Book one](/book-a-call/) and we will tell you which of these four you have. If your workflows are three nodes each and only touch internal tools, you probably do not need us for it.
 

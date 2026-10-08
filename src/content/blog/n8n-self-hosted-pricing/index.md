@@ -92,9 +92,13 @@ Here is the whole calculation in one table. The n8n plan fees are on [the pricin
 |---|---|---|---|
 | **What usually fits** | One builder or a small team, with volume inside a plan's quota | A team where someone already runs servers | A team that needs SSO, environments and Git on its own servers |
 | **n8n licence or plan** | Cloud plan fee | €0 | Business licence fee |
-| **Server, database, backups, monitoring** | Included in the plan | On our instances, up to about $30 to $40 a month on DigitalOcean, and usually no more than a standard n8n Cloud subscription | The same lines as Community, plus a second server for the test instance |
+| **Server, database, backups, monitoring** | Included in the plan | On our instances, usually about $30 to $40 a month on DigitalOcean, which is in the same range as an n8n Cloud subscription, between the Starter and Pro plans | The same lines as Community, plus a second server for the test instance |
 | **Maintenance hours a month** | Workflow fixes only | About 5 hours or less, depending on the workflows | The Community figure, plus the time to keep the test instance in step |
 | **Monthly total** | Plan fee + workflow fixes | Infra + hours × hourly cost | Licence + infra + hours × hourly cost |
+
+That $30 to $40 is what our instances usually cost. A heavier setup costs more: at the DigitalOcean prices above, a 4 GiB Droplet with managed Postgres and daily backups comes to about $46 a month.
+
+![Illustration of three self-hosted n8n setups priced at DigitalOcean's October 2026 rates. A 2 GiB Droplet at $12 with managed Postgres at $15.15 and weekly backups at $2.40 comes to about $29.55 a month. A 4 GiB Droplet at $24 with Postgres on the same server and daily backups at $7.20 comes to about $31.20. A 4 GiB Droplet with managed Postgres and daily backups comes to about $46.35. A band marks $30 to $40 as what our instances usually cost; the third setup sits above it.](./04.webp)
 
 Two things change the picture more than the column you pick. The first is whether someone on your team already runs servers. If they do, the maintenance hours cost you less, because the routine is one they already have. The second is whether your volume fits a Cloud plan's execution quota. n8n counts one execution per workflow run, however many steps it has, so a workflow that runs every five minutes uses about 8,600 executions a month on its own.
 
@@ -108,7 +112,7 @@ We run self-hosted instances for clients and like it, so take that into account.
 
 **Nobody will own the monthly update.** Self-hosting is cheap only if someone does the routine above, every month. If the honest answer to "who updates it?" is a name followed by "when they get time", the instance falls behind, and the update that finally happens jumps several versions at once. Cloud is the cheaper option for that team, whatever the table says.
 
-**The volume fits a Cloud plan.** If your runs fit inside a plan's quota, compare the plan fee with your maintenance hours times the hourly cost. [REAL FIGURE NEEDED: our rule of thumb for the point where we recommend Cloud, as executions a month or hours of maintenance]
+**The volume fits a Cloud plan.** If your runs fit inside a plan's quota, compare the plan fee with your maintenance hours times the hourly cost.
 
 **The only reason for Business is folders.** Register Community Edition instead. It is free and folders come with it.
 

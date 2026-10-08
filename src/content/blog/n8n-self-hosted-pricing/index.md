@@ -1,8 +1,7 @@
 ---
 title: "n8n Self-Hosted Pricing: What Running It Really Costs"
 description: "n8n self-hosted pricing past the free licence: server, backups, monitoring, maintenance hours, what our instances cost, and when Cloud or Business wins."
-published: 2026-10-08
-draft: true
+published: 2026-10-14
 hero: ./hero.webp
 heroAlt: "Illustration of what running n8n yourself costs: a server window holding a reverse proxy, the n8n container, a Postgres database and the encryption key, a monthly bill with infrastructure at about $30 to $40 and maintenance at 5 hours or less, and a calendar with one update day marked for the monthly update, backup and check."
 ---

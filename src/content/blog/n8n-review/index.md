@@ -1,8 +1,7 @@
 ---
 title: "n8n Review: What Holds Up and What Breaks in Client Production"
 description: "An n8n review from client production: where it beats Zapier, the failures that cost real money, what maintenance takes, and who should not use it."
-published: 2026-10-08
-draft: true
+published: 2026-10-13
 hero: ./hero.webp
 heroAlt: "Illustration of n8n in production: an executions list where the 06:00, 07:00 and 08:00 runs all say Succeeded, an n8n canvas where a Schedule trigger and an Airtable search feed a CRM node that received 0 items, and an error workflow alert in Slack reporting that the Orders to accounting workflow failed, with a link to the execution."
 ---

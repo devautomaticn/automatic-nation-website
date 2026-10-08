@@ -1,6 +1,6 @@
 ---
 title: "n8n Review: What Holds Up and What Breaks in Client Production"
-description: "An n8n review from client production: where it beats Zapier, the three failures that cost real money, what upkeep takes, and who should not use it."
+description: "An n8n review from client production: where it beats Zapier, the three failures that cost real money, what maintenance takes, and who should not use it."
 published: 2026-10-08
 draft: true
 ---
@@ -33,7 +33,7 @@ It also decides the order of operations. Our WhatsApp agent answers customers fr
 
 n8n's cloud plans are priced on executions, and n8n defines an execution as "a single run of your entire workflow", however many steps it has. A 20 node workflow costs the same per run as a 2 node one. Zapier bills by task, and a task is counted for each action step that runs, so a long Zap multiplies its own cost on every trigger.
 
-For short, high volume jobs the gap is small. For the workflows we usually build, which spend more nodes translating IDs and statuses between systems than on the task itself, it is the difference that makes n8n the cheaper option. The self-hosted Community Edition has no licence fee at all, though the server it runs on has a cost and someone's time attached.
+For short, high volume jobs the gap is small. For the workflows we usually build, which spend more nodes translating IDs and statuses between systems than on the task itself, it is the difference that makes n8n the cheaper option. The self-hosted Community Edition has no licence fee at all. The server still costs money: on DigitalOcean it tops out around $30 to $40 a month, which is usually no more than a standard n8n Cloud subscription. Someone's time comes on top of that.
 
 ## What goes wrong in production, and what it costs to fix
 
@@ -92,9 +92,7 @@ The fix is structural. Process records in batches with Loop Over Items, hand eac
 
 ## Maintenance: what running it actually takes per month
 
-[MAINTENANCE HOURS NEEDED: typical monthly hours for a client instance, ideally split between cloud and self-hosted.]
-
-The hours depend on how many workflows there are and how many outside systems they touch. The jobs themselves are the same on any instance:
+Our estimate for a client instance is usually around 5 hours a month or less. It depends on the workflows: how many there are and how many outside systems they touch. The jobs themselves are the same on any instance:
 
 - **Read the alerts.** Every message from the error workflow gets an answer: a retry, a fix, or a note that it was expected.
 - **Check the runs that should have done something.** The quiet failures above are the reason. A daily look at whether the key workflows wrote what they should have written catches what alerts miss.

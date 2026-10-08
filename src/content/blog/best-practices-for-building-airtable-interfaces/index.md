@@ -99,6 +99,23 @@ When we audit a base, the interfaces nobody opens usually fail in one of these w
 
 **Nobody owns it.** An interface is part of the base. When a field is renamed or a table is split, someone has to open the interface and check it. If that is nobody's job, the interface breaks one element at a time.
 
+## When a standard form can't do the job
+
+Forms and layouts cover most of what a team needs, up to a point. A form page creates a record in one table. Any check against other records, and any calculation, happens in the base or in an automation after the record is saved.
+
+Past that point, Airtable lets you put your own code inside an interface. Interface Extensions are written in JavaScript or TypeScript with React, built locally with Airtable's command line tool, and added to an interface as a page of their own (the Custom layout) or as a custom element on a Dashboard page. The code reads records from the tables the builder connects to it in Interface Designer, and it can create, update and delete records in more than one of them. It runs with the permissions of whoever is using it, so a user with read-only access still can't write.
+
+That covers the jobs a standard form can't do:
+
+- An order form that saves the order and its line items to two tables in one submit, each line already linked to the order.
+- An intake that checks the base before saving, for example warning that a client with the same email already exists instead of creating a duplicate.
+- A quote builder that prices the options as the user picks them, so the total is on screen before anything is saved, not in a formula field afterwards.
+- A visual picker: choosing a desk on a floor plan or a slot on a schedule, instead of scrolling a dropdown of record names.
+
+There is a shorter route as well. Omni, Airtable's AI assistant, can generate a custom element from a description, and you can open and edit its source code afterwards.
+
+Know the limits before you commit to code. Extensions can't store credentials for outside services securely, they don't show on mobile, and batch writes are capped at 50 records per call. Code also needs someone who can read it when Airtable changes or the process does. If a standard layout does the job, use it, because anyone on your team can change it. If what you want is a tweak to how Airtable's own screens behave rather than a new page, a browser script can sometimes do it, and we wrote up that approach in [adding custom features to Airtable](/enhancing-airtable-with-custom-features-a-practical-guide/).
+
 ## Interfaces versus giving people the base
 
 Giving everyone base access is simpler to set up, and for a team of three who built the base together it is often the right call. An interface for three people who already know the schema is overhead.
@@ -109,6 +126,6 @@ Interfaces pay off when someone needs to do one thing in a base they did not bui
 - **A current user filter is not a lock** if the person also has base access. Anyone with base access can open the table and see every record. If people must see only their own records, give them interface-only access.
 - **Base permissions still apply inside interfaces.** A field locked at base level stays locked on every page.
 
-When an interface can't do what a job needs, there are ways to extend it, from buttons that run automations to [custom features added on top of Airtable](/enhancing-airtable-with-custom-features-a-practical-guide/). When the interfaces are fine and the base under them keeps breaking them, the base is the problem, and that is where our [Airtable consulting](/lp/airtable-consulting/) work starts.
+When the interfaces are fine and the base under them keeps breaking them, the base is the problem, and that is where our [Airtable consulting](/lp/airtable-consulting/) work starts.
 
 Build the first interface for the person who complains most about the grid. Give them one page that does their one job, and see whether they open it the next morning.

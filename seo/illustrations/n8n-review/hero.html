@@ -1,0 +1,63 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of n8n in production: an executions list where the 06:00, 07:00 and 08:00 runs all say Succeeded, an n8n canvas where a Schedule trigger and an Airtable search feed a CRM node that received 0 items, and an error workflow alert in Slack reporting that the Orders to accounting workflow failed, with a link to the execution.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  /* Rendered at 2x by render.mjs, so 768x512 CSS px gives 1536x1024.
+     Content stays inside the middle 16:9 band (y 40 to 472), because
+     PostCard crops heroes with object-cover at aspect 16/9. */
+  :root { --w: 768px; --h: 512px; --bg: var(--blue-soft); }
+  body { font-size: 13px; display: block; position: relative; }
+  .window { position: absolute; border-width: 2.5px; border-radius: 16px; box-shadow: 6px 6px 0 var(--ink); }
+  .bar { padding: 10px 14px; border-bottom: 2.5px solid var(--ink); font-weight: 700; font-size: 15px; display: flex; justify-content: space-between; align-items: center; }
+  .f { font-size: 10px; font-weight: 500; border: 1.5px solid var(--ink); border-radius: 12px; padding: 1px 7px; background: var(--yellow-soft); }
+
+  .runs { left: 30px; top: 66px; width: 290px; height: 250px; }
+  .run { display: grid; grid-template-columns: 1fr auto; align-items: center; padding: 11px 14px; border-bottom: 1.5px solid var(--line); }
+  .run b { display: block; font-size: 13px; }
+  .run span.t { font-size: 11px; color: var(--mute); }
+  .ok { border: 1.5px solid var(--ink); border-radius: 12px; padding: 2px 9px; font-size: 11px; font-weight: 700; background: var(--green); }
+
+  .flow { left: 344px; top: 66px; width: 394px; height: 196px; z-index: 2; }
+  .canvas { position: absolute; left: 0; right: 0; top: 41px; bottom: 0; border-radius: 0 0 14px 14px; background-size: 16px 16px; }
+  .node { width: 96px; gap: 6px; }
+  .node .box { width: 58px; height: 58px; border-width: 2.5px; border-radius: 14px; font-size: 22px; box-shadow: 3px 3px 0 var(--ink); }
+  .node.trigger .box { border-radius: 29px 14px 14px 29px; }
+  .node .name { font-size: 12px; }
+  .canvas > svg.wires path { stroke-width: 2.5; }
+  .zero { position: absolute; left: 318px; top: 16px; z-index: 3; background: var(--red); border: 2px solid var(--ink); border-radius: 10px; padding: 1px 7px; font-size: 11px; font-weight: 700; }
+
+  .alert { left: 236px; top: 300px; width: 400px; height: 132px; z-index: 3; }
+  .alert .bar { background: var(--ink); color: var(--paper); }
+  .alert .bar .f { background: var(--yellow); color: var(--ink); border-color: var(--paper); }
+  .msg { padding: 11px 14px; font-size: 13px; line-height: 1.5; }
+  .msg b { display: block; font-size: 14px; }
+  .msg .m { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--mute); }
+  .msg u { font-weight: 700; }
+</style></head>
+<body>
+<div class="window runs">
+  <div class="bar"><span>Executions</span><span class="f">New leads to CRM</span></div>
+  <div class="run"><div><b>08:00</b><span class="t">Schedule · 1.2s</span></div><span class="ok">Succeeded</span></div>
+  <div class="run"><div><b>07:00</b><span class="t">Schedule · 1.1s</span></div><span class="ok">Succeeded</span></div>
+  <div class="run"><div><b>06:00</b><span class="t">Schedule · 1.3s</span></div><span class="ok">Succeeded</span></div>
+</div>
+<div class="window flow">
+  <div class="bar"><span>New leads to CRM</span><span class="f">Published</span></div>
+  <div class="canvas">
+    <svg class="wires"><path d="M83 52 L148 52"/><path d="M211 52 L276 52"/></svg>
+    <div class="node trigger" style="left: 6px; top: 22px;"><div class="box yellow">▶</div><div class="name">Schedule</div></div>
+    <div class="node" style="left: 132px; top: 22px;"><div class="box blue">A</div><div class="name">Airtable search</div></div>
+    <div class="node" style="left: 258px; top: 22px;"><div class="box">◎</div><div class="name">CRM</div></div>
+    <div class="zero">0 items</div>
+  </div>
+</div>
+<div class="window alert">
+  <div class="bar"><span># ops-alerts</span><span class="f">Error workflow</span></div>
+  <div class="msg">
+    <b>⚠ Workflow failed: Orders to accounting</b>
+    <span class="m">Node: HTTP Request · 401 Unauthorized · 09:12</span><br>
+    <u>View execution →</u>
+  </div>
+</div>
+</body></html>

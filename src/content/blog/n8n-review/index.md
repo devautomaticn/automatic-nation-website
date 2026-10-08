@@ -3,6 +3,8 @@ title: "n8n Review: What Holds Up and What Breaks in Client Production"
 description: "An n8n review from client production: where it beats Zapier, the failures that cost real money, what maintenance takes, and who should not use it."
 published: 2026-10-08
 draft: true
+hero: ./hero.webp
+heroAlt: "Illustration of n8n in production: an executions list where the 06:00, 07:00 and 08:00 runs all say Succeeded, an n8n canvas where a Schedule trigger and an Airtable search feed a CRM node that received 0 items, and an error workflow alert in Slack reporting that the Orders to accounting workflow failed, with a link to the execution."
 ---
 
 Every execution in the list is green. The workflow ran at 06:00, 07:00 and 08:00, and each run says Succeeded. The CRM still has no new leads since Tuesday, because a vendor renamed a status and the search node has been returning an empty list ever since. An empty list is a valid answer, so n8n never saw anything wrong. Most n8n reviews skip this kind of failure, and it is the one that costs money.

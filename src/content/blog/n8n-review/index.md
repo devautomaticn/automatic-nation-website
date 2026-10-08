@@ -1,13 +1,13 @@
 ---
 title: "n8n Review: What Holds Up and What Breaks in Client Production"
-description: "An n8n review from client production: where it beats Zapier, the three failures that cost real money, what maintenance takes, and who should not use it."
+description: "An n8n review from client production: where it beats Zapier, the failures that cost real money, what maintenance takes, and who should not use it."
 published: 2026-10-08
 draft: true
 ---
 
 Every execution in the list is green. The workflow ran at 06:00, 07:00 and 08:00, and each run says Succeeded. The CRM still has no new leads since Tuesday, because a vendor renamed a status and the search node has been returning an empty list ever since. An empty list is a valid answer, so n8n never saw anything wrong. Most n8n reviews skip this kind of failure, and it is the one that costs money.
 
-This n8n review is written from the other side of the trial. We are an automation agency, and we build and run n8n workflows for clients: [CLIENT WORKFLOW COUNT NEEDED: approximate number of client workflows in production on n8n, and across how many instances]. Below is what holds up, the three things that go wrong in production and what each takes to fix, what running it takes each month, and who should pick something else.
+This n8n review is written from the other side of the trial. We are an automation agency, and we build and run n8n workflows for clients: [CLIENT WORKFLOW COUNT NEEDED: approximate number of client workflows in production on n8n, and across how many instances]. Below is what holds up, the four things that go wrong in production and what each takes to fix, what running it takes each month, and who should pick something else.
 
 ## n8n review: the short verdict
 
@@ -37,7 +37,7 @@ For short, high volume jobs the gap is small. For the workflows we usually build
 
 ## What goes wrong in production, and what it costs to fix
 
-These are the three that come up when we take over or look after an instance. Each has a known fix, and most of the fixes are settings nobody changed.
+These are the four that come up when we take over or look after an instance. Each has a known fix, and most of the fixes are settings or habits nobody put in place.
 
 ### 1. Failures nobody hears about
 
@@ -68,8 +68,6 @@ n8n releases quickly. Its release notes show a new minor version roughly every w
 
 Each of those is a reasonable change. Each one can also break a workflow that relied on the old behaviour, and not always loudly. A parent that expected the child's input gets different data and writes it somewhere.
 
-[REAL INCIDENT NEEDED: one upgrade or production incident from a client instance. What broke, how it was noticed, how long it ran before anyone noticed, and what the fix was.]
-
 On self-hosted n8n, pin the version you run rather than following the newest image. Read the release notes before you move. Upgrade a copy of the instance first, run the production workflows against test accounts, and only then upgrade the real one. On n8n's cloud plan less of the upgrade work is yours, but a behaviour change still reaches your workflows, so the reading and the test run still apply.
 
 ### 3. Credentials that stop working
@@ -82,9 +80,24 @@ Workflows outlive the logins they run on. The common versions:
 
 With an error workflow in place, an expired credential at least fails loudly. The fix is to make every connection on an account the company owns, store every key in n8n's credential store and reference it by name, and keep a list of which credential each workflow depends on and who owns it.
 
-If you have a set of n8n workflows that nobody has looked at since launch, that is a good use of a call. [Book one](/book-a-call/) and we will tell you which of these three you have. If your workflows are three nodes each and only touch internal tools, you probably do not need us for it.
+### 4. Someone changes the Airtable base
 
-### A fourth, on self-hosted instances: memory
+This is the one we actually run into on client builds. Nothing is wrong with n8n or with the workflow. Someone on the client's team renames a field from "Status" to "Stage", turns a text field into a single select, or tidies up the options in a dropdown, and the workflow that reads or writes that base breaks.
+
+How it breaks depends on what the workflow does with the field. When you pick the base and the table from the list in n8n's Airtable node, it stores their IDs, so renaming a table does not break anything. Fields are different. The column mapping in a create or update operation works by field name, so after a rename the next write sends a name the table no longer has, Airtable rejects it, and the run fails. A changed field type or a deleted select option fails the same way on writes, because the value no longer fits the field. [Each Airtable field type](/airtable-field-types-a-friendly-guide-to-unlock-the-power-of-your-data/) stores its value differently, so switching text to single select is a schema change even though the column looks the same.
+
+Reads fail quietly. Airtable returns each record's fields keyed by name and leaves empty fields out of the response. An expression that still reads the old name gets nothing back, which looks exactly like an empty cell. An If node sends every record down the "empty" branch, or a blank gets copied into the next system, and the execution says Succeeded.
+
+The fixes, in the order we would apply them:
+
+- **The error workflow from the first failure** catches the writes that fail loudly.
+- **A guard on the reads.** After the Airtable node, check that the fields the workflow depends on are present on records that must have them, and send anything else to a Stop and Error node. It is the same pattern as the empty result guard above.
+- **Agree which fields belong to the automation.** Make it visible in the base: a prefix on those field names, a line in the field description saying which workflow reads it, or a section of the base the team knows to leave alone. A rename then becomes a question before it happens.
+- **Field IDs where it matters most.** Airtable's API accepts field IDs in place of names, and an ID survives a rename. The Airtable node's column mapping uses names, so this means calling the API with an HTTP Request node for the steps a rename must not break.
+
+If you have a set of n8n workflows that nobody has looked at since launch, that is a good use of a call. [Book one](/book-a-call/) and we will tell you which of these four you have. If your workflows are three nodes each and only touch internal tools, you probably do not need us for it.
+
+### One more, on self-hosted instances: memory
 
 Big runs can stop an instance. n8n's documentation lists what drives memory use: the amount of JSON and binary data, the number of nodes, Code nodes in particular, manual runs (which copy the data to the editor), and other workflows running at the same time. The symptom is an execution stopped mid-node with a note that n8n may have run out of memory, or "JavaScript heap out of memory" in the server logs.
 
@@ -99,6 +112,7 @@ Our estimate for a client instance is usually around 5 hours a month or less. It
 - **Upgrade on purpose.** Read the release notes, test on a copy, then move. On a self-hosted instance this is the biggest recurring job.
 - **Keep the run history you will need.** A self-hosted instance prunes execution data older than 336 hours (14 days) by default. If someone may ask in March whether a January invoice went out, write a line per important run to a table you keep, such as an Airtable base.
 - **Back up and test the restore.** The workflows and the encrypted credentials live in n8n's database. An untested backup is a guess.
+- **Know when the base changes.** A renamed field breaks the workflow that reads it, so changes to the fields an automation depends on go past whoever looks after the workflows first.
 - **Watch the credentials.** Rotate keys when people leave and renew anything with a fixed expiry before it lapses.
 - **Keep the server up, if you self-host.** When the instance is down, incoming webhooks get no answer. Some senders retry later and some never send that event again.
 

@@ -54,6 +54,17 @@ export default defineConfig({
   // at root: only these legacy aliases need it, never a canonical URL.
   redirects: {
     '/blog': '/blogs',
+
+    // WordPress's older slugs for the "Airtable's …" posts, which spelled the
+    // apostrophe as "-s-". Still requested (seen in Metricool, Sep–Oct 2026)
+    // and not covered by the /blog/{slug}/ stubs, which use the current slug.
+    '/blog/airtable-s-ai-field-a-quick-guide': '/airtables-ai-field-a-quick-guide/',
+    '/blog/airtable-s-count-field-how-to-use-it-and-why-it-s-a-game-changer':
+      '/airtables-count-field-how-to-use-it-and-why-its-a-game-changer/',
+    '/blog/airtable-s-grouping-feature-a-quick-guide': '/airtables-grouping-feature-a-quick-guide/',
+    '/blog/airtable-s-lookup-field-a-quick-guide': '/airtables-lookup-field-a-quick-guide/',
+    '/blog/airtable-s-rollup-field-a-quick-guide': '/airtables-rollup-field-a-quick-guide/',
+    '/blog/airtable-s-views-a-quick-guide': '/airtables-views-a-quick-guide/',
   },
 
   integrations: [

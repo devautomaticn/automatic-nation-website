@@ -21,6 +21,13 @@ export const SITE = {
  * The cal.com event every call is booked into — the same one the WordPress
  * site used, so migrated /book-a-call-now/ traffic still lands on it.
  *
+ * **The slug lies about the duration.** It reads `45min`, but the event behind
+ * it is titled "30 Min Consultation" — it was shortened on cal.com without
+ * renaming the link. So the copy says 30 minutes, matching the home page and
+ * the process timeline, and it is NOT a typo to be reconciled with the URL.
+ * The slug is what cal.com serves, so it stays until someone renames the event
+ * there; renaming it here would break booking.
+ *
  * Kept as the bare handle because /book-a-call/ needs it in two shapes: the
  * embed's `calLink`, which takes no origin, and the plain URL the <noscript>
  * fallback links to. Deriving the second from the first is what stops them

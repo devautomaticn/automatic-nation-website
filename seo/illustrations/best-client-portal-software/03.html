@@ -1,0 +1,72 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of the permission model of a custom client portal: client companies own users, each user has a role within their company, every project, document and request row carries the company it belongs to, a share table grants one record to a second company, and staff users sit outside the client scope with their own roles.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 540px; --bg: var(--blue-soft); }
+  body { display: block; position: relative; font-size: 17px; }
+  svg.wires { position: absolute; inset: 0; width: 100%; height: 100%; }
+  svg.wires path { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; }
+  svg.wires path.d { stroke-dasharray: 8 7; }
+  .box { position: absolute; z-index: 2; }
+  .box .bar { padding: 10px 16px; font-weight: 700; border-bottom: var(--stroke); display: flex; justify-content: space-between; }
+  .box .bar span { font-weight: 500; font-size: 14px; color: var(--mute); }
+  .row { padding: 8px 16px; border-bottom: 2px solid var(--line); font-size: 16px; display: flex; justify-content: space-between; gap: 10px; }
+  .row:last-child { border-bottom: 0; }
+  .m { font-family: 'JetBrains Mono', monospace; font-size: 14px; }
+  .co { background: var(--yellow); border: 2px solid var(--ink); border-radius: 7px; padding: 0 7px; font-size: 13px; font-family: 'JetBrains Mono', monospace; }
+  .co.b { background: var(--orange); }
+  .role { border: 2px solid var(--ink); border-radius: 7px; padding: 0 7px; font-size: 13px; background: var(--blue-soft); }
+  .zone { position: absolute; border: 3px dashed var(--ink); border-radius: 26px; }
+  .zl { position: absolute; font-weight: 700; font-size: 15px; background: var(--blue-soft); padding: 0 8px; }
+  .staff .bar { background: var(--ink); color: var(--paper); border-bottom-color: var(--ink); }
+  .staff .bar span { color: var(--paper); opacity: .7; }
+</style></head>
+<body>
+<div class="zone" style="left:40px; top:50px; width:820px; height:440px"></div>
+<div class="zl" style="left:64px; top:38px">Client scope: every query filtered to the user's company</div>
+
+<svg class="wires" viewBox="0 0 1200 540">
+  <path d="M 300 160 C 340 160, 340 160, 380 160" />
+  <path d="M 300 330 C 340 330, 340 330, 380 330" />
+  <path d="M 650 230 C 690 230, 690 400, 640 420" class="d" />
+  <path d="M 940 300 C 900 300, 880 300, 840 300" />
+</svg>
+
+<div class="window box" style="left:70px; top:90px; width:230px">
+  <div class="bar">Companies</div>
+  <div class="row">Northwind <span class="co">co_1</span></div>
+  <div class="row">Globex <span class="co b">co_2</span></div>
+</div>
+
+<div class="window box" style="left:70px; top:270px; width:230px">
+  <div class="bar">Users</div>
+  <div class="row">Ana <span><span class="co">co_1</span> <span class="role">admin</span></span></div>
+  <div class="row">Ben <span><span class="co">co_1</span> <span class="role">billing</span></span></div>
+  <div class="row">Cleo <span><span class="co b">co_2</span> <span class="role">member</span></span></div>
+</div>
+
+<div class="window box" style="left:380px; top:90px; width:270px">
+  <div class="bar">Projects<span>+ documents, requests</span></div>
+  <div class="row">Website rebuild <span class="co">co_1</span></div>
+  <div class="row">Q4 report pack <span class="co">co_1</span></div>
+  <div class="row">Brand refresh <span class="co b">co_2</span></div>
+</div>
+
+<div class="window box" style="left:380px; top:380px; width:450px">
+  <div class="bar">Shares<span>one record, one extra company</span></div>
+  <div class="row"><span>Joint launch plan.pdf</span><span>owner <span class="co">co_1</span> → also <span class="co b">co_2</span></span></div>
+</div>
+
+<div class="window box" style="left:380px; top:270px; width:270px">
+  <div class="bar">Invoices</div>
+  <div class="row">INV-104 <span><span class="co">co_1</span> <span class="role">billing</span></span></div>
+</div>
+
+<div class="window box staff" style="left:940px; top:200px; width:230px">
+  <div class="bar">Staff<span>your team</span></div>
+  <div class="row">Account lead <span class="role">all clients</span></div>
+  <div class="row">Support <span class="role">read only</span></div>
+  <div class="row m">every change logged</div>
+</div>
+</body></html>

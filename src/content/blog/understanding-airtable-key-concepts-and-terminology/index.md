@@ -76,9 +76,8 @@ The usual repair attempt is sync. Someone builds a reporting base and syncs a ta
 
 ![Two setups side by side. On the left, a base per client: four client bases, Northwind, Globex, Initech and Umbrella, each feeding a Reporting base through its own sync, where linked records arrive as text. On the right, one Client work base where every project and invoice links to a record in the Clients table, and the cross-client report is a grouped view.](./02.webp)
 
-The fix is almost always to merge: one base, a Clients table, and every project, task and invoice linked to its client. A filter on a view, or a page in an interface, then shows one client's work. Cross-client reporting becomes a view instead of a project. The cost is the migration itself. Records have to be imported with their links rebuilt, and every automation and interface pointing at the old bases has to be rebuilt too. For a base with years of history that is real work, and occasionally the answer is to leave the old bases read only and start the merged base from today.
+The fix is almost always to merge: one base, a Clients table, and every project, task and invoice linked to its client. A filter on a view, or a page in an interface, then shows one client's work. Cross-client reporting becomes a view instead of a project. The cost is the migration itself. The usual order is: build the merged base from the most complete copy, add a Client link field to every table that was split by client, import each old base's records and fill that link as they come in, then rebuild the automations and interfaces once, in one place, instead of once per base. For a base with years of history that is real work, and occasionally the answer is to leave the old bases read only and start the merged base from today.
 
-<!-- NEEDS: one real, anonymised example of a base merge or split we did for a client: what they had (how many bases, split by what), what broke, what we merged it into, and one checkable number (bases before and after, hours saved on reporting, number of syncs removed). Two or three sentences, placed here. -->
 
 ## When splitting is right, and syncing between bases
 

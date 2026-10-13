@@ -3,6 +3,8 @@ title: "What Is n8n Used For? 4 Systems We've Actually Built With It"
 description: "What n8n is used for in practice: four systems we built with it, the nodes inside each one, and the jobs where n8n is the wrong tool."
 published: 2026-09-28
 draft: true
+hero: ./hero.webp
+heroAlt: "Illustration of n8n as the layer between a business's systems: a small n8n canvas in the middle, with a webhook, an Airtable lookup and an If node that branches to QuickBooks or WhatsApp, wired out to four app windows around it: an Airtable orders table, a QuickBooks invoice, a lead list and a WhatsApp chat."
 ---
 
 Someone closes an order in Airtable, then opens QuickBooks and types the same order in again, line by line, picking the right class and department from a dropdown. Every order, every day. If you are asking what n8n is used for, that person is usually the answer. n8n takes over the job of copying data from one system into another, and the checks that go with it.
@@ -32,6 +34,8 @@ It replaced re-keying orders from Airtable into QuickBooks by hand.
 
 Most of those nodes are lookups, and that is where the work was. QuickBooks wants its own IDs for class and department, so before the workflow can create anything it has to translate every Airtable value into its QuickBooks equivalent. Notice also that the QuickBooks calls are plain HTTP Request nodes hitting the API. That is normal on real builds. A built-in node covers the common operations, and as soon as you need something it does not expose, you call the API yourself.
 
+![Illustration of an n8n workflow that turns an Airtable order into QuickBooks documents: a Webhook receives the order, Airtable nodes fetch the order and its lines, Get Class calls the QuickBooks API, a Code node reshapes the data and get business fetches the business. An If node then splits the run: one branch gathers contacts, looks up the department and creates a purchase order, the other looks up the department and creates an invoice, and each ends by updating the Airtable record.](./01.webp)
+
 ### 2. Product capture from any vendor site
 
 This one starts with a click in a browser extension, on any supplier's product page. The extension clips the product (vendor, price, image, specs) and n8n sits between it and the studio's Airtable base, so the product lands in the right project.
@@ -50,6 +54,8 @@ The hard decisions in a job like this are about matching. Which two rows are the
 
 n8n also works for one-off jobs like this, which people tend to forget. A migration that runs once, in batches, is a perfectly good use of it.
 
+![Illustration of a one-off lead migration run in batches with n8n, Claude and Airtable: leads from spreadsheets and an old CRM, with the same company spelled two ways, pass through three matching rules (which two rows are the same company, which record wins when they disagree, what happens to rows that cannot be matched with confidence) and land in one Airtable base of 5,000 deduplicated leads enriched with company data.](./03.webp)
+
 ### 4. A WhatsApp agent that answers from your own data
 
 A customer sends a message on WhatsApp. n8n receives it, checks who the sender is against Airtable, and only then lets Claude write a reply from that customer's own records. Every thread lands in a web console where the team can watch, take over mid-conversation, and tune the responses.
@@ -58,7 +64,7 @@ It replaced a team answering every message by hand.
 
 The work was in the order of operations. The agent verifies the customer before it generates a word, because an assistant that reads an order status to whoever happens to message is a data leak. n8n runs that sequence, and the rest of the system depends on it running in that order every time.
 
-![Illustration of an n8n workflow for a WhatsApp agent: a WhatsApp trigger receives the customer's message, an Airtable node checks who the sender is, and an If node lets Claude write a reply from that customer's own records only after the sender is verified. An unverified sender never reaches Claude.](./03.webp)
+![Illustration of an n8n workflow for a WhatsApp agent: a WhatsApp trigger receives the customer's message, an Airtable node checks who the sender is, and an If node lets Claude write a reply from that customer's own records only after the sender is verified. An unverified sender never reaches Claude.](./04.webp)
 
 If one of these looks like your week, that is the quickest conversation to have. [Book a call](/book-a-call/) and tell us which one, and what your version of it involves.
 

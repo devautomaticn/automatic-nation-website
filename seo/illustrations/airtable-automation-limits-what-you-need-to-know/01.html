@@ -1,0 +1,65 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration comparing two Airtable automations. On the left, a loop: a When record updated trigger watching all fields leads to an Update record action that writes Last synced, which fires the trigger again, and a run counter climbs from 1 to 4,812. On the right, a guarded automation: the trigger requires Status is Approved and Processed is unchecked, the actions run once, and the final Update record step ticks Processed so the record no longer matches.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 720px; --bg: var(--blue-soft); }
+  body { display: flex; align-items: center; justify-content: center; gap: 48px; }
+  .col { display: flex; flex-direction: column; gap: 18px; align-items: flex-start; }
+  .tag { border: var(--stroke); border-radius: 12px; padding: 6px 14px; font-weight: 700; font-size: 18px; box-shadow: 4px 4px 0 var(--ink); }
+  .tag.bad { background: var(--red); } .tag.good { background: var(--green); }
+  .panel { width: 520px; height: 560px; }
+  .head { background: var(--ink); color: var(--paper); padding: 14px 20px; font-weight: 700; display: flex; gap: 12px; align-items: center; justify-content: space-between; }
+  .flow { position: relative; padding: 22px 26px; display: flex; flex-direction: column; gap: 12px; height: 500px; }
+  .step { border: var(--stroke); border-radius: 14px; padding: 10px 14px; background: var(--paper); box-shadow: 4px 4px 0 var(--ink); width: 380px; position: relative; z-index: 1; }
+  .step .k { font-size: 13px; font-weight: 700; color: var(--mute); text-transform: uppercase; letter-spacing: .04em; }
+  .step .t { font-size: 18px; font-weight: 700; margin-top: 2px; }
+  .step .d { font-size: 15px; color: var(--mute); margin-top: 4px; }
+  .step.trig { background: var(--yellow-soft); }
+  .step.hot { background: color-mix(in srgb, var(--red) 22%, var(--paper)); }
+  .step.guard { background: color-mix(in srgb, var(--green) 30%, var(--paper)); }
+  .cond { display: inline-block; border: 2px solid var(--ink); border-radius: 8px; padding: 1px 8px; font-size: 14px; margin: 6px 4px 0 0; background: var(--paper); }
+  .cond.g { background: var(--yellow); font-weight: 700; }
+  .down { margin-left: 30px; font-size: 22px; line-height: 1; }
+  .why { font-size: 16px; font-weight: 700; color: var(--red); width: 330px; margin-top: 8px; }
+  .why.g { color: var(--ink); }
+  svg.loop { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+  svg.loop path { fill: none; stroke: var(--red); stroke-width: 4; stroke-linecap: round; }
+  svg.loop path.d { stroke-dasharray: 9 7; }
+  .count { position: absolute; right: 22px; bottom: 24px; border: var(--stroke); border-radius: 14px; background: var(--paper); padding: 10px 16px; box-shadow: 4px 4px 0 var(--ink); text-align: right; }
+  .count .k { font-size: 13px; font-weight: 700; color: var(--mute); }
+  .count .v { font-family: 'JetBrains Mono', monospace; font-size: 30px; font-weight: 700; }
+  .count.bad .v { color: var(--red); } .count.good .v { color: var(--ink); }
+</style></head>
+<body>
+<div class="col">
+  <div class="tag bad">✕ Writes to what it watches</div>
+  <div class="window panel">
+    <div class="head"><span>Stamp last synced</span><span class="chip" style="color: var(--ink);">On</span></div>
+    <div class="flow">
+      <svg class="loop"><path class="d" d="M432 196 C 498 196, 498 62, 432 62"/><path d="M444 52 L 432 62 L 446 72"/></svg>
+      <div class="step trig"><div class="k">Trigger</div><div class="t">When record updated</div><div class="d">Table: Orders · Fields: <b style="color: var(--ink);">all fields</b></div></div>
+      <div class="down">↓</div>
+      <div class="step hot"><div class="k">Action</div><div class="t">Update record</div><div class="d">Last synced → now</div></div>
+      <div class="why">The update is an edit, so the trigger fires again. And again.</div>
+      <div class="count bad"><div class="k">Runs on ORD-1042</div><div class="v">1 → 4,812</div></div>
+    </div>
+  </div>
+</div>
+<div class="col">
+  <div class="tag good">✓ Guard field</div>
+  <div class="window panel">
+    <div class="head"><span>Order approved</span><span class="chip" style="color: var(--ink);">On</span></div>
+    <div class="flow">
+      <div class="step trig"><div class="k">Trigger</div><div class="t">When record matches conditions</div>
+        <div><span class="cond">Status is Approved</span><span class="cond g">Processed is unchecked</span></div></div>
+      <div class="down">↓</div>
+      <div class="step"><div class="k">Actions</div><div class="t">Send email · Post to Slack</div><div class="d">The real work, once</div></div>
+      <div class="down">↓</div>
+      <div class="step guard"><div class="k">Last action</div><div class="t">Update record</div><div class="d" style="color: var(--ink);">Processed → ☑ checked</div></div>
+      <div class="why g" style="width: 250px;">The record no longer matches the trigger.</div>
+      <div class="count good"><div class="k">Runs on ORD-1042</div><div class="v">1</div></div>
+    </div>
+  </div>
+</div>
+</body></html>

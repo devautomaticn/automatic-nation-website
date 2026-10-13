@@ -1,0 +1,92 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of an Airtable workspace running out of automation runs: a usage meter at 24,860 of 25,000 runs, an automation history listing the same record updated every few seconds, and a small n8n workflow that takes the heavy job out of Airtable and writes the result back.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  /* Rendered at 2x by render.mjs, so 768x512 CSS px gives 1536x1024.
+     Content stays inside the middle 16:9 band (y 40 to 472), because
+     PostCard crops heroes with object-cover at aspect 16/9. */
+  :root { --w: 768px; --h: 512px; --bg: var(--blue-soft); }
+  body { font-size: 13px; display: block; position: relative; }
+  .window { position: absolute; border-width: 2.5px; border-radius: 16px; box-shadow: 6px 6px 0 var(--ink); }
+  .bar { padding: 8px 12px; border-bottom: 2.5px solid var(--ink); font-weight: 700; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
+  .f { font-size: 10px; font-weight: 500; border: 1.5px solid var(--ink); border-radius: 12px; padding: 1px 7px; background: var(--paper); }
+
+  .usage { left: 34px; top: 66px; width: 250px; }
+  .usage .body { padding: 12px 14px 14px; }
+  .usage .k { font-size: 11px; color: var(--mute); font-weight: 700; }
+  .usage .v { font-size: 40px; font-weight: 700; line-height: 1.05; margin-top: 4px; color: var(--red); }
+  .usage .of { font-size: 12px; color: var(--mute); margin-top: 2px; }
+  .meter { margin-top: 10px; height: 16px; border: 2px solid var(--ink); border-radius: 9px; overflow: hidden; background: var(--paper); }
+  .meter i { display: block; height: 100%; width: 99.4%; background: var(--red); }
+  .ticks { display: flex; justify-content: space-between; font-size: 10px; color: var(--mute); margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
+
+  .hist { left: 312px; top: 54px; width: 420px; z-index: 1; }
+  .r { display: grid; grid-template-columns: 74px 1fr 82px; border-bottom: 1.5px solid var(--line); }
+  .r > div { padding: 6px 10px; display: flex; align-items: center; font-size: 12px; }
+  .r .t { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--mute); }
+  .r.h > div { font-weight: 700; font-size: 11px; color: var(--mute); }
+  .s { border: 1.5px solid var(--ink); border-radius: 7px; padding: 0 6px; font-size: 10px; white-space: nowrap; background: color-mix(in srgb, var(--green) 45%, var(--paper)); }
+  .s.p { background: color-mix(in srgb, var(--orange) 50%, var(--paper)); }
+
+  .n8n { left: 300px; top: 300px; width: 432px; z-index: 2; }
+  .n8n .bar { background: var(--ink); color: var(--paper); border-radius: 13px 13px 0 0; font-weight: 500; }
+  .n8n .canvas { height: 118px; border-radius: 0 0 13px 13px; background-size: 16px 16px; }
+  .n8n .canvas > svg.wires path { stroke-width: 2.5; }
+  .mini { position: absolute; top: 20px; display: flex; flex-direction: column; align-items: center; gap: 5px; width: 76px; }
+  .mini .box { width: 42px; height: 42px; border: 2.5px solid var(--ink); border-radius: 11px; box-shadow: 3px 3px 0 var(--ink); display: grid; place-items: center; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 16px; background: var(--paper); }
+  .mini.trigger .box { border-radius: 21px 11px 11px 21px; background: var(--orange); }
+  .mini .name { font-size: 10px; font-weight: 700; text-align: center; line-height: 1.15; }
+
+  .rec { left: 34px; top: 312px; width: 236px; }
+  .kv { display: grid; grid-template-columns: 96px 1fr; font-size: 12px; }
+  .kv > div { padding: 6px 12px; border-bottom: 1.5px solid var(--line); display: flex; align-items: center; }
+  .kv .k { color: var(--mute); }
+  .kv > div:nth-last-child(-n+2) { border-bottom: 0; }
+  .ok { border: 1.5px solid var(--ink); border-radius: 7px; padding: 0 6px; font-size: 10px; background: color-mix(in srgb, var(--green) 45%, var(--paper)); }
+  svg.links { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+  svg.links path { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 6 6; }
+</style></head>
+<body>
+<svg class="links"><path d="M300 380 C 285 380, 285 370, 274 370"/></svg>
+
+<div class="window usage">
+  <div class="bar" style="background: var(--yellow);"><span>Usage</span><span class="f">Team plan</span></div>
+  <div class="body">
+    <div class="k">Automation runs this month</div>
+    <div class="v">24,860</div>
+    <div class="of">of 25,000 · resets on the 1st</div>
+    <div class="meter"><i></i></div>
+    <div class="ticks"><span>0</span><span>80%</span><span>100%</span></div>
+  </div>
+</div>
+
+<div class="window hist">
+  <div class="bar"><span>Automation history · Stamp last synced</span><span class="f">Orders</span></div>
+  <div class="r h"><div>Time</div><div>Record</div><div>Status</div></div>
+  <div class="r"><div class="t">09:14:02</div><div>ORD-1042 updated</div><div><span class="s">Success</span></div></div>
+  <div class="r"><div class="t">09:14:05</div><div>ORD-1042 updated</div><div><span class="s">Success</span></div></div>
+  <div class="r"><div class="t">09:14:08</div><div>ORD-1042 updated</div><div><span class="s">Success</span></div></div>
+  <div class="r" style="border-bottom: 0;"><div class="t">09:14:11</div><div>ORD-1042 updated</div><div><span class="s p">Paused</span></div></div>
+</div>
+
+<div class="window rec">
+  <div class="bar" style="background: var(--blue);"><span>ORD-1042</span><span class="f">Airtable</span></div>
+  <div class="kv">
+    <div class="k">Sync status</div><div><span class="ok">Done</span></div>
+    <div class="k">Sent to n8n</div><div>☑</div>
+    <div class="k">Synced at</div><div class="mono" style="font-size:11px">09:31</div>
+  </div>
+</div>
+
+<div class="window n8n">
+  <div class="bar"><span>n8n · Order sync</span><span class="f" style="color: var(--ink);">Active</span></div>
+  <div class="canvas">
+    <svg class="wires"><path d="M74 42 H 136"/><path d="M178 42 H 240"/><path d="M282 42 H 344"/></svg>
+    <div class="mini trigger" style="left: 18px;"><div class="box">⚡</div><div class="name">Webhook</div></div>
+    <div class="mini" style="left: 120px;"><div class="box" style="background: var(--yellow);">▦</div><div class="name">Get record</div></div>
+    <div class="mini" style="left: 224px;"><div class="box" style="background: var(--blue);">↗</div><div class="name">Call API<br>retry 3×</div></div>
+    <div class="mini" style="left: 328px;"><div class="box" style="background: var(--green);">✓</div><div class="name">Write back</div></div>
+  </div>
+</div>
+</body></html>

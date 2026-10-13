@@ -28,10 +28,6 @@ So there are two paths worth comparing:
 
 If you searched for the best client portal software, these are the names that come up. Each one is a reasonable product. Each one also has a point where your business starts bending to fit it.
 
-**SuiteDash.** An all-in-one: CRM, projects, invoicing, file sharing and a branded portal. Its pricing is a flat fee per plan with unlimited clients and staff, so the limit is the workflow. You get SuiteDash's idea of a project, a task and an invoice, and when your process has a step it does not model, that step goes back to email.
-
-**Assembly.** A clean portal with messaging, files, forms and billing. Each plan includes a fixed number of internal users, the plans below Advanced cap how many client contacts can be active, and custom domains start on the Professional plan (checked on assembly.com, 12 October 2026). As your client list grows you move up tiers, and your data stays in Assembly's model rather than one you can query and extend.
-
 **HubSpot customer portal.** Part of Service Hub Professional and Enterprise. Clients log in to view and reply to their support tickets and read your knowledge base. If your portal is a help desk, that fits. If clients need to see project stages, approve deliverables or download a monthly report, you are working against a tool built around tickets, and Service Hub is priced per seat for your team.
 
 **SharePoint.** Many companies already pay for it, and guests from outside your organisation can be invited to a site without a licence of their own. It is built for documents. Permissions are set per site, library, folder or file, which gets hard to audit with fifty clients, and when you share one folder with several guests they can see each other's names in its access panel. SharePoint works as a client portal for file exchange. Anything with a workflow needs Power Automate and someone who maintains it.

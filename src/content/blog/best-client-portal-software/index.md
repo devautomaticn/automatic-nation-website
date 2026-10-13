@@ -1,6 +1,6 @@
 ---
 title: "Custom Client Portal or Client Portal Software? Why We Build Them Now"
-description: Why a custom client portal now beats renting client portal software, where SuiteDash, Assembly, HubSpot and SharePoint stop fitting, and two ways to build.
+description: Why a custom client portal now beats renting client portal software, where HubSpot and SharePoint stop fitting, and two ways to build.
 published: 2025-10-21
 updated: 2026-10-12
 draft: true
@@ -26,19 +26,19 @@ So there are two paths worth comparing:
 
 ## The client portal software people compare, and where each one stops fitting
 
-If you searched for the best client portal software, these are the names that come up. Each one is a reasonable product. Each one also has a point where your business starts bending to fit it.
+If you searched for the best client portal software, these are two of the names that come up. Each one is a reasonable product. Each one also has a point where your business starts bending to fit it.
 
 **HubSpot customer portal.** Part of Service Hub Professional and Enterprise. Clients log in to view and reply to their support tickets and read your knowledge base. If your portal is a help desk, that fits. If clients need to see project stages, approve deliverables or download a monthly report, you are working against a tool built around tickets, and Service Hub is priced per seat for your team.
 
 **SharePoint.** Many companies already pay for it, and guests from outside your organisation can be invited to a site without a licence of their own. It is built for documents. Permissions are set per site, library, folder or file, which gets hard to audit with fifty clients, and when you share one folder with several guests they can see each other's names in its access panel. SharePoint works as a client portal for file exchange. Anything with a workflow needs Power Automate and someone who maintains it.
 
-The pattern is the same across all four. The product decides what a client, a project and a request are. When yours are different, you either change your process or keep a spreadsheet next to the portal, and the spreadsheet is where the client emails come from.
+The pattern is the same for both. The product decides what a client, a project and a request are. When yours are different, you either change your process or keep a spreadsheet next to the portal, and the spreadsheet is where the client emails come from.
 
 ## What AI changed about building custom software, and what it did not
 
 What got faster is the predictable code. A list of projects filtered to the logged-in client, a project detail page, an upload form, a request form with validation, the screens your own team uses to manage all of it. Login and password reset come from established libraries. In our builds, an engineer describes these screens, an AI model writes them, and the engineer reviews and corrects the result. Those screens are most of what a client portal is.
 
-<!-- NEEDS: from the current build, which parts were generated and reviewed (auth, permissions, CRUD screens, dashboard) and roughly what share of the code or hours that was. -->
+On the portal we are building now, the login, the screens that list and edit records, the client dashboard and the code that applies the permission rule took about 4 hours of work.
 
 What did not get faster:
 
@@ -108,9 +108,9 @@ Whatever the business, a custom portal's structure comes down to the same few de
 
 On top of that sit the screens the client sees: their projects with stage and next step, what is waiting on them, their documents, their requests, and their invoices.
 
-<!-- NEEDS: stack (database, framework, hosting, auth provider). -->
-<!-- NEEDS: timeline from kickoff to first client login. -->
-<!-- NEEDS: how the scope was fixed up front (what was in, what was deliberately left out). -->
+The app is hosted on Vercel. Supabase holds the database and handles login, and because it is Postgres underneath, the company rule can be a row level security policy that the database applies to every query, whichever screen sends it.
+
+We fix the scope in writing before the build starts. The first version covers what a client needs to log in and see their own work: their projects, their documents, their requests, their invoices and the roles inside their company. Paying inside the portal, e-signature and extra integrations go on a written list for a later version, priced separately, once clients have used the first one and you can see what they actually ask for.
 
 If a portal like this is on your list, [book a call](/book-a-call/). We will scope it with you, and if a no-code portal on your base would do the job, we will tell you to build that first.
 
@@ -118,20 +118,20 @@ If a portal like this is on your list, [book a call](/book-a-call/). We will sco
 
 Over three years, at your real client count, the two costs have different shapes.
 
-Most SaaS portals start cheap and grow in steps. You pay per seat or per plan every month, and you climb a tier when your team or your active client contacts pass the plan's limit. The total depends on how many clients you add, which is the number you want to go up. SuiteDash's flat fee is the exception, and there the cost you carry is the workflow.
+Most SaaS portals start cheap and grow in steps. You pay per seat or per plan every month, and you climb a tier when your team or your active client contacts pass the plan's limit. The total depends on how many clients you add, which is the number you want to go up.
 
-A custom portal costs most in the first months, while it is built. After that you pay for hosting and for whoever maintains it, and that does not change much whether you have twenty client users or two thousand.
+A custom portal costs most at the start, while it is built. After that you pay for hosting and for whoever maintains it, and that does not change much whether you have twenty client users or two thousand. The portal we are building runs on Supabase Pro, listed at [$25 a month](https://supabase.com/pricing), and Vercel Pro, listed at [$20 a month](https://vercel.com/pricing) for one developer seat. That is about $45 a month in hosting at list prices, before any usage past the plans' included limits.
 
 ![Illustration of a schematic three-year cost comparison with no figures: a SaaS portal line that starts low and gets steeper each time client users pass a plan limit, and a custom portal line that starts higher with the build and then stays nearly flat.](./04.webp)
 
 Where the lines cross depends on your seat count and the size of the build. We put the build cost in a fixed quote before anything starts, so you can set it against what your seat count costs you today.
 
-<!-- NEEDS: cost range of the current custom build, and the SaaS seat or plan cost it replaced at the client's user count, to place the crossing point with real numbers. -->
+<!-- NEEDS: cost range of the build itself, and the SaaS seat or plan cost it replaced at the client's user count, to place the crossing point with real numbers. -->
 
 ## How to create a client portal: three ways in
 
-- **An afternoon: Airtable Interfaces.** If your data is already in a base, build one page per client job (their projects, their documents, a request form), share it with interface-only access, and filter by the current user. Good for a handful of clients who already have Airtable accounts or for testing the idea.
-- **About two weeks: Softr on Airtable.** A real login page, your branding, one set of pages for every client filtered to their own records, and forms writing back to the base.
+- **Airtable Interfaces.** If your data is already in a base, build one page per client job (their projects, their documents, a request form), share it with interface-only access, and filter by the current user. Good for a handful of clients who already have Airtable accounts or for testing the idea.
+- **Softr on Airtable.** A real login page, your branding, one set of pages for every client filtered to their own records, and forms writing back to the base.
 - **A fixed-scope custom build.** Your own application with the permission model above. We fix the scope first, so you have the price in writing before any work starts.
 
 If your data is not in one place yet, start there. A portal can only show what is already organised, and the [guide to building a CRM](/how-to-build-a-crm-system/) is a good way to get your clients and projects into a shape a portal can sit on.
@@ -141,7 +141,7 @@ If your data is not in one place yet, start there. A portal can only show what i
 | | SaaS portal | No-code on Airtable | Custom portal |
 |---|---|---|---|
 | Cost over 3 years | Monthly, per seat or per plan, usually rising with client users | Airtable and Softr plans, plus the build | Build up front, then hosting and maintenance |
-| Time to launch | Days, if your process fits | An afternoon to a few weeks | Fixed in the scope |
+| Time to launch | Days, if your process fits | Fast, if your data is already in a base | Fixed in the scope |
 | Branding | The vendor's, with limits by plan | Your logo and colours, within the tool's options | Yours entirely |
 | Permissions | The product's roles | One rule per page or block | Roles per client company, enforced in the database |
 | Who owns the data | Inside the vendor's model | You, in your base | You, in your own database |

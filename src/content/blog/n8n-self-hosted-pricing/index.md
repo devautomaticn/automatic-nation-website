@@ -126,7 +126,7 @@ Self-hosting still wins in some cases:
 
 **Business is worth paying for** when you have to self-host and you also need SSO for your team, or a proper development to production path with environments and Git. At that size the licence is usually the easier line to justify, and the maintenance hours from the table still apply on top of it.
 
-One licence point before you plan anything: the Sustainable Use License covers your own internal use. If the plan is to host n8n and charge your own customers for access to it, that is outside what the licence allows. Read it before you build on it.
+One licence point before you plan anything: the Sustainable Use License covers your own internal use, and n8n's [License FAQ](https://docs.n8n.io/n8n-community-license/community-license/license-faq/) says an agency can charge for installing, building and maintaining n8n for a client. What it does not allow is hosting n8n as a service: charging your own customers for access to an instance where they log in and build workflows. Read the FAQ before you build on it.
 
 ## Your instance, your account
 

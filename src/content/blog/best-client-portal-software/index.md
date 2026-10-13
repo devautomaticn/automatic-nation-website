@@ -94,7 +94,7 @@ These are the signals that move a project from no-code to custom. One of them ca
 
 ## Inside a custom client portal we are building
 
-We are building one now, for a client who needed something no portal product and no Airtable front end could do. <!-- NEEDS: client name or business type, permission to name them, and the one thing that ruled out SaaS and no-code, in one sentence. -->
+We are building one now, for a client whose permissions and data model did not fit a portal product or an Airtable front end.
 
 Whatever the business, a custom portal's structure comes down to the same few decisions:
 
@@ -108,7 +108,7 @@ Whatever the business, a custom portal's structure comes down to the same few de
 
 On top of that sit the screens the client sees: their projects with stage and next step, what is waiting on them, their documents, their requests, and their invoices.
 
-The app is hosted on Vercel. Supabase holds the database and handles login, and because it is Postgres underneath, the company rule can be a row level security policy that the database applies to every query, whichever screen sends it.
+The app is hosted on Vercel. Supabase holds the database and handles login, and the company rule is enforced with Supabase row level security: a Postgres policy the database applies to every query, whichever screen sends it.
 
 We fix the scope in writing before the build starts. The first version covers what a client needs to log in and see their own work: their projects, their documents, their requests, their invoices and the roles inside their company. Paying inside the portal, e-signature and extra integrations go on a written list for a later version, priced separately, once clients have used the first one and you can see what they actually ask for.
 
@@ -124,9 +124,7 @@ A custom portal costs most at the start, while it is built. After that you pay f
 
 ![Illustration of a schematic three-year cost comparison with no figures: a SaaS portal line that starts low and gets steeper each time client users pass a plan limit, and a custom portal line that starts higher with the build and then stays nearly flat.](./04.webp)
 
-Where the lines cross depends on your seat count and the size of the build. We put the build cost in a fixed quote before anything starts, so you can set it against what your seat count costs you today.
-
-<!-- NEEDS: cost range of the build itself, and the SaaS seat or plan cost it replaced at the client's user count, to place the crossing point with real numbers. -->
+Where the lines cross depends on your seat count and the size of your build, so it sits at a different point for every business.
 
 ## How to create a client portal: three ways in
 

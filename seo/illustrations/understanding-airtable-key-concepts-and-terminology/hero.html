@@ -1,0 +1,62 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of an Airtable workspace: a sidebar listing two bases, Client work and People, and the Client work base open on its Projects table, where each project links to a client record and its invoices.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  /* 768x512 CSS px at 2x = 1536x1024. Everything that matters sits inside
+     the middle 16:9 band (y 40 to 472), because PostCard crops to 16/9. */
+  :root { --w: 768px; --h: 512px; --bg: var(--blue-soft); }
+  body { font-size: 13px; display: block; position: relative; }
+  .window { position: absolute; border-width: 2.5px; border-radius: 16px; box-shadow: 6px 6px 0 var(--ink); }
+
+  .ws { left: 34px; top: 74px; width: 196px; height: 330px; padding: 14px 12px; background: color-mix(in srgb, var(--ink) 4%, var(--paper)); }
+  .ws .k { font-size: 11px; color: var(--mute); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 0 6px 8px; }
+  .ws .t { font-weight: 700; font-size: 15px; padding: 0 6px 14px; }
+  .b { display: flex; align-items: center; gap: 10px; padding: 9px 8px; border-radius: 10px; font-weight: 500; font-size: 14px; margin-bottom: 6px; }
+  .b .sq { width: 26px; height: 26px; border: 2px solid var(--ink); border-radius: 7px; flex: none; }
+  .b.on { background: var(--yellow); border: 2px solid var(--ink); font-weight: 700; }
+  .b .sub { display: block; font-size: 11px; color: var(--mute); font-weight: 400; }
+
+  .base { left: 262px; top: 58px; width: 472px; height: 262px; z-index: 2; }
+  .tabs { display: flex; gap: 4px; background: var(--ink); padding: 8px 10px 0; }
+  .tab { color: var(--paper); padding: 7px 14px; border-radius: 9px 9px 0 0; font-weight: 500; font-size: 13px; opacity: .75; }
+  .tab.on { background: var(--paper); color: var(--ink); opacity: 1; font-weight: 700; }
+  .vbar { display: flex; gap: 10px; align-items: center; padding: 8px 12px; border-bottom: 2px solid var(--ink); font-size: 12px; font-weight: 500; }
+  .vbar .v { border: 1.5px solid var(--ink); border-radius: 8px; padding: 2px 8px; background: var(--yellow-soft); }
+  .g { display: grid; grid-template-columns: 1.3fr 1fr 1.1fr; }
+  .g > div { padding: 9px 10px; border-bottom: 1.5px solid var(--line); border-right: 1.5px solid var(--line); font-size: 13px; display: flex; gap: 6px; align-items: center; min-height: 40px; }
+  .g .h { font-weight: 700; background: color-mix(in srgb, var(--ink) 4%, var(--paper)); border-bottom: 2px solid var(--ink); }
+  .c { border: 1.5px solid var(--ink); border-radius: 7px; padding: 1px 7px; font-size: 11.5px; white-space: nowrap; background: var(--blue-soft); }
+  .c.y { background: color-mix(in srgb, var(--green) 40%, var(--paper)); }
+
+  .rec { left: 484px; top: 296px; width: 250px; height: 150px; z-index: 3; padding: 12px 14px; }
+  .rec .k { font-size: 11px; color: var(--mute); font-weight: 700; }
+  .rec .n { font-size: 17px; font-weight: 700; margin: 2px 0 8px; }
+  .rec .r { display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0; border-top: 1.5px solid var(--line); }
+  .rec .r span:first-child { color: var(--mute); }
+</style></head>
+<body>
+<div class="window ws">
+  <div class="k">Workspace</div>
+  <div class="t">Ops team</div>
+  <div class="b on"><span class="sq" style="background:var(--blue)"></span><span>Client work<span class="sub">Clients, Projects, Invoices</span></span></div>
+  <div class="b"><span class="sq" style="background:var(--green)"></span><span>People<span class="sub">Team, Time off</span></span></div>
+</div>
+<div class="window base">
+  <div class="tabs"><div class="tab">Clients</div><div class="tab on">Projects</div><div class="tab">Invoices</div></div>
+  <div class="vbar"><span class="v">Grid: Active projects</span><span style="color:var(--mute)">Filtered by Status</span></div>
+  <div class="g">
+    <div class="h">Project</div><div class="h">Client</div><div class="h">Invoices</div>
+    <div>Website rebuild</div><div><span class="c">Northwind</span></div><div><span class="c y">INV-104</span><span class="c y">INV-112</span></div>
+    <div>Spring campaign</div><div><span class="c">Globex</span></div><div><span class="c y">INV-109</span></div>
+    <div>Onboarding portal</div><div><span class="c">Northwind</span></div><div><span class="c y">INV-115</span></div>
+      </div>
+</div>
+<div class="window rec">
+  <div class="k">Clients &rsaquo; linked record</div>
+  <div class="n">Northwind</div>
+  <div class="r"><span>Projects</span><span>2 linked</span></div>
+  <div class="r"><span>Invoices</span><span>3 linked</span></div>
+  <div class="r"><span>Open balance</span><span>rollup</span></div>
+</div>
+</body></html>

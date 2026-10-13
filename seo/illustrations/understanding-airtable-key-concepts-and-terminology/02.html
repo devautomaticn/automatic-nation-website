@@ -1,0 +1,73 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Two setups side by side. On the left, a base per client: four client bases, Northwind, Globex, Initech and Umbrella, each feeding a Reporting base through its own sync, where linked records arrive as text. On the right, one Client work base where every project and invoice links to a record in the Clients table, and the cross-client report is a grouped view.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 720px; --bg: var(--blue-soft); }
+  body { display: block; position: relative; font-size: 17px; }
+  .col { position: absolute; top: 40px; height: 640px; width: 540px; }
+  .head { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .sub { color: var(--mute); font-size: 16px; }
+  .mini { position: absolute; width: 120px; background: var(--paper); border: 2.5px solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); padding: 10px 12px; }
+  .mini b { display: block; font-size: 16px; }
+  .mini span { font-size: 12.5px; color: var(--mute); }
+  .rep { position: absolute; left: 140px; top: 400px; width: 260px; background: var(--paper); border: var(--stroke); border-radius: 18px; box-shadow: 6px 6px 0 var(--ink); padding: 14px 16px; }
+  .rep b { font-size: 19px; }
+  .rep .r { font-size: 14px; padding: 6px 0; border-top: 1.5px solid var(--line); display: flex; justify-content: space-between; }
+  .rep .r i { font-style: normal; color: var(--red); font-weight: 700; }
+  svg.wires { position: absolute; inset: 0; width: 100%; height: 100%; }
+  svg.wires path { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 8 7; }
+  svg.wires path.solid { stroke-dasharray: none; }
+  .divider { position: absolute; left: 598px; top: 60px; width: 3px; height: 600px; background: var(--ink); opacity: .25; border-radius: 2px; }
+  .base { position: absolute; left: 660px; top: 150px; width: 500px; background: var(--paper); border: var(--stroke); border-radius: 20px; box-shadow: 8px 8px 0 var(--ink); overflow: hidden; }
+  .tabs { display: flex; gap: 6px; background: var(--ink); padding: 9px 12px 0; }
+  .tab { color: var(--paper); padding: 8px 14px; border-radius: 10px 10px 0 0; font-size: 15px; opacity: .75; font-weight: 500; }
+  .tab.on { background: var(--paper); color: var(--ink); opacity: 1; font-weight: 700; }
+  .vb { padding: 9px 14px; border-bottom: 2.5px solid var(--ink); font-size: 14px; font-weight: 500; }
+  .vb span { border: 1.5px solid var(--ink); border-radius: 8px; padding: 2px 8px; background: var(--yellow-soft); }
+  .grp { padding: 8px 14px; font-weight: 700; font-size: 14px; background: color-mix(in srgb, var(--ink) 5%, var(--paper)); border-bottom: 1.5px solid var(--line); display: flex; justify-content: space-between; }
+  .row { display: grid; grid-template-columns: 1fr 120px 90px; border-bottom: 1.5px solid var(--line); font-size: 14.5px; }
+  .row > div { padding: 8px 14px; }
+  .chip { font-size: 12.5px; padding: 1px 8px; border-width: 1.5px; border-radius: 7px; }
+</style></head>
+<body>
+<div class="col" style="left:40px">
+  <div class="head">A base per client</div>
+  <div class="sub">Each copy drifts. Reporting needs a sync from every one.</div>
+</div>
+<div class="mini" style="left:40px; top:150px"><b>Northwind</b><span>base</span></div>
+<div class="mini" style="left:170px; top:150px"><b>Globex</b><span>base</span></div>
+<div class="mini" style="left:300px; top:150px"><b>Initech</b><span>no Hours field</span></div>
+<div class="mini" style="left:430px; top:150px"><b>Umbrella</b><span>base</span></div>
+<svg class="wires" viewBox="0 0 1200 720">
+  <path d="M 100 215 C 100 320, 190 320, 200 400" />
+  <path d="M 230 215 C 230 320, 245 320, 245 400" />
+  <path d="M 360 215 C 360 320, 300 320, 295 400" />
+  <path d="M 490 215 C 490 320, 350 320, 345 400" />
+</svg>
+<div class="rep">
+  <b>Reporting</b> <span style="color:var(--mute); font-size:13px">4 synced tables</span>
+  <div class="r"><span>Client</span><i>text, not a link</i></div>
+  <div class="r"><span>Project</span><i>text, not a link</i></div>
+  <div class="r"><span>Hours</span><i>missing for Initech</i></div>
+</div>
+
+<div class="divider"></div>
+
+<div class="col" style="left:660px">
+  <div class="head">One base</div>
+  <div class="sub">Every project and invoice links to its client.</div>
+</div>
+<div class="base">
+  <div class="tabs"><div class="tab">Clients</div><div class="tab on">Projects</div><div class="tab">Invoices</div></div>
+  <div class="vb"><span>Grid: All projects, grouped by Client</span></div>
+  <div class="grp"><span>Northwind</span><span style="color:var(--mute); font-weight:500">2 projects</span></div>
+  <div class="row"><div>Website rebuild</div><div><span class="chip">INV-104</span></div><div>32 h</div></div>
+  <div class="row"><div>Onboarding portal</div><div><span class="chip">INV-115</span></div><div>18 h</div></div>
+  <div class="grp"><span>Globex</span><span style="color:var(--mute); font-weight:500">1 project</span></div>
+  <div class="row"><div>Spring campaign</div><div><span class="chip">INV-109</span></div><div>24 h</div></div>
+  <div class="grp"><span>Initech</span><span style="color:var(--mute); font-weight:500">1 project</span></div>
+  <div class="row" style="border-bottom:0"><div>Brand refresh</div><div></div><div>9 h</div></div>
+</div>
+<div class="note" style="left:760px; top:590px">The cross-client report is a view.</div>
+</body></html>

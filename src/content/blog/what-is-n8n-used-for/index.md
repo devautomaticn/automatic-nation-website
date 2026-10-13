@@ -1,8 +1,7 @@
 ---
 title: "What Is n8n Used For? 4 Systems We've Actually Built With It"
 description: "What n8n is used for in practice: four systems we built with it, the nodes inside each one, and the jobs where n8n is the wrong tool."
-published: 2026-09-28
-draft: true
+published: 2026-10-20
 hero: ./hero.webp
 heroAlt: "Illustration of n8n as the layer between a business's systems: a small n8n canvas in the middle, with a webhook, an Airtable lookup and an If node that branches to QuickBooks or WhatsApp, wired out to four app windows around it: an Airtable orders table, a QuickBooks invoice, a lead list and a WhatsApp chat."
 ---

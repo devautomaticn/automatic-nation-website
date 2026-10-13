@@ -68,13 +68,14 @@ Put the four side by side and n8n plays the same part in every one: it is the co
 
 That is the most useful way to think about what n8n is for. It is very good at sequence: fetch this, check that, branch, write back. It is a poor place to keep anything. When a project starts treating n8n as the database, storing state in it or making it the only place a number exists, it starts going wrong.
 
+Small workflows are one of the places n8n excels. A workflow with two steps (new form entry, send a Slack message) is one trigger node and one action node. On n8n's cloud plans a run counts as one execution however many nodes it has, and a self-hosted instance does not count executions at all, so a step you add does not change what each run costs. When that Slack message later needs a lookup or a branch, you add a node to the workflow you already have.
+
 If you want the category first, [what workflow automation actually is](/what-is-workflow-automation/) covers the idea these systems sit on.
 
 ## What n8n is not good for
 
 These are the jobs where we would steer you away from it.
 
-- **A workflow with two steps.** New form entry, send a Slack message. Use a template, or Zapier. You will spend longer setting up n8n than the job is worth.
 - **Anything that should be stored.** n8n passes data through. If a number only exists inside an execution log, you do not really have it.
 - **A process your team is still arguing about.** Automating it hard codes the argument. Settle the process first.
 - **Messy data.** If the underlying records are a mess, n8n moves the mess faster and into more places. Fix the data model first.
@@ -88,7 +89,7 @@ None of these is our product, so the table has no favourite.
 
 | | n8n | Zapier | Make | Airtable automations |
 |---|---|---|---|---|
-| Good at | Long, branching workflows with lookups and custom API calls | Quick two or three step connections between popular apps | Visual multi-step scenarios with routing | Anything that starts and ends inside one base |
+| Good at | Anything from a two-step connection to long, branching workflows with lookups and custom API calls | Quick two or three step connections between popular apps | Visual multi-step scenarios with routing | Anything that starts and ends inside one base |
 | Hosting | Self-host or n8n cloud | Cloud only | Cloud only | Inside Airtable |
 | When a built-in step is missing | HTTP Request node, or a Code node in JavaScript or Python | Webhooks, or a Code by Zapier step | HTTP module | A script action |
 | Suits | A team with someone technical, or a partner who owns it | Anyone, with no setup | Power users who like a canvas | Teams whose whole process lives in Airtable |
@@ -96,4 +97,4 @@ None of these is our product, so the table has no favourite.
 
 For a longer comparison of the first three, see [which automation tool suits your business](/what-automation-tool-suits-your-business/).
 
-If your whole process already lives in one Airtable base, start with Airtable's own automations. Reach for n8n when the work crosses several systems, needs to branch, or needs an API call that no built-in step offers.
+If your whole process already lives in one Airtable base, start with Airtable's own automations. Reach for n8n when the work leaves that base, whether it is a two-step connection to another app or a flow that branches or needs an API call no built-in step offers.

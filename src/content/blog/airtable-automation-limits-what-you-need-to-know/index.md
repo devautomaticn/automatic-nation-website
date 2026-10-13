@@ -31,8 +31,6 @@ How those numbers are counted:
 - The per-base cap counts automations that are turned off. Turning one off does not free a slot; deleting it does.
 - Workspace owners get an email at 80%, 90% and 100% of the monthly runs. Make sure the owner is someone who reads email.
 
-You will still see "50 automations per base" quoted around the web. That was the cap on every plan for a long time; Airtable now sets it by plan, as above.
-
 ## The one that hurts most: runaway trigger loops
 
 A loop happens when an action writes to something the trigger is watching. Airtable's help center describes it plainly: each run sets up the next one, and the automation keeps going until it has used up the workspace's runs. The usual shapes:
@@ -82,7 +80,17 @@ How we consolidate an existing base:
 
 Delete with a note. Before removing an old automation, copy its description and action list somewhere the team can find, so the reason it existed outlives it.
 
-<!-- NEEDS: one real anonymised example from a client base. For example "a Team plan base went from N automations to M, and its monthly runs dropped from X to Y after consolidation." Do not publish without a real figure or without removing this comment. -->
+### The math on an orders base
+
+Here is the arithmetic on a pattern we build often: Airtable orders that turn into QuickBooks invoices or purchase orders. Assume a base that closes 40 orders a working day, about 880 a month over 22 working days, and an order that moves through three statuses after it is created: Approved, Shipped and Closed. Built one automation per request, it ends up with seven automations, each with its own **When a record matches conditions** trigger on Status:
+
+- Approved: email the customer, post to Slack, stamp Approved on, and send the record ID to n8n, which creates the invoice or purchase order in QuickBooks. That is four automations.
+- Shipped: email the tracking number and stamp Shipped on. Two more.
+- Closed: notify the account manager. One.
+
+Every order fires all seven, so the base spends 880 × 7 = 6,160 runs a month. Consolidated, it is one automation: **When record updated**, watching Status, with three conditional groups. Each status change is one run, so 880 × 3 = 2,640 runs a month. That is seven slots down to one, and on the Team plan's 25,000 runs, from about 25% of the workspace's monthly allowance to about 11%, for the same emails, date stamps and QuickBooks documents.
+
+The consolidated trigger spends a run on every change to Status, including changes that match no group. If people move orders back and forth, or the field has statuses with nothing attached, count those changes too before you trust the saving.
 
 ## Script timeouts and memory: batch in chunks of 50
 

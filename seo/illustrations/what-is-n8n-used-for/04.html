@@ -1,0 +1,56 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of an n8n workflow for a WhatsApp agent: a WhatsApp trigger receives the customer's message, an Airtable node checks who the sender is, and an If node lets Claude write a reply from that customer's own records only after the sender is verified. An unverified sender never reaches Claude.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 700px; --bg: var(--blue-soft); }
+  .window { width: 1100px; }
+  .bar { display: flex; align-items: center; gap: 16px; background: var(--ink); color: var(--paper); padding: 14px 22px; font-weight: 500; }
+  .bar .crumb { opacity: .7; }
+  .bar .pill { margin-left: auto; background: var(--green); color: var(--ink); border: 2px solid var(--paper); border-radius: 20px; padding: 3px 14px; font-size: 16px; font-weight: 700; }
+  .canvas { height: 500px; }
+  .dash .box { border-style: dashed; box-shadow: none; background: transparent; color: var(--mute); }
+  .lbl { position: absolute; font-size: 15px; font-weight: 700; background: var(--paper); padding: 1px 6px; border-radius: 6px; }
+  .node .box { position: relative; }
+  .step { position: absolute; top: -14px; left: -14px; width: 32px; height: 32px; border-radius: 50%; background: var(--ink); color: var(--paper); font-size: 16px; display: grid; place-items: center; font-family: 'JetBrains Mono', monospace; }
+  .chat { position: absolute; left: 24px; top: 150px; width: 220px; background: var(--paper); border: var(--stroke); border-radius: 18px; box-shadow: 4px 4px 0 var(--ink); overflow: hidden; font-size: 15px; }
+  .chat .t { background: var(--green); border-bottom: var(--stroke); padding: 8px 14px; font-weight: 700; }
+  .chat .msgs { padding: 14px 12px; display: flex; flex-direction: column; gap: 8px; }
+  .bubble { background: var(--yellow-soft); border: 2px solid var(--ink); border-radius: 12px 12px 12px 3px; padding: 7px 11px; align-self: flex-start; }
+  .from { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--mute); }
+</style></head>
+<body>
+<div class="window">
+  <div class="bar"><span class="crumb">Workflows /</span><span>WhatsApp agent</span><span class="pill">Active</span></div>
+  <div class="canvas">
+    <svg class="wires">
+      <path d="M248 238 H287" style="stroke-dasharray: 8 8"/>
+      <path d="M383 238 H457"/>
+      <path d="M553 238 H627"/>
+      <path d="M723 238 C 770 238, 770 98, 817 98"/>
+      <path d="M723 238 C 770 238, 770 378, 817 378" style="stroke-dasharray: 8 8"/>
+      <path d="M913 98 H977"/>
+    </svg>
+
+    <div class="chat">
+      <div class="t">WhatsApp</div>
+      <div class="msgs">
+        <span class="from">+1 555 0142</span>
+        <div class="bubble">Hi, where is my order?</div>
+      </div>
+    </div>
+
+    <div class="node trigger" style="left: 260px; top: 190px;"><div class="box green mono">✆</div><div class="name">Message received</div><div class="sub">WhatsApp trigger</div></div>
+    <div class="node" style="left: 430px; top: 190px;"><div class="box yellow mono"><span class="step">1</span>▦</div><div class="name">Check sender</div><div class="sub">Airtable</div></div>
+    <div class="node" style="left: 600px; top: 190px;"><div class="box blue mono">?</div><div class="name">Verified customer?</div><div class="sub">If</div></div>
+    <div class="node" style="left: 790px; top: 50px;"><div class="box orange mono"><span class="step">2</span>✎</div><div class="name">Write reply</div><div class="sub">Claude, their records</div></div>
+    <div class="node" style="left: 950px; top: 50px;"><div class="box green mono">➤</div><div class="name">Send reply</div><div class="sub">WhatsApp</div></div>
+    <div class="node dash" style="left: 790px; top: 330px;"><div class="box mono">∅</div><div class="name">Claude never runs</div><div class="sub">unverified sender</div></div>
+
+    <span class="lbl" style="left: 748px; top: 135px;">true</span>
+    <span class="lbl" style="left: 745px; top: 322px;">false</span>
+
+    <div class="note" style="left: 330px; top: 70px; transform: rotate(-2deg);">Verify first, then generate. Every time.</div>
+  </div>
+</div>
+</body></html>

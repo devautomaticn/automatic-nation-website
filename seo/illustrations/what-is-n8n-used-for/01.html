@@ -1,0 +1,71 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of an n8n workflow that turns an Airtable order into QuickBooks documents: a Webhook receives the order, Airtable nodes fetch the order and its lines, Get Class calls the QuickBooks API, a Code node reshapes the data and get business fetches the business. An If node then splits the run: one branch gathers contacts, looks up the department and creates a purchase order, the other looks up the department and creates an invoice, and each ends by updating the Airtable record.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 800px; --bg: var(--blue-soft); }
+  .window { width: 1100px; }
+  .bar { display: flex; align-items: center; gap: 16px; background: var(--ink); color: var(--paper); padding: 14px 22px; font-weight: 500; }
+  .bar .crumb { opacity: .7; }
+  .bar .pill { margin-left: auto; background: var(--green); color: var(--ink); border: 2px solid var(--paper); border-radius: 20px; padding: 3px 14px; font-size: 16px; font-weight: 700; }
+  .canvas { height: 600px; }
+  .lbl { position: absolute; font-size: 15px; font-weight: 700; background: var(--paper); padding: 1px 6px; border-radius: 6px; }
+  /* Fourteen nodes on one canvas: same skin as 02 and 04, drawn smaller. */
+  .node { width: 124px; gap: 8px; }
+  .node .box { width: 76px; height: 76px; border-radius: 16px; font-size: 26px; }
+  .node.trigger .box { border-radius: 38px 16px 16px 38px; }
+  .node .name { font-size: 14px; }
+  .node .sub { font-size: 12px; margin-top: -5px; }
+  .node .box.http { font-size: 16px; }
+</style></head>
+<body>
+<div class="window">
+  <div class="bar"><span class="crumb">Workflows /</span><span>Airtable order to QuickBooks</span><span class="pill">Active</span></div>
+  <div class="canvas">
+    <svg class="wires">
+      <path d="M116 66 H190"/>
+      <path d="M266 66 H340"/>
+      <path d="M416 66 H490"/>
+      <path d="M566 66 H640"/>
+      <path d="M716 66 H790"/>
+      <path d="M866 66 H940"/>
+      <path d="M1016 66 H1048 Q1068 66 1068 86 V188 Q1068 208 1048 208 H28 Q10 208 10 226 V350 Q10 368 28 368 H40"/>
+      <path d="M116 368 H190"/>
+      <path d="M266 368 C 304 368, 304 278, 340 278"/>
+      <path d="M266 368 C 304 368, 304 458, 340 458 H490"/>
+      <path d="M416 278 H490"/>
+      <path d="M566 278 H640"/>
+      <path d="M716 278 H790"/>
+      <path d="M566 458 H640"/>
+      <path d="M716 458 H790"/>
+    </svg>
+
+    <!-- row 1 -->
+    <div class="node trigger" style="left: 16px; top: 28px;"><div class="box yellow mono">↯</div><div class="name">Webhook</div><div class="sub">order record ID</div></div>
+    <div class="node" style="left: 166px; top: 28px;"><div class="box yellow mono">▦</div><div class="name">get transaction order</div><div class="sub">Airtable</div></div>
+    <div class="node" style="left: 316px; top: 28px;"><div class="box mono">⋔</div><div class="name">Split Out</div><div class="sub">one item per line</div></div>
+    <div class="node" style="left: 466px; top: 28px;"><div class="box yellow mono">▦</div><div class="name">transaction lines</div><div class="sub">Airtable</div></div>
+    <div class="node" style="left: 616px; top: 28px;"><div class="box yellow mono">▦</div><div class="name">get class ids</div><div class="sub">Airtable</div></div>
+    <div class="node" style="left: 766px; top: 28px;"><div class="box green mono http">GET</div><div class="name">Get Class</div><div class="sub">QuickBooks API</div></div>
+    <div class="node" style="left: 916px; top: 28px;"><div class="box orange mono">{ }</div><div class="name">Reshape data</div><div class="sub">Code</div></div>
+
+    <!-- row 2 -->
+    <div class="node" style="left: 16px; top: 330px;"><div class="box yellow mono">▦</div><div class="name">get business</div><div class="sub">Airtable</div></div>
+    <div class="node" style="left: 166px; top: 330px;"><div class="box blue mono">?</div><div class="name">PO or invoice</div><div class="sub">If</div></div>
+
+    <div class="node" style="left: 316px; top: 240px;"><div class="box yellow mono">▦</div><div class="name">Contacts</div><div class="sub">filter, aggregate</div></div>
+    <div class="node" style="left: 466px; top: 240px;"><div class="box green mono http">GET</div><div class="name">Department</div><div class="sub">QuickBooks API</div></div>
+    <div class="node" style="left: 616px; top: 240px;"><div class="box green mono http">POST</div><div class="name">Create PO</div><div class="sub">QuickBooks API</div></div>
+    <div class="node" style="left: 766px; top: 240px;"><div class="box yellow mono">▦</div><div class="name">Update order</div><div class="sub">Airtable</div></div>
+
+    <div class="node" style="left: 466px; top: 420px;"><div class="box green mono http">GET</div><div class="name">Department</div><div class="sub">QuickBooks API</div></div>
+    <div class="node" style="left: 616px; top: 420px;"><div class="box green mono http">POST</div><div class="name">Create Invoice</div><div class="sub">QuickBooks API</div></div>
+    <div class="node" style="left: 766px; top: 420px;"><div class="box yellow mono">▦</div><div class="name">Update order</div><div class="sub">Airtable</div></div>
+
+    <span class="lbl" style="left: 284px; top: 300px;">PO</span>
+    <span class="lbl" style="left: 378px; top: 446px;">invoice</span>
+
+    <div class="note" style="left: 40px; top: 530px; transform: rotate(-2deg);">Most of these nodes are lookups</div>
+  </div>
+</div>
+</body></html>

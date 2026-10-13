@@ -1,0 +1,77 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of a one-off lead migration run in batches with n8n, Claude and Airtable: leads from spreadsheets and an old CRM, with the same company spelled two ways, pass through three matching rules (which two rows are the same company, which record wins when they disagree, what happens to rows that cannot be matched with confidence) and land in one Airtable base of 5,000 deduplicated leads enriched with company data.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 700px; --bg: var(--yellow-soft); }
+  .window { width: 1100px; }
+  .bar { display: flex; align-items: center; gap: 16px; background: var(--ink); color: var(--paper); padding: 14px 22px; font-weight: 500; }
+  .bar .crumb { opacity: .7; }
+  .bar .stack { display: flex; gap: 8px; margin-left: 18px; }
+  .bar .stack span { border: 2px solid var(--paper); border-radius: 20px; padding: 1px 12px; font-size: 15px; }
+  .bar .pill { margin-left: auto; background: var(--blue); color: var(--ink); border: 2px solid var(--paper); border-radius: 20px; padding: 3px 14px; font-size: 16px; font-weight: 700; }
+  .canvas { height: 500px; }
+
+  .card { position: absolute; background: var(--paper); border: var(--stroke); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); font-size: 15px; overflow: hidden; }
+  .card .t { border-bottom: var(--stroke); padding: 7px 12px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  .card .r { display: flex; justify-content: space-between; gap: 10px; padding: 6px 12px; border-bottom: 1.5px solid var(--line); }
+  .card .r:last-child { border-bottom: 0; }
+  .card .r span:last-child { color: var(--mute); }
+  .dup { background: var(--yellow-soft); }
+
+  .rule { position: absolute; left: 380px; width: 330px; background: var(--paper); border: var(--stroke); border-radius: 16px; box-shadow: 4px 4px 0 var(--ink); padding: 10px 14px 10px 54px; font-size: 15px; font-weight: 700; line-height: 1.25; }
+  .rule .k { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 30px; height: 30px; border-radius: 50%; background: var(--ink); color: var(--paper); display: grid; place-items: center; font-family: 'JetBrains Mono', monospace; font-size: 15px; }
+  .rule.q { border-style: dashed; box-shadow: none; }
+  .rule small { display: block; font-weight: 500; color: var(--mute); font-size: 13px; margin-top: 2px; }
+
+  .base .h { display: grid; grid-template-columns: 1fr 120px; font-weight: 700; background: color-mix(in srgb, var(--ink) 4%, var(--paper)); border-bottom: var(--stroke); }
+  .base .row { display: grid; grid-template-columns: 1fr 120px; border-bottom: 1.5px solid var(--line); }
+  .base .h > div, .base .row > div { padding: 7px 12px; display: flex; align-items: center; gap: 6px; }
+  .base .row > div + div, .base .h > div + div { border-left: 1.5px solid var(--line); }
+  .tag { border: 1.5px solid var(--ink); border-radius: 7px; padding: 0 6px; font-size: 12px; background: var(--blue-soft); white-space: nowrap; }
+  .merged { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--mute); }
+  .count { padding: 10px 12px; display: flex; align-items: baseline; gap: 8px; }
+  .count b { font-size: 30px; line-height: 1; }
+  .count span { font-size: 13px; color: var(--mute); }
+</style></head>
+<body>
+<div class="window">
+  <div class="bar"><span class="crumb">Workflows /</span><span>Lead migration</span><span class="stack"><span>n8n</span><span>Claude</span><span>Airtable</span></span><span class="pill">Runs once, in batches</span></div>
+  <div class="canvas">
+    <svg class="wires">
+      <path d="M298 120 C 340 120, 340 210, 380 210"/>
+      <path d="M298 360 C 340 360, 340 250, 380 250"/>
+      <path d="M714 230 H760"/>
+    </svg>
+
+    <div class="card" style="left: 28px; top: 40px; width: 270px;">
+      <div class="t" style="background: var(--green);"><span>Spreadsheets</span><span class="mono" style="font-weight: 500; font-size: 13px;">leads_2021.xlsx</span></div>
+      <div class="r dup"><span>Northwind Ltd</span><span>Ops lead</span></div>
+      <div class="r"><span>Acme Co.</span><span>Founder</span></div>
+      <div class="r"><span>Bluebird Studio</span><span>Owner</span></div>
+    </div>
+
+    <div class="card" style="left: 28px; top: 280px; width: 270px;">
+      <div class="t" style="background: var(--orange);"><span>Old CRM</span><span class="mono" style="font-weight: 500; font-size: 13px;">export</span></div>
+      <div class="r dup"><span>Northwind Limited</span><span>Ops lead</span></div>
+      <div class="r"><span>Globex</span><span>CFO</span></div>
+      <div class="r"><span>Initech</span><span>IT manager</span></div>
+    </div>
+
+    <div class="rule" style="top: 110px;"><span class="k">1</span>Which two rows are the same company?</div>
+    <div class="rule" style="top: 196px;"><span class="k">2</span>Which record wins when they disagree?</div>
+    <div class="rule q" style="top: 282px;"><span class="k">3</span>Rows that can't be matched with confidence<small>what happens to them is a rule too</small></div>
+
+    <div class="card base" style="left: 760px; top: 70px; width: 312px;">
+      <div class="t" style="background: var(--yellow);"><span>▦ Leads</span><span style="font-weight: 500; font-size: 13px;">one base</span></div>
+      <div class="h"><div>Company</div><div>Company data</div></div>
+      <div class="row"><div>Northwind Ltd <span class="merged">2→1</span></div><div><span class="tag">Logistics</span></div></div>
+      <div class="row"><div>Acme Co.</div><div><span class="tag">Retail</span></div></div>
+      <div class="row"><div>Globex</div><div><span class="tag">Manufacturing</span></div></div>
+      <div class="count"><b>5,000</b><span>leads, deduplicated</span></div>
+    </div>
+
+    <div class="note" style="left: 420px; top: 405px; transform: rotate(-2deg);">n8n runs the rules. Someone still writes them.</div>
+  </div>
+</div>
+</body></html>

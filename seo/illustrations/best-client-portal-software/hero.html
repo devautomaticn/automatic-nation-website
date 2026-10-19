@@ -1,0 +1,66 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of a client portal and the Airtable base behind it: a Projects table linked to Clients, Documents and Requests, a client's portal page showing their project stage and the files waiting on them, and a permissions card where every record belongs to one client company.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  /* 768x512 CSS px, rendered at 2x. Content stays inside the middle 16:9
+     band (y 40..472), because PostCard crops heroes to 16/9. */
+  :root { --w: 768px; --h: 512px; --bg: var(--blue-soft); }
+  body { font-size: 13px; display: block; position: relative; }
+  .window { position: absolute; border-width: 2.5px; border-radius: 16px; box-shadow: 6px 6px 0 var(--ink); }
+  .bar { padding: 9px 14px; border-bottom: 2.5px solid var(--ink); font-weight: 700; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
+  .dark { background: var(--ink); color: var(--paper); }
+
+  .base { left: 28px; top: 66px; width: 330px; height: 300px; }
+  .tabs { display: flex; gap: 4px; background: var(--ink); padding: 7px 10px 0; }
+  .tab { color: var(--paper); padding: 6px 10px; border-radius: 8px 8px 0 0; font-weight: 500; font-size: 12px; opacity: .75; }
+  .tab.on { background: var(--paper); color: var(--ink); opacity: 1; font-weight: 700; }
+  .g { display: grid; grid-template-columns: 1.3fr 1fr 1fr; }
+  .g > div { padding: 8px 10px; border-bottom: 1.5px solid var(--line); border-right: 1.5px solid var(--line); font-size: 12px; display: flex; align-items: center; min-height: 34px; }
+  .g .h { font-weight: 700; background: color-mix(in srgb, var(--ink) 4%, var(--paper)); border-bottom: 2.5px solid var(--ink); }
+  .lk { border: 1.5px solid var(--ink); border-radius: 7px; padding: 1px 6px; font-size: 11px; background: var(--blue-soft); white-space: nowrap; }
+  .st { border: 1.5px solid var(--ink); border-radius: 7px; padding: 1px 6px; font-size: 11px; white-space: nowrap; background: var(--yellow-soft); }
+
+  .portal { left: 392px; top: 92px; width: 340px; height: 330px; z-index: 2; }
+  .portal .body { padding: 14px 16px; }
+  .portal h1 { font-size: 18px; margin-bottom: 10px; }
+  .card { border: 2px solid var(--ink); border-radius: 11px; padding: 8px 12px; margin-bottom: 9px; box-shadow: 3px 3px 0 var(--ink); }
+  .card .k { font-size: 11px; color: var(--mute); }
+  .card .v { font-size: 14px; font-weight: 700; margin-top: 1px; }
+  .card.w { background: var(--yellow-soft); }
+  .doc { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 2px; border-bottom: 1.5px solid var(--line); }
+  .btn { margin-top: 10px; display: inline-block; border: 2px solid var(--ink); border-radius: 9px; padding: 5px 12px; font-weight: 700; font-size: 12px; background: var(--green); box-shadow: 3px 3px 0 var(--ink); }
+
+  .perm { left: 150px; top: 330px; width: 250px; z-index: 3; padding: 10px 14px; background: var(--paper); }
+  .perm .k { font-size: 11px; color: var(--mute); font-weight: 700; }
+  .perm .v { font-size: 13px; font-weight: 700; margin-top: 4px; }
+  .perm .m { font-family: 'JetBrains Mono', monospace; font-size: 11px; background: var(--yellow); border: 1.5px solid var(--ink); border-radius: 6px; padding: 2px 6px; display: inline-block; margin-top: 6px; }
+</style></head>
+<body>
+<div class="window base">
+  <div class="tabs"><span class="tab">Clients</span><span class="tab on">Projects</span><span class="tab">Documents</span><span class="tab">Requests</span></div>
+  <div class="g">
+    <div class="h">Project</div><div class="h">Client</div><div class="h">Stage</div>
+    <div>Website rebuild</div><div><span class="lk">Northwind</span></div><div><span class="st">Design review</span></div>
+    <div>Q4 report pack</div><div><span class="lk">Northwind</span></div><div><span class="st">In progress</span></div>
+    <div>Brand refresh</div><div><span class="lk">Globex</span></div><div><span class="st">Kickoff</span></div>
+    <div>Onboarding flow</div><div><span class="lk">Initech</span></div><div><span class="st">Delivered</span></div>
+  </div>
+</div>
+<div class="window portal">
+  <div class="bar dark"><span>Northwind · Client portal</span><span style="font-weight:500;font-size:12px">ana@northwind</span></div>
+  <div class="body">
+    <h1>Your projects</h1>
+    <div class="card"><div class="k">Website rebuild</div><div class="v">Design review · next: homepage draft</div></div>
+    <div class="card w"><div class="k">Waiting on you</div><div class="v">Final logo files</div></div>
+    <div class="doc"><span>Homepage wireframe.pdf</span><span style="color:var(--mute)">shared</span></div>
+    <div class="doc"><span>Q3 report.pdf</span><span style="color:var(--mute)">shared</span></div>
+    <span class="btn">+ New request</span>
+  </div>
+</div>
+<div class="window perm">
+  <div class="k">Who sees what</div>
+  <div class="v">Every record belongs to one client</div>
+  <span class="m">client = my client</span>
+</div>
+</body></html>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of an Airtable base behind a client portal: a Clients table linked to Contacts, Projects and Requests, with Documents linked to Projects. The Contacts table holds the email each client user logs in with, and Documents carries a Visible to client checkbox.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 680px; --bg: var(--blue-soft); }
+  body { display: block; position: relative; font-size: 17px; }
+  svg.wires { position: absolute; inset: 0; width: 100%; height: 100%; }
+  svg.wires path { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; }
+  .t { position: absolute; width: 270px; z-index: 2; }
+  .t .bar { background: var(--ink); color: var(--paper); padding: 11px 16px; font-weight: 700; display: flex; justify-content: space-between; }
+  .t .bar span { font-weight: 500; opacity: .7; font-size: 14px; }
+  .f { padding: 9px 16px; border-bottom: 2px solid var(--line); display: flex; align-items: center; gap: 10px; font-size: 16px; }
+  .f:last-child { border-bottom: 0; }
+  .f .ico { font-size: 12px; width: 20px; height: 20px; border-radius: 6px; }
+  .f.k { background: var(--yellow-soft); font-weight: 700; }
+  .f.lk .ico { background: var(--blue-soft); }
+  .note { font-size: 15px; }
+</style></head>
+<body>
+<svg class="wires" viewBox="0 0 1200 680">
+  <!-- Clients (center) to Contacts (left), Projects (right), Requests (bottom) -->
+  <path d="M 465 175 C 400 175, 380 160, 330 160" />
+  <path d="M 735 175 C 800 175, 820 160, 870 160" />
+  <path d="M 600 300 C 600 380, 600 400, 600 430" />
+  <!-- Projects to Documents -->
+  <path d="M 1005 300 C 1005 380, 1005 400, 1005 430" />
+  <!-- Projects to Requests -->
+  <path d="M 870 250 C 790 300, 760 470, 735 500" />
+</svg>
+
+<div class="window t" style="left:60px; top:90px">
+  <div class="bar">Contacts<span>who logs in</span></div>
+  <div class="f k"><span class="ico">@</span>Email</div>
+  <div class="f">Name</div>
+  <div class="f lk"><span class="ico">↗</span>Client</div>
+</div>
+
+<div class="window t" style="left:465px; top:110px">
+  <div class="bar">Clients<span>one per company</span></div>
+  <div class="f">Company name</div>
+  <div class="f lk"><span class="ico">↗</span>Contacts</div>
+  <div class="f lk"><span class="ico">↗</span>Projects</div>
+  <div class="f lk"><span class="ico">↗</span>Requests</div>
+</div>
+
+<div class="window t" style="left:870px; top:90px">
+  <div class="bar">Projects<span>client sees 3</span></div>
+  <div class="f lk"><span class="ico">↗</span>Client</div>
+  <div class="f">Stage · Next delivery</div>
+  <div class="f">Waiting on you</div>
+  <div class="f" style="color:var(--faint)">Budget · Margin · Notes</div>
+</div>
+
+<div class="window t" style="left:870px; top:430px">
+  <div class="bar">Documents<span>files</span></div>
+  <div class="f lk"><span class="ico">↗</span>Project</div>
+  <div class="f">Attachment</div>
+  <div class="f k"><span class="ico">✓</span>Visible to client</div>
+</div>
+
+<div class="window t" style="left:465px; top:430px">
+  <div class="bar">Requests<span>from the portal</span></div>
+  <div class="f lk"><span class="ico">↗</span>Client · Project</div>
+  <div class="f">What they need</div>
+  <div class="f">Status</div>
+</div>
+
+<div class="note" style="left:60px; top:330px; white-space:normal; width:330px">Portal rule: show records where<br>Client = the logged-in contact's Client</div>
+</body></html>

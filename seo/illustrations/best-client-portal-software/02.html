@@ -1,0 +1,47 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of a client portal page for a client called Northwind: their two projects with stage and next delivery, a Waiting on you list with one item, a list of shared documents, and a New request button.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 680px; --bg: var(--blue-soft); }
+  .portal { width: 1000px; }
+  .top { background: var(--ink); color: var(--paper); padding: 16px 26px; display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
+  .top span { font-weight: 500; opacity: .8; font-size: 16px; }
+  .wrap { display: grid; grid-template-columns: 200px 1fr; }
+  .nav { border-right: var(--stroke); padding: 18px 12px; display: flex; flex-direction: column; gap: 6px; }
+  .nav div { padding: 9px 14px; border-radius: 10px; font-weight: 500; }
+  .nav .on { background: var(--yellow); font-weight: 700; border: 2px solid var(--ink); }
+  .main { padding: 22px 28px 26px; display: grid; grid-template-columns: 1.3fr 1fr; gap: 22px; }
+  h1 { font-size: 26px; grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; }
+  .btn { font-size: 16px; border: 2.5px solid var(--ink); border-radius: 11px; padding: 7px 16px; background: var(--green); box-shadow: 3px 3px 0 var(--ink); }
+  .card { border: var(--stroke); border-radius: 14px; padding: 14px 18px; box-shadow: 4px 4px 0 var(--ink); margin-bottom: 14px; }
+  .card .k { font-size: 15px; color: var(--mute); }
+  .card .v { font-size: 20px; font-weight: 700; margin-top: 2px; }
+  .card .s { display: inline-block; margin-top: 8px; font-size: 14px; border: 2px solid var(--ink); border-radius: 8px; padding: 2px 9px; background: var(--blue-soft); }
+  .wait { background: var(--yellow-soft); }
+  .lbl { font-weight: 700; margin-bottom: 8px; }
+  .doc { display: flex; justify-content: space-between; padding: 10px 4px; border-bottom: 2px solid var(--line); font-size: 17px; }
+  .doc span { color: var(--mute); font-size: 15px; }
+</style></head>
+<body>
+<div class="window portal">
+  <div class="top">Northwind · Client portal<span>Signed in as ana@northwind.example</span></div>
+  <div class="wrap">
+    <div class="nav"><div class="on">Projects</div><div>Documents</div><div>Requests</div><div>Invoices</div></div>
+    <div class="main">
+      <h1>Your projects <span class="btn">+ New request</span></h1>
+      <div>
+        <div class="card"><div class="k">Website rebuild</div><div class="v">Next: homepage draft, 17 Oct</div><span class="s">Design review</span></div>
+        <div class="card"><div class="k">Q4 report pack</div><div class="v">Next: data cut, 24 Oct</div><span class="s">In progress</span></div>
+      </div>
+      <div>
+        <div class="card wait"><div class="lbl">Waiting on you</div><div class="v">Final logo files</div><div class="k">for Website rebuild</div></div>
+        <div class="lbl" style="margin-top:6px">Shared documents</div>
+        <div class="doc">Homepage wireframe.pdf<span>12 Oct</span></div>
+        <div class="doc">Q3 report.pdf<span>3 Oct</span></div>
+        <div class="doc">Statement of work.pdf<span>8 Sep</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>

@@ -33,6 +33,8 @@ If you have used Excel or Google Sheets, entering data in rows and columns will 
 
 Log in and click “Create” within a given workspace. You can start fresh or use one of Airtable’s many helpful templates for project management, content calendars, CRM, and more.
 
+Not sure whether you need one base or several? Read [what a base in Airtable is](/understanding-airtable-key-concepts-and-terminology/) first, because tables in different bases cannot link to each other.
+
 ### Step 2: Tables
 
 A typical base might have:

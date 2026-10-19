@@ -58,10 +58,10 @@ While Airtable covers many use cases, sometimes you need a more versatile platfo
 
 - Visual drag-and-drop workflow builder for intricate processes.
 - Extensive connectors for apps, databases, and APIs.
-- Options to self-host or use cloud infrastructure (specifically n8n).
+- Options to self-host or use cloud infrastructure (specifically n8n, where [self-hosting is free to license but not free to run](/n8n-self-hosted-pricing/)).
 - Supports custom JavaScript for advanced customization (specifically n8n).
 
-For example, these tools can extract data from Airtable, enhance it with information from external APIs, and update your CRM automatically, all with minimal coding.
+For example, these tools can extract data from Airtable, enhance it with information from external APIs, and update your CRM automatically, all with minimal coding. Our [n8n review](/n8n-review/) covers what holds up and what breaks once workflows like that run in client production.
 
 ## Getting Started with Low Code Automation
 

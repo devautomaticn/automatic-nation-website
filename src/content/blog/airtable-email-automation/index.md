@@ -85,7 +85,7 @@ Combining automations with a well-designed base maximizes efficiency. For more, 
 - **Start Small:** Build one automation and expand gradually.
 - **Test Regularly:** Verify emails before activating.
 - **Use Views and Filters:** Target specific records for better control.
-- **Know Your Limits:** Review Airtable’s automation limits on their [pricing page](/airtable-pricing-compare-plans-and-choose-the-best-one/).
+- **Know Your Limits:** Review [Airtable’s automation limits](/airtable-automation-limits-what-you-need-to-know/) and the runs each plan includes on their [pricing page](/airtable-pricing-compare-plans-and-choose-the-best-one/).
 
 ## Final Thoughts on Airtable Email Automation
 

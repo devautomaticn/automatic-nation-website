@@ -82,7 +82,7 @@ Perfect for organizations building critical applications or deeply integrating A
 ## Tips to Optimize Your Airtable Pricing Plan
 
 - Evaluate your team size carefully; pay only for editors, while others collaborate for free.
-- Monitor automation runs to avoid exceeding limits.
+- Monitor automation runs to avoid exceeding [your plan's automation limits](/airtable-automation-limits-what-you-need-to-know/).
 - Keep track of record and attachment quotas to prevent overages.
 - Use Airtable’s AI features strategically for efficient credit usage.
 

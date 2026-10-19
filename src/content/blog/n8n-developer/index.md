@@ -60,7 +60,7 @@ If the developer runs the instance on their own server and bills you for it, you
 
 ### 6. "Which part of this would you not build in n8n?"
 
-Experienced developers usually have an answer. The data should live in a real database and n8n should only move it. A two-step job should just be a Zapier zap. The process is still being argued about and should be settled first. Someone who says every part of your brief is a perfect fit for n8n is telling you what they sell.
+Experienced developers usually have an answer, because they have seen [where n8n breaks in production](/n8n-review/). The data should live in a real database and n8n should only move it. A two-step job should just be a Zapier zap. The process is still being argued about and should be settled first. Someone who says every part of your brief is a perfect fit for n8n is telling you what they sell.
 
 If you have put these six to a few candidates and want to hear how we would answer them for your process, [book a call](/book-a-call/). If the honest answer is that you need a freelancer for a week and not us, we will say so.
 
@@ -100,7 +100,7 @@ For a reference point, Upwork puts freelance n8n experts at [roughly $40 to $100
 - **Whether each app has a built-in n8n node.** If one exists and covers what you need, that step is quick. If not, the developer is working from API docs and writing HTTP requests.
 - **How much translating the data needs.** Matching customers, IDs, statuses and currencies between two systems is slow, careful work, and it is where most bugs live.
 - **Failure handling and logging.** The error workflow, retries, alerts and run log from the questions above. A quote that leaves them out is cheaper now.
-- **Hosting.** n8n's cloud plan is a subscription with no server to run. The self-hosted community edition has no licence fee, and someone has to run, back up and upgrade the server.
+- **Hosting.** n8n's cloud plan is a subscription with no server to run. The self-hosted community edition has no licence fee, and someone has to run, back up and upgrade the server, so [the real cost of self-hosting n8n](/n8n-self-hosted-pricing/) is in those hours.
 - **What already exists.** Half-built workflows need an audit first. That can make the job cheaper if much of it is sound.
 - **What happens after launch.** APIs change and tokens expire. Decide up front who watches the workflows, and whether that is a retainer or your own team.
 

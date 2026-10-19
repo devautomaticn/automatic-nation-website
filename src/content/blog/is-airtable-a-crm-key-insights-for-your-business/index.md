@@ -46,7 +46,7 @@ Dedicated CRM platforms usually come with specialized sales modules, forecasting
 
 If your business requires AI-driven lead scoring or sophisticated support ticketing, a dedicated CRM might be a better fit. However, if you want full control over customer data and a DIY approach, Airtable offers an unmatched customizable platform.
 
-For a hands-on approach, see our guide on [how to build a CRM system](/how-to-build-a-crm-system/).
+For a hands-on approach, see our guide on [how to build a CRM system](/how-to-build-a-crm-system/). If clients also need to log in and see their own projects and files, read our take on [a custom client portal versus client portal software](/best-client-portal-software/).
 
 ## Final Verdict: Is Airtable a CRM?
 

@@ -64,7 +64,7 @@ Showing it to people outside the company is the fiddly part. There are three way
 - **Share the page with a public link.** Nobody needs an account. A public page has no logged-in user, though, so the current user filter does not work there. Anyone with the link sees whatever the page shows, which means one page per client, filtered by hand.
 - **Use Airtable Portals**, a paid add-on for sharing interfaces with guests outside your organisation, with a branded sign-in page.
 
-If you have many clients who each log in and see only their own records, a portal tool built on top of Airtable is sometimes the better fit. When it is, we will say so instead of forcing an interface into the job.
+If you have many clients who each log in and see only their own records, a portal tool built on top of Airtable, or [a custom client portal](/best-client-portal-software/), is sometimes the better fit. When it is, we will say so instead of forcing an interface into the job.
 
 ### 5. The "what is late" dashboard
 

@@ -50,7 +50,7 @@ Together, these features turn Airtable into more than just a database or spreads
 
 You don’t need technical skills to get started with Airtable. Its intuitive interface and extensive collection of customizable templates make it easy to jump right in.
 
-If you want to familiarize yourself with Airtable’s database features and common terminology, check out this helpful resource: [Understanding Airtable: Key Concepts and Terminology](/understanding-airtable-key-concepts-and-terminology/).
+If you want to familiarize yourself with Airtable’s database features and common terminology, check out this helpful resource: [What Is a Base in Airtable? One Base or Several](/understanding-airtable-key-concepts-and-terminology/).
 
 ## Conclusion
 

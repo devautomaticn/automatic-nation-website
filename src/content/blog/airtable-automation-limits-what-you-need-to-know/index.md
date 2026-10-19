@@ -2,7 +2,7 @@
 title: "Airtable Automation Limits: What Actually Runs Out First, and How We Build Around It"
 description: "Airtable automation limits by plan, the order they break in real bases, and the fix for each: a guard field, one consolidated trigger, batching, or n8n."
 published: 2025-01-24
-updated: 2026-10-13
+updated: 2026-10-19
 hero: ./hero.webp
 heroAlt: "Illustration of an Airtable workspace running out of automation runs: a usage meter at 24,860 of 25,000 runs, an automation history listing the same record updated every few seconds, and a small n8n workflow that takes the heavy job out of Airtable and writes the result back."
 wpId: 260

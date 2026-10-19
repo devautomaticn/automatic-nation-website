@@ -2,8 +2,7 @@
 title: "Custom Client Portal or Client Portal Software? Why We Build Them Now"
 description: Why a custom client portal now beats renting client portal software, where HubSpot and SharePoint stop fitting, and two ways to build.
 published: 2025-10-21
-updated: 2026-10-12
-draft: true
+updated: 2026-10-19
 hero: ./hero.webp
 heroAlt: "Illustration of a client portal and the Airtable base behind it: a Projects table linked to Clients, Documents and Requests, a client's portal page showing their project stage and the files waiting on them, and a permissions card where every record belongs to one client company."
 wpId: 1189

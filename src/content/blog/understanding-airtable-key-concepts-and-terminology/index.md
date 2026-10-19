@@ -2,7 +2,7 @@
 title: "What Is a Base in Airtable? One Base or Several, and the Rule We Use to Decide"
 description: A base in Airtable is one database whose tables can link to each other. How it fits with workspaces and interfaces, and when to use several bases.
 published: 2025-08-17
-updated: 2026-10-13
+updated: 2026-10-19
 hero: ./hero.webp
 heroAlt: "Illustration of an Airtable workspace: a sidebar listing two bases, Client work and People, and the Client work base open on its Projects table, where each project links to a client record and its invoices."
 wpId: 1138

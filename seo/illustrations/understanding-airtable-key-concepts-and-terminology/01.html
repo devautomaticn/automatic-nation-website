@@ -1,0 +1,78 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Diagram of how Airtable's pieces nest: a workspace holds two bases. The Client work base holds three tables, Clients, Projects and Invoices, joined by linked record fields, with a view and an interface built on top. A second base, People, sits beside it with no links into the first.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 720px; --bg: var(--blue-soft); }
+  body { display: block; position: relative; font-size: 17px; }
+  .ws { position: absolute; left: 40px; top: 40px; width: 1120px; height: 640px; border: 3px dashed var(--ink); border-radius: 26px; }
+  .lbl { position: absolute; font-weight: 700; font-size: 15px; text-transform: uppercase; letter-spacing: .07em; color: var(--mute); }
+  .base { position: absolute; background: var(--paper); border: var(--stroke); border-radius: 22px; box-shadow: 8px 8px 0 var(--ink); }
+  .bname { position: absolute; left: 22px; top: 16px; font-size: 24px; font-weight: 700; }
+  .bk { position: absolute; left: 22px; top: 48px; font-size: 14px; color: var(--mute); font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
+  .t { position: absolute; width: 190px; border: 2.5px solid var(--ink); border-radius: 14px; background: var(--paper); overflow: hidden; }
+  .t .h { padding: 9px 14px; font-weight: 700; border-bottom: 2.5px solid var(--ink); display: flex; justify-content: space-between; align-items: center; }
+  .t .h small { font-size: 12px; font-weight: 500; color: var(--mute); }
+  .t .f { padding: 7px 14px; font-size: 15px; border-bottom: 1.5px solid var(--line); display: flex; justify-content: space-between; }
+  .t .f:last-child { border-bottom: 0; }
+  .t .f i { font-style: normal; font-size: 12px; color: var(--mute); font-family: 'JetBrains Mono', monospace; }
+  .link { background: var(--yellow-soft); }
+  svg.wires { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  svg.wires path { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; }
+  .tag { position: absolute; border: 2px solid var(--ink); border-radius: 10px; padding: 6px 12px; font-size: 14px; font-weight: 700; box-shadow: 3px 3px 0 var(--ink); white-space: nowrap; }
+  .tag span { display: block; font-weight: 400; font-size: 12.5px; color: var(--mute); }
+</style></head>
+<body>
+<div class="ws"></div>
+<div class="lbl" style="left:64px; top:56px">Workspace: Ops team</div>
+
+<div class="base" style="left:70px; top:96px; width:760px; height:556px;">
+  <div class="bname">Client work</div>
+  <div class="bk">Base</div>
+</div>
+<div class="base" style="left:866px; top:96px; width:268px; height:556px; background: color-mix(in srgb, var(--green) 14%, var(--paper));">
+  <div class="bname">People</div>
+  <div class="bk">Base</div>
+</div>
+
+<svg class="wires" viewBox="0 0 1200 720">
+  <path d="M 290 330 C 330 330, 330 250, 370 250" />
+  <path d="M 560 330 C 600 330, 600 410, 640 410" />
+</svg>
+
+<div class="t" style="left:100px; top:250px">
+  <div class="h">Clients <small>table</small></div>
+  <div class="f">Name <i>text</i></div>
+  <div class="f">Email <i>email</i></div>
+  <div class="f link">Projects <i>link</i></div>
+</div>
+<div class="t" style="left:370px; top:200px">
+  <div class="h">Projects <small>table</small></div>
+  <div class="f">Project <i>text</i></div>
+  <div class="f link">Client <i>link</i></div>
+  <div class="f">Due date <i>date</i></div>
+  <div class="f link">Invoices <i>link</i></div>
+</div>
+<div class="t" style="left:640px; top:360px; width:170px">
+  <div class="h">Invoices <small>table</small></div>
+  <div class="f">Number <i>auto</i></div>
+  <div class="f link">Project <i>link</i></div>
+  <div class="f">Amount <i>$</i></div>
+</div>
+
+<div class="tag" style="left:370px; top:420px; background: var(--yellow)">View<span>Active projects: a filter and a sort,<br>no data of its own</span></div>
+<div class="tag" style="left:100px; top:530px; background: var(--blue)">Interface<span style="color:var(--ink)">Client dashboard: pages on top of this base</span></div>
+<div class="tag" style="left:100px; top:170px; background: var(--paper)">Records are rows, fields are typed columns</div>
+
+<div class="t" style="left:900px; top:200px; width:200px">
+  <div class="h">Team <small>table</small></div>
+  <div class="f">Name <i>text</i></div>
+  <div class="f">Role <i>select</i></div>
+</div>
+<div class="t" style="left:900px; top:340px; width:200px">
+  <div class="h">Time off <small>table</small></div>
+  <div class="f">Person <i>link</i></div>
+  <div class="f">Dates <i>date</i></div>
+</div>
+<div class="note" style="left:884px; top:520px; white-space: normal; width: 232px; font-size: 16px; line-height:1.3">No link field can reach Client work from here.</div>
+</body></html>

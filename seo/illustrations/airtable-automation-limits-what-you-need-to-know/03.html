@@ -1,0 +1,79 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="alt" content="Illustration of the handoff between Airtable and n8n. In Airtable, one automation triggers when Sync status is Ready and Sent to n8n is unchecked, runs a script that posts the record ID to an n8n webhook, then ticks Sent to n8n. In n8n, a Webhook node receives the ID, an Airtable node reads the current record, an HTTP Request node calls the external API, and a final Airtable node writes Sync status Done, or Error with the message, back to the same record.">
+<link rel="stylesheet" href="../_base.css">
+<style>
+  :root { --w: 1200px; --h: 660px; --bg: var(--blue-soft); }
+  body { display: block; position: relative; }
+  .at { position: absolute; left: 36px; top: 70px; width: 384px; height: 500px; }
+  .head { background: var(--ink); color: var(--paper); padding: 14px 20px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  .flow { padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; }
+  .step { border: var(--stroke); border-radius: 14px; padding: 9px 14px; background: var(--paper); box-shadow: 4px 4px 0 var(--ink); }
+  .step .k { font-size: 12px; font-weight: 700; color: var(--mute); text-transform: uppercase; letter-spacing: .04em; }
+  .step .t { font-size: 17px; font-weight: 700; margin-top: 2px; }
+  .step .d { font-size: 14px; color: var(--mute); margin-top: 3px; }
+  .trig { background: var(--yellow-soft); }
+  .cond { display: inline-block; border: 2px solid var(--ink); border-radius: 8px; padding: 0 7px; font-size: 13px; margin: 5px 4px 0 0; background: var(--paper); }
+  .cond.g { background: var(--yellow); font-weight: 700; }
+  .code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: var(--ink); color: var(--paper); border-radius: 8px; padding: 6px 9px; margin-top: 6px; }
+  .down { font-size: 20px; line-height: 1; margin-left: 24px; }
+
+  .n8n { position: absolute; left: 545px; top: 70px; width: 620px; height: 330px; }
+  .n8n .canvas { height: 280px; }
+  .n8n .node { top: 70px; width: 140px; }
+  .n8n .node .box { width: 84px; height: 84px; font-size: 30px; }
+  .n8n .node .name { font-size: 15px; }
+
+  .rec { position: absolute; left: 620px; top: 450px; width: 380px; }
+  .rec .bar { padding: 11px 16px; border-bottom: var(--stroke); font-weight: 700; display: flex; justify-content: space-between; background: var(--blue); }
+  .kv { display: grid; grid-template-columns: 150px 1fr; font-size: 16px; }
+  .kv > div { padding: 9px 16px; border-bottom: 2px solid var(--line); display: flex; align-items: center; gap: 8px; }
+  .kv .k { color: var(--mute); }
+  .kv > div:nth-last-child(-n+2) { border-bottom: 0; }
+  .s { border: 2px solid var(--ink); border-radius: 8px; padding: 0 8px; font-size: 14px; }
+  .s.ok { background: var(--green); } .s.err { background: color-mix(in srgb, var(--red) 40%, var(--paper)); }
+  svg.links { position: absolute; inset: 0; width: 100%; height: 100%; }
+  svg.links path { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 8 7; }
+  .lab { position: absolute; font-size: 14px; font-weight: 700; background: var(--yellow); border: 2px solid var(--ink); border-radius: 8px; padding: 2px 8px; box-shadow: 3px 3px 0 var(--ink); }
+</style></head>
+<body>
+<svg class="links">
+  <path d="M420 330 C 490 330, 480 220, 545 220"/>
+  <path d="M1080 400 C 1080 430, 1060 440, 1020 460"/>
+</svg>
+<div class="lab" style="left: 436px; top: 262px;">record ID</div>
+<div class="lab" style="left: 1060px; top: 418px;">write back</div>
+
+<div class="window at">
+  <div class="head"><span>Airtable · Send order to n8n</span><span class="chip" style="color: var(--ink);">On</span></div>
+  <div class="flow">
+    <div class="step trig"><div class="k">Trigger</div><div class="t">When record matches conditions</div>
+      <div><span class="cond">Sync status is Ready</span><span class="cond g">Sent to n8n is unchecked</span></div></div>
+    <div class="down">↓</div>
+    <div class="step"><div class="k">Action</div><div class="t">Run a script</div>
+      <div class="code">fetch(webhookUrl, { recordId })</div></div>
+    <div class="down">↓</div>
+    <div class="step" style="background: color-mix(in srgb, var(--green) 30%, var(--paper));"><div class="k">Last action</div><div class="t">Update record</div><div class="d" style="color: var(--ink);">Sent to n8n ☑ · Sync status: Queued</div></div>
+  </div>
+</div>
+
+<div class="window n8n">
+  <div class="head"><span>n8n · Order sync</span><span class="chip" style="color: var(--ink);">Active</span></div>
+  <div class="canvas">
+    <svg class="wires"><path d="M117 112 H 167"/><path d="M262 112 H 312"/><path d="M407 112 H 457"/></svg>
+    <div class="node trigger" style="left: 12px;"><div class="box orange">⚡</div><div class="name">Webhook</div><div class="sub">respond immediately</div></div>
+    <div class="node" style="left: 157px;"><div class="box yellow">▦</div><div class="name">Airtable</div><div class="sub">get record</div></div>
+    <div class="node" style="left: 302px;"><div class="box blue">↗</div><div class="name">HTTP Request</div><div class="sub">retry on fail</div></div>
+    <div class="node" style="left: 447px;"><div class="box green">▦</div><div class="name">Airtable</div><div class="sub">update record</div></div>
+  </div>
+</div>
+
+<div class="window rec">
+  <div class="bar"><span>ORD-1042</span><span>Orders</span></div>
+  <div class="kv">
+    <div class="k">Sync status</div><div><span class="s ok">Done</span> or <span class="s err">Error</span></div>
+    <div class="k">Sync error</div><div style="color: var(--mute);">API returned 422: missing tax ID</div>
+    <div class="k">Synced at</div><div class="mono" style="font-size: 14px;">13 Oct, 09:31</div>
+  </div>
+</div>
+</body></html>

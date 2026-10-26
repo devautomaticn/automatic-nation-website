@@ -43,7 +43,7 @@ export const isLive = (post: Post): boolean =>
  */
 export const RESERVED_SLUGS: ReadonlySet<string> = new Set([
   // real routes today
-  'index', 'blog', 'blogs', 'lp', '404', 'book-a-call', 'rss.xml',
+  'index', 'blog', 'blogs', 'lp', 'es', '404', 'book-a-call', 'rss.xml',
   'robots.txt', 'sitemap-index.xml', 'sitemap-0.xml',
   // Legacy WordPress URLs, now real routes again as redirect stubs. They were
   // reserved before the stubs existed; now they are reserved because a static

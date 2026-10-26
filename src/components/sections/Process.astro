@@ -23,9 +23,11 @@ interface Props {
   stat?: string;
   phases: Phase[];
   ticks: Tick[];
+  /** The tag on a buffer tick, for translated pages. */
+  bufferLabel?: string;
 }
 
-const { id, eyebrow, title, stat, phases, ticks } = Astro.props as Props;
+const { id, eyebrow, title, stat, phases, ticks, bufferLabel = 'buffer' } = Astro.props as Props;
 ---
 <Section {id}>
   {stat && (
@@ -68,7 +70,7 @@ const { id, eyebrow, title, stat, phases, ticks } = Astro.props as Props;
     <div class="gantt-axis" aria-hidden="true">
       {ticks.map((k, i) => (
         <span class={k.buffer ? 'is-buffer' : undefined} style={`--i:${i}`}>
-          {k.t}{k.buffer && <b>buffer</b>}
+          {k.t}{k.buffer && <b>{bufferLabel}</b>}
         </span>
       ))}
     </div>

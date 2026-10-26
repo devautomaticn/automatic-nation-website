@@ -3,8 +3,8 @@ import '../styles/global.css';
 import Seo from '../components/seo/Seo.astro';
 import Nav from '../components/chrome/Nav.astro';
 import Footer from '../components/chrome/Footer.astro';
-import { asset } from '../lib/url';
-import type { Cta } from '../lib/design';
+import { asset, pageUrl } from '../lib/url';
+import type { Cta, Translation } from '../lib/design';
 
 interface Props {
   title: string;
@@ -40,6 +40,12 @@ interface Props {
   navLinks?: readonly { label: string; href: string }[];
   footerLinks?: readonly { label: string; href: string }[];
   navCta?: Cta | false;
+  /**
+   * The same page in the other language. Drives the navbar's EN/ES switch
+   * and the hreflang pair in <head>; both pages of a pair must pass it,
+   * pointing at each other, or search engines ignore the pair.
+   */
+  translation?: Translation;
   class?: string;
 }
 
@@ -59,6 +65,7 @@ const {
   navLinks,
   footerLinks,
   navCta,
+  translation,
   class: className,
 } = Astro.props as Props;
 ---
@@ -77,6 +84,13 @@ const {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Montserrat:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
+  {translation && (
+    <>
+      <link rel="alternate" hreflang={lang} href={pageUrl(path, Astro.site)} />
+      <link rel="alternate" hreflang={translation.lang} href={pageUrl(translation.path, Astro.site)} />
+    </>
+  )}
+
   {preloadImages.map(src => <link rel="preload" as="image" href={asset(src)} />)}
 
   <!-- Metricool tracking pixel. Vendor snippet, pasted verbatim.
@@ -90,7 +104,7 @@ const {
   <script is:inline>function loadScript(a){var b=document.getElementsByTagName("head")[0],c=document.createElement("script");c.type="text/javascript",c.src="https://tracker.metricool.com/resources/be.js",c.onreadystatechange=a,c.onload=a,b.appendChild(c)}loadScript(function(){beTracker.t({hash:"374ed6d4a4c1299b12bff9e4f9c496d3"})});</script>
 </head>
 <body class={className}>
-  {nav && <Nav links={navLinks} cta={navCta} {lang} />}
+  {nav && <Nav links={navLinks} cta={navCta} {translation} />}
   <slot />
   {footer && <Footer links={footerLinks} {lang} />}
 

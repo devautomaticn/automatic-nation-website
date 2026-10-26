@@ -44,3 +44,9 @@ export interface Cta {
   href: string;
   external?: boolean;
 }
+
+/** A page's counterpart in the other language. `path` is pageUrl()'s shape: no leading slash. */
+export interface Translation {
+  lang: 'en' | 'es';
+  path: string;
+}

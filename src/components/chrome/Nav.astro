@@ -1,19 +1,19 @@
 ---
 import Button from '../ui/Button.astro';
 import { BASE, href as url } from '../../lib/url';
-import { NAV, BOOKING, SITE, LANG_SWITCH } from '../../lib/site';
-import type { Cta } from '../../lib/design';
+import { NAV, BOOKING, SITE, LANGS } from '../../lib/site';
+import type { Cta, Translation } from '../../lib/design';
 
 interface Props {
   /** Override the default "Book a call" action. */
   cta?: Cta | false;
   links?: readonly { label: string; href: string }[];
-  /** The page's lang. Picks where the EN/ES switch leads; none if unknown. */
-  lang?: string;
+  /** The same page in the other language. No translation, no switch. */
+  translation?: Translation;
 }
 
-const { cta, links = NAV, lang = 'en' } = Astro.props as Props;
-const switchTo = LANG_SWITCH[lang];
+const { cta, links = NAV, translation } = Astro.props as Props;
+const switchTo = translation && { ...translation, ...LANGS[translation.lang] };
 const action = cta === undefined
   ? { label: 'Book a call', href: BOOKING.href, external: BOOKING.external }
   : cta;
@@ -40,7 +40,7 @@ const action = cta === undefined
         language switch has to survive on a phone. */}
     {switchTo && (
       <a
-        href={url(switchTo.href)}
+        href={url(`/${switchTo.path}`)}
         class="lang-switch"
         hreflang={switchTo.lang}
         lang={switchTo.lang}

@@ -69,16 +69,15 @@ export const BOOKING = {
 } as const;
 
 /**
- * The EN/ES switch in the navbar. Keyed by the CURRENT page's lang, and the
- * entry is where the switch leads.
+ * The navbar's language switch, keyed by the language it switches TO.
  *
- * There is no Spanish home yet: the Spanish side is the law-firm landing, so
- * every English page points there and the landing points back to the home.
- * When a real /es/ home exists, change the `en` href and nothing else.
+ * The switch only renders on a page that passes `translation` to BaseLayout:
+ * it must show the same page in the other language, never a different page.
+ * A page with no translation (the blog, the Airtable landing) gets no switch.
  */
-export const LANG_SWITCH: Record<string, { label: string; href: string; lang: string; title: string }> = {
-  en: { label: 'ES', href: '/lp/estudios-juridicos/', lang: 'es', title: 'Ver en español' },
-  es: { label: 'EN', href: '/', lang: 'en', title: 'View in English' },
+export const LANGS: Record<string, { label: string; title: string }> = {
+  en: { label: 'EN', title: 'View in English' },
+  es: { label: 'ES', title: 'Ver en español' },
 };
 
 /** The footer's fixed strings, per lang. `place` is SITE.place. */

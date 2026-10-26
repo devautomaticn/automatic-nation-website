@@ -1,0 +1,70 @@
+---
+/**
+ * The legal landing, in Spanish. Same shape as airtable-consulting.astro,
+ * with two differences:
+ *
+ * - The booking widget is on the page (#book), and every CTA scrolls to it.
+ *   /book-a-call/ is in English, which is the wrong next step for a page
+ *   whose whole audience reads Spanish.
+ * - Nav and footer get Spanish links pointing at this page's own sections,
+ *   so none of the home page's bare fragments can dangle here.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HeroCopy from '../../components/heroes/HeroCopy.astro';
+import FeatureGrid from '../../components/sections/FeatureGrid.astro';
+import UseCases from '../../components/sections/UseCases.astro';
+import CtaStrip from '../../components/sections/CtaStrip.astro';
+import Faq from '../../components/sections/Faq.astro';
+import CalEmbed from '../../components/sections/CalEmbed.astro';
+import SectionHeader from '../../components/ui/SectionHeader.astro';
+
+import * as copy from '../../data/landings/estudios-juridicos';
+
+const book = { href: '#book', external: false };
+---
+<BaseLayout
+  title={copy.seo.title}
+  description={copy.seo.description}
+  lang="es"
+  path="lp/estudios-juridicos/"
+  navLinks={copy.nav}
+  footerLinks={copy.footerLinks}
+  navCta={{ ...book, label: copy.navCtaLabel }}
+>
+  <HeroCopy
+    eyebrow={copy.hero.eyebrow}
+    title={copy.hero.title}
+    sub={copy.hero.sub}
+    sub2={copy.hero.sub2}
+    cta={{ ...book, label: copy.hero.ctaLabel }}
+    ctaSecondary={{ href: '#casos', label: copy.hero.ctaSecondaryLabel }}
+  />
+
+  <FeatureGrid id="problemas" {...copy.problems} />
+
+  <UseCases
+    id="casos"
+    eyebrow={copy.cases.eyebrow}
+    title={copy.cases.title}
+    items={copy.cases.items}
+    link={{ ...book, label: copy.cases.linkLabel }}
+  />
+
+  <FeatureGrid id="proceso" {...copy.process} />
+
+  <CtaStrip text={copy.strip.text} cta={{ ...book, label: copy.strip.ctaLabel }} />
+
+  <Faq id="faq" eyebrow={copy.faq.eyebrow} title={copy.faq.title} items={copy.faq.items} />
+
+  <CalEmbed fallbackText={copy.booking.fallbackText} fallbackLabel={copy.booking.fallbackLabel}>
+    <SectionHeader
+      eyebrow={copy.booking.eyebrow}
+      title={copy.booking.title}
+      lead={copy.booking.lead}
+      level={2}
+      scale="display-md"
+      width="full"
+    />
+    <div class="mt-block"></div>
+  </CalEmbed>
+</BaseLayout>

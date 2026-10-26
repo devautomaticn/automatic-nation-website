@@ -404,6 +404,10 @@
   margin-bottom: 32px;
 }
 .headline strong { font-weight: 700; }
+/* Title Case is an English convention. Spanish capitalises the first word
+   only, and "IA Y Automatización Que Entiende" reads as a typo. */
+:lang(es) .headline,
+:lang(es) .nav-links a { text-transform: none; }
 
 .hero-sub {
   font-family: 'Montserrat', sans-serif;

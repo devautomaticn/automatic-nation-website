@@ -1,0 +1,89 @@
+---
+import Section from '../ui/Section.astro';
+import Container from '../ui/Container.astro';
+import Button from '../ui/Button.astro';
+import { CAL } from '../../lib/site';
+
+/**
+ * The cal.com scheduler, inline. Shared by /book-a-call/ and any landing that
+ * books on the page instead of sending the visitor to /book-a-call/ (the
+ * Spanish landings do: the booking page is in English).
+ *
+ * id defaults to "book" and that is not cosmetic. BOOKING falls back to
+ * '#book', the footer's Contact link is '#book', and so are the migrated
+ * in-content booking links — every page has to render this target.
+ *
+ * Render it at most once per page: the snippet mounts into #cal-embed.
+ */
+interface Props {
+  id?: string;
+  /** The <noscript> fallback's two strings, for non-English pages. */
+  fallbackText?: string;
+  fallbackLabel?: string;
+}
+
+const {
+  id = 'book',
+  fallbackText = 'The scheduler needs JavaScript. Book on cal.com instead:',
+  fallbackLabel = 'Open the calendar',
+} = Astro.props as Props;
+---
+<Section {id} size="none" container={false} border="top" class="pb-section">
+  <Container class="pt-section-sm">
+    <slot />
+    <div id="cal-embed" class="cal-embed"></div>
+
+    {/* Without JS the embed never mounts and the box stays empty, so fall
+        back to the link the CTAs used to point at. A plain anchor, not an
+        iframe: an iframe here would be a second, untested rendering path
+        for the one page that cannot afford to be broken. */}
+    <noscript>
+      <div class="text-center">
+        <p class="text-lg text-mute">{fallbackText}</p>
+        <div class="mt-block-sm">
+          <Button href={CAL.url} external size="lg" arrow>{fallbackLabel}</Button>
+        </div>
+      </div>
+    </noscript>
+  </Container>
+</Section>
+
+{/* is:inline is required — define:vars implies it, and this snippet has no
+    imports for Astro to resolve anyway. calLink comes from CAL so the embed
+    and the <noscript> fallback cannot drift apart. */}
+<script is:inline define:vars={{ calLink: CAL.link }}>
+  (function (C, A, L) {
+    let p = function (a, ar) { a.q.push(ar); };
+    let d = C.document;
+    C.Cal = C.Cal || function () {
+      let cal = C.Cal;
+      let ar = arguments;
+      if (!cal.loaded) {
+        cal.ns = {};
+        cal.q = cal.q || [];
+        d.head.appendChild(d.createElement("script")).src = A;
+        cal.loaded = true;
+      }
+      if (ar[0] === L) {
+        const api = function () { p(api, arguments); };
+        const namespace = ar[1];
+        api.q = api.q || [];
+        if (typeof namespace === "string") {
+          cal.ns[namespace] = cal.ns[namespace] || api;
+          p(cal.ns[namespace], ar);
+          p(cal, ["initNamespace", namespace]);
+        } else p(cal, ar);
+        return;
+      }
+      p(cal, ar);
+    };
+  })(window, "https://app.cal.com/embed/embed.js", "init");
+
+  Cal("init");
+  Cal("inline", {
+    elementOrSelector: "#cal-embed",
+    calLink: calLink,
+    config: { layout: "month_view" },
+  });
+  Cal("ui", { hideEventTypeDetails: false, layout: "month_view" });
+</script>

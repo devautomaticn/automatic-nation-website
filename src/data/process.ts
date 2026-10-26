@@ -65,3 +65,39 @@ export const GANTT_TICKS: Tick[] = [
   { t: 'Week 4' },
   { t: 'Ongoing', buffer: true },
 ];
+
+/**
+ * The same timeline in Spanish, for /es/. Same w/ws on purpose: only the
+ * words differ, so the Gantt lines up exactly as it does on the English home.
+ */
+export const PROCESS_ES: Phase[] = [
+  {
+    n: '01', name: 'Diagnóstico', when: 'Semana 0', w: 0, ws: 1,
+    body: '30 minutos. Mapeamos tus herramientas actuales, los cuellos de botella y qué significa "terminado". Salís con un alcance por escrito y un precio cerrado.',
+    tasks: ['Llamada inicial', 'Herramientas y cuellos de botella', 'Alcance por escrito', 'Precio cerrado'],
+  },
+  {
+    n: '02', name: 'Desarrollo', when: 'Semanas 1 a 3', w: 1, ws: 3,
+    body: 'Construimos el sistema sobre Airtable, n8n y las herramientas que ya usás. Cada semana ves un video con el avance; nada se construye a ciegas.',
+    tasks: ['Desarrollo del sistema', 'Videos de avance semanales', 'Pruebas de integración'],
+  },
+  {
+    n: '03', name: 'Lanzamiento', when: 'Semana 4', w: 4, ws: 1, hl: true,
+    body: 'Lo ponemos en producción, capacitamos a tu equipo y entregamos documentación escrita para personas, no para ingenieros.',
+    tasks: ['Puesta en producción', 'Capacitación', 'Documentación'],
+  },
+  {
+    n: '04', name: 'Mantenimiento', when: 'Continuo', w: 5, ws: 1,
+    body: 'Un abono opcional para cambios, monitoreo y el próximo sistema. La mayoría de los clientes se queda.',
+    tasks: ['Monitoreo', 'Cambios y ajustes', 'Próximo sistema'],
+  },
+];
+
+export const GANTT_TICKS_ES: Tick[] = [
+  { t: 'Semana 0' },
+  { t: 'Semana 1' },
+  { t: 'Semana 2' },
+  { t: 'Semana 3' },
+  { t: 'Semana 4' },
+  { t: 'Continuo', buffer: true },
+];

@@ -1,0 +1,76 @@
+---
+/**
+ * The home page in Spanish. Same sections, same order, same ids as
+ * index.astro: the EN/ES switch promises the same page, so keep the two in
+ * step. Copy is in data/landings/home-es.ts.
+ *
+ * Only faqPage goes in the JSON-LD. Organization and WebSite describe the
+ * site, not the page, and stay on the English home alone.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HeroTetris from '../../components/heroes/HeroTetris.astro';
+import FeatureGrid from '../../components/sections/FeatureGrid.astro';
+import UseCases from '../../components/sections/UseCases.astro';
+import Process from '../../components/sections/Process.astro';
+import CtaStrip from '../../components/sections/CtaStrip.astro';
+import Faq from '../../components/sections/Faq.astro';
+import ClosingCta from '../../components/sections/ClosingCta.astro';
+
+import { HERO_ASSETS } from '../../lib/hero-assets';
+import { PROCESS_ES, GANTT_TICKS_ES } from '../../data/process';
+import { faqPage } from '../../lib/jsonld';
+import * as copy from '../../data/landings/home-es';
+
+const book = { href: '/es/agendar/', external: false };
+---
+<BaseLayout
+  title={copy.seo.title}
+  description={copy.seo.description}
+  lang="es"
+  path="es/"
+  translation={{ lang: 'en', path: '' }}
+  preloadImages={HERO_ASSETS}
+  jsonLd={faqPage(copy.faq.items)}
+  navLinks={copy.nav}
+  footerLinks={copy.footerLinks}
+  navCta={{ ...book, label: copy.navCtaLabel }}
+>
+  <HeroTetris
+    sub={copy.hero.sub}
+    sub2={copy.hero.sub2}
+    cta={{ ...book, label: copy.hero.ctaLabel }}
+    tetris={{ text: copy.tetrisText }}
+  >
+    <Fragment slot="title">
+      Construimos sistemas que le ahorran a tu equipo <strong>22 horas</strong> por semana.
+    </Fragment>
+  </HeroTetris>
+
+  <FeatureGrid id="who-its-for" {...copy.audience} />
+
+  <UseCases
+    id="templates"
+    eyebrow={copy.useCases.eyebrow}
+    title={copy.useCases.title}
+    items={copy.useCases.items}
+    quote={copy.useCases.quote}
+    link={{ ...book, label: copy.useCases.linkLabel }}
+  />
+
+  <Process id="process" {...copy.process} phases={PROCESS_ES} ticks={GANTT_TICKS_ES} />
+
+  <CtaStrip text={copy.strip.text} cta={{ ...book, label: copy.strip.ctaLabel }} />
+
+  <Faq id="faq" eyebrow={copy.faq.eyebrow} title={copy.faq.title} items={copy.faq.items} />
+
+  <ClosingCta
+    id="book"
+    eyebrow={copy.closing.eyebrow}
+    body={copy.closing.body}
+    note={copy.closing.note}
+    cta={{ ...book, label: copy.closing.ctaLabel }}
+    deco={copy.closingDeco}
+  >
+    <Fragment slot="title">Otro trimestre de trabajo manual.<br />O una llamada de 30 minutos.</Fragment>
+  </ClosingCta>
+</BaseLayout>

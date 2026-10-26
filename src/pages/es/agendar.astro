@@ -1,0 +1,66 @@
+---
+/**
+ * /book-a-call/ in Spanish. Same layout and the same cal.com event; only the
+ * words change. Copy is `booking` in data/landings/home-es.ts.
+ *
+ * navCta is '#book' for the same reason as on the English page: a button
+ * that reloads the page you are on is a dead control.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Section from '../../components/ui/Section.astro';
+import Container from '../../components/ui/Container.astro';
+import SectionHeader from '../../components/ui/SectionHeader.astro';
+import CalEmbed from '../../components/sections/CalEmbed.astro';
+import { asset, pageUrl } from '../../lib/url';
+import { breadcrumbs } from '../../lib/jsonld';
+import * as copy from '../../data/landings/home-es';
+
+const { booking } = copy;
+const nav = { label: copy.navCtaLabel, href: '#book', external: false };
+// The nav and footer link back into the Spanish home's sections.
+const away = (h: string) => (h.startsWith('#') ? `/es/${h}` : h);
+const navLinks = copy.nav.map(({ label, href }) => ({ label, href: away(href) }));
+const footerLinks = copy.footerLinks.map(({ label, href }) => ({ label, href: away(href) }));
+
+/** Same file as /book-a-call/'s portrait. */
+const PORTRAIT = 'image.png';
+---
+<BaseLayout
+  title={booking.seo.title}
+  description={booking.seo.description}
+  lang="es"
+  path="es/agendar/"
+  translation={{ lang: 'en', path: 'book-a-call/' }}
+  jsonLd={breadcrumbs([
+    { name: 'Inicio', url: pageUrl('es/', Astro.site) },
+    { name: booking.eyebrow, url: pageUrl('es/agendar/', Astro.site) },
+  ])}
+  navLinks={navLinks}
+  footerLinks={footerLinks}
+  navCta={nav}
+  preloadImages={[PORTRAIT]}
+>
+  <Section size="lg" container={false}>
+    <Container width="narrow">
+      <div class="flex flex-col md:flex-row md:items-start gap-10">
+        <div class="flex-1 min-w-0">
+          <SectionHeader
+            eyebrow={booking.eyebrow}
+            title={booking.title}
+            lead={booking.lead}
+            level={2}
+            scale="display-md"
+            width="full"
+          />
+        </div>
+
+        <figure class="book-portrait reveal">
+          <img src={asset(PORTRAIT)} alt="Mike Simmons" width="400" height="400" />
+          <figcaption>{booking.portraitCaption}</figcaption>
+        </figure>
+      </div>
+    </Container>
+  </Section>
+
+  <CalEmbed fallbackText={booking.fallbackText} fallbackLabel={booking.fallbackLabel} />
+</BaseLayout>

@@ -21,6 +21,7 @@ const book = { href: BOOKING.href, external: BOOKING.external };
 <BaseLayout
   title={copy.seo.title}
   description={copy.seo.description}
+  translation={{ lang: 'es', path: 'es/' }}
   preloadImages={HERO_ASSETS}
   jsonLd={[organization(origin), webSite(origin), faqPage(copy.faq.items)]}
 >

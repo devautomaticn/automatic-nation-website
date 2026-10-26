@@ -27,7 +27,9 @@ export class Tetris {
       // raising `speed` speeds up only the long falls.
       minMs: 220,
       holdDepth: 5, holdMs: 2600, clearStyle: 'sweep', tile: 'tint',
-      guides: true, hud: true, seed: 63, assetBase: '', reduced: null
+      guides: true, hud: true, seed: 63, assetBase: '', reduced: null,
+      // HUD strings, so a translated page can pass its own. Uppercased by CSS.
+      text: { cleared: 'rows cleared', apps: '900+ apps', next: 'next' }
     }, opts || {});
     // Reduced motion: run the solver but place every piece directly at its
     // landing cell — no fall, no line clears, no re-deal. The well still reads
@@ -89,16 +91,16 @@ export class Tetris {
     const wrap = document.createElement('div');
     wrap.style.cssText = 'position:absolute;left:0;top:0;padding:20px 22px;display:flex;flex-direction:column;gap:6px;pointer-events:none;color:rgba(255,255,255,0.55);' + mono;
     this.hudLeft = document.createElement('span');
-    this.hudLeft.textContent = 'rows cleared 00';
+    this.hudLeft.textContent = this.o.text.cleared + ' 00';
     const sub = document.createElement('span');
-    sub.textContent = '900+ apps';
+    sub.textContent = this.o.text.apps;
     sub.style.color = 'rgba(255,255,255,0.35)';
     wrap.appendChild(this.hudLeft); wrap.appendChild(sub);
     this.root.appendChild(wrap);
 
     const nx = document.createElement('div');
     nx.style.cssText = 'position:absolute;top:18px;right:18px;display:flex;flex-direction:column;align-items:flex-end;gap:8px;pointer-events:none;color:rgba(255,255,255,0.4);' + mono;
-    const lbl = document.createElement('span'); lbl.textContent = 'next';
+    const lbl = document.createElement('span'); lbl.textContent = this.o.text.next;
     this.nextBox = document.createElement('div');
     this.nextBox.style.cssText = 'width:76px;height:76px;border:1px solid rgba(255,255,255,0.14);border-radius:10px;position:relative;overflow:hidden;';
     nx.appendChild(lbl); nx.appendChild(this.nextBox);
@@ -110,7 +112,7 @@ export class Tetris {
     Array.from(this.stage.querySelectorAll('.tt-cell')).forEach(el => el.remove());
     this.grid = Array.from({ length: this.rows }, () => Array(this.cols).fill(null));
     this.cleared = 0;
-    if (this.hudLeft) this.hudLeft.textContent = 'rows cleared 00';
+    if (this.hudLeft) this.hudLeft.textContent = this.o.text.cleared + ' 00';
     this.dealBag();
     this.next = this.makeSpec();
   }
@@ -307,7 +309,7 @@ export class Tetris {
         this.grid[r][x] = null;
       }));
       this.cleared += rows.length;
-      if (this.hudLeft) this.hudLeft.textContent = 'rows cleared ' + String(this.cleared).padStart(2, '0');
+      if (this.hudLeft) this.hudLeft.textContent = this.o.text.cleared + ' ' + String(this.cleared).padStart(2, '0');
 
       this.after(230, () => {
         if (this.dead) return;

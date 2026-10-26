@@ -1,14 +1,16 @@
 ---
 import Container from '../ui/Container.astro';
 import Eyebrow from '../ui/Eyebrow.astro';
-import { SITE, FOOTER_LINKS } from '../../lib/site';
+import { SITE, FOOTER_LINKS, FOOTER_COPY } from '../../lib/site';
 import { href as url } from '../../lib/url';
 
 interface Props {
   links?: readonly { label: string; href: string }[];
+  lang?: string;
 }
 
-const { links = FOOTER_LINKS } = Astro.props as Props;
+const { links = FOOTER_LINKS, lang = 'en' } = Astro.props as Props;
+const t = FOOTER_COPY[lang] ?? FOOTER_COPY.en;
 const year = 2026;
 const place = SITE.place || '[PLACE]';
 ---
@@ -16,12 +18,12 @@ const place = SITE.place || '[PLACE]';
   <Container class="py-section-sm grid grid-cols-1 md:grid-cols-3 gap-10">
     <div>
       <div class="font-sans font-bold tracking-[-0.02em] text-lg text-paper">{SITE.name}</div>
-      <p class="mt-3 text-xs">{SITE.tagline}</p>
+      <p class="mt-3 text-xs">{t.tagline}</p>
       <p class="mt-6 font-mono text-2xs text-faint">est. {SITE.founded}</p>
     </div>
 
     <div class="md:justify-self-center">
-      <Eyebrow tone="faint" class="mb-4">Sitemap</Eyebrow>
+      <Eyebrow tone="faint" class="mb-4">{t.sitemap}</Eyebrow>
       <ul class="space-y-2 text-xs">
         {links.map(item => (
           <li><a href={url(item.href)} class="link-u hover:text-paper">{item.label}</a></li>
@@ -30,7 +32,7 @@ const place = SITE.place || '[PLACE]';
     </div>
 
     <div class="md:justify-self-end">
-      <Eyebrow tone="faint" class="mb-4">Get in touch</Eyebrow>
+      <Eyebrow tone="faint" class="mb-4">{t.contact}</Eyebrow>
       <a href={`mailto:${SITE.email}`} class="link-u text-sm text-paper">{SITE.email}</a>
       {SITE.linkedin && (
         <div class="mt-4 flex items-center gap-3">
@@ -54,7 +56,7 @@ const place = SITE.place || '[PLACE]';
   <div class="border-t border-line-dk">
     <Container class="py-section-xs">
       <p class="font-mono text-2xs text-faint">
-        &copy; {year} {SITE.name} — Made with too much coffee in {place}.
+        &copy; {year} {SITE.name} — {t.madeWith(place)}
       </p>
     </Container>
   </div>

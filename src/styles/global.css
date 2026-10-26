@@ -256,6 +256,21 @@
 }
 .nav-links a:hover { opacity: 0.6; }
 
+/* EN/ES switch. Mono and boxed so it reads as a toggle, not a fourth nav
+   link. Sits between the links and the CTA, inside the same 40px gap. */
+.lang-switch {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  color: var(--color-ink);
+  text-decoration: none;
+  border: 1px solid var(--color-line-hi);
+  border-radius: var(--radius-chip);
+  padding: 6px 10px;
+  transition: border-color 0.2s;
+}
+.lang-switch:hover { border-color: var(--color-ink); }
+
 /* ── Button ──
    One component at three sizes. The page previously ran four implementations
    of this — .btn-cta, .btn-hero, and two stacks of Tailwind utilities — which
@@ -733,6 +748,9 @@
 @media (max-width: 900px) {
   .nav-links { display: none; }
   .navbar-inner { justify-content: space-between; }
+  /* With the links gone, the switch takes over margin-left:auto so it groups
+     with the CTA on the right instead of floating in the middle. */
+  .lang-switch { margin-left: auto; }
 }
 
 @media (max-width: 640px) {

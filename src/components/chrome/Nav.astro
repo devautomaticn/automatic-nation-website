@@ -1,16 +1,19 @@
 ---
 import Button from '../ui/Button.astro';
 import { BASE, href as url } from '../../lib/url';
-import { NAV, BOOKING, SITE } from '../../lib/site';
+import { NAV, BOOKING, SITE, LANG_SWITCH } from '../../lib/site';
 import type { Cta } from '../../lib/design';
 
 interface Props {
   /** Override the default "Book a call" action. */
   cta?: Cta | false;
   links?: readonly { label: string; href: string }[];
+  /** The page's lang. Picks where the EN/ES switch leads; none if unknown. */
+  lang?: string;
 }
 
-const { cta, links = NAV } = Astro.props as Props;
+const { cta, links = NAV, lang = 'en' } = Astro.props as Props;
+const switchTo = LANG_SWITCH[lang];
 const action = cta === undefined
   ? { label: 'Book a call', href: BOOKING.href, external: BOOKING.external }
   : cta;
@@ -32,6 +35,18 @@ const action = cta === undefined
           start with '#') while the '/#faq' form still picks up any base. */}
       {links.map(item => <a href={url(item.href)}>{item.label}</a>)}
     </nav>
+
+    {/* Outside .nav-links on purpose: those hide below 900px, and the
+        language switch has to survive on a phone. */}
+    {switchTo && (
+      <a
+        href={url(switchTo.href)}
+        class="lang-switch"
+        hreflang={switchTo.lang}
+        lang={switchTo.lang}
+        title={switchTo.title}
+      >{switchTo.label}</a>
+    )}
 
     {action && (
       <Button href={action.href} external={action.external} size="md">{action.label}</Button>

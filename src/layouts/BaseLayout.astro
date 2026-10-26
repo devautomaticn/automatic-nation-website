@@ -90,9 +90,9 @@ const {
   <script is:inline>function loadScript(a){var b=document.getElementsByTagName("head")[0],c=document.createElement("script");c.type="text/javascript",c.src="https://tracker.metricool.com/resources/be.js",c.onreadystatechange=a,c.onload=a,b.appendChild(c)}loadScript(function(){beTracker.t({hash:"374ed6d4a4c1299b12bff9e4f9c496d3"})});</script>
 </head>
 <body class={className}>
-  {nav && <Nav links={navLinks} cta={navCta} />}
+  {nav && <Nav links={navLinks} cta={navCta} {lang} />}
   <slot />
-  {footer && <Footer links={footerLinks} />}
+  {footer && <Footer links={footerLinks} {lang} />}
 
   <!-- Smooth scrolling. Site-wide and deliberately separate from any hero
        script: bundling them together would make every page that has no well

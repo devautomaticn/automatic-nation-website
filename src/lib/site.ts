@@ -68,6 +68,40 @@ export const BOOKING = {
   external: isOffsite(BOOKING_URL),
 } as const;
 
+/**
+ * The EN/ES switch in the navbar. Keyed by the CURRENT page's lang, and the
+ * entry is where the switch leads.
+ *
+ * There is no Spanish home yet: the Spanish side is the law-firm landing, so
+ * every English page points there and the landing points back to the home.
+ * When a real /es/ home exists, change the `en` href and nothing else.
+ */
+export const LANG_SWITCH: Record<string, { label: string; href: string; lang: string; title: string }> = {
+  en: { label: 'ES', href: '/lp/estudios-juridicos/', lang: 'es', title: 'Ver en español' },
+  es: { label: 'EN', href: '/', lang: 'en', title: 'View in English' },
+};
+
+/** The footer's fixed strings, per lang. `place` is SITE.place. */
+export const FOOTER_COPY: Record<string, {
+  tagline: string;
+  sitemap: string;
+  contact: string;
+  madeWith: (place: string) => string;
+}> = {
+  en: {
+    tagline: SITE.tagline,
+    sitemap: 'Sitemap',
+    contact: 'Get in touch',
+    madeWith: place => `Made with too much coffee in ${place}.`,
+  },
+  es: {
+    tagline: 'Integraciones a medida y flujos automatizados para equipos que quieren avanzar.',
+    sitemap: 'Mapa del sitio',
+    contact: 'Contacto',
+    madeWith: place => `Hecho con demasiado café en ${place === 'planet Earth' ? 'el planeta Tierra' : place}.`,
+  },
+};
+
 /** Primary nav. Duplicated into the footer sitemap, which is why it's data. */
 export const NAV = [
   { label: 'Use cases', href: '#templates' },

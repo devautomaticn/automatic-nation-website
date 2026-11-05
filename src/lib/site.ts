@@ -15,7 +15,29 @@ export const SITE = {
    * team is distributed, so naming one office was the wrong claim.
    */
   place: 'planet Earth',
+  /** WhatsApp number in international format, digits only — what wa.me takes. */
+  whatsapp: '5491149712224',
 } as const;
+
+/**
+ * The floating WhatsApp button's prefilled message, per lang. `page` is the
+ * page's title with the brand stripped, or null on a home page, where "I was
+ * reading Automatic Nation" would read oddly.
+ */
+export const WHATSAPP_COPY: Record<string, { label: string; message: (page: string | null) => string }> = {
+  en: {
+    label: 'Chat on WhatsApp',
+    message: page => page
+      ? `Hey, I was reading "${page}" and wanted to get in touch about the following: `
+      : 'Hey, I was checking out your website and wanted to get in touch about the following: ',
+  },
+  es: {
+    label: 'Escribinos por WhatsApp',
+    message: page => page
+      ? `Hola, estaba leyendo "${page}" y quería contactarlos por lo siguiente: `
+      : 'Hola, estaba viendo su sitio web y quería contactarlos por lo siguiente: ',
+  },
+};
 
 /**
  * The cal.com event every call is booked into — the same one the WordPress

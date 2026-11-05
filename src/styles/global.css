@@ -41,6 +41,10 @@
      --accent-edge does. */
   --color-accent-soft: color-mix(in srgb, var(--color-accent) 22%, var(--color-paper));
 
+  /* WhatsApp's own brand green, for the floating chat button only. Not part
+     of the palette: the button should read as WhatsApp at a glance. */
+  --color-whatsapp: #25D366;
+
   --font-sans: 'Space Grotesk', 'Montserrat', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 

@@ -105,7 +105,7 @@ module script in `index.astro`:
   const B = raw.endsWith('/') ? raw.slice(0, -1) : raw;
   new Tetris(card, {
     cols: 10, rows: 10, size: 608, radius: 12, speed: 2000, gap: 100,
-    holdDepth: 8, holdMs: 2600, guides: true, hud: true, seed: 63,
+    holdDepth: 8, holdMs: 2600, guides: true, hud: true, seed: null,
     assetBase: B + '/',
   });
 </script>
@@ -140,15 +140,22 @@ double-fetch hazard is unchanged, just moved.
 | `holdMs` | `2600` | ms the full stack holds before the board re-deals. |
 | `guides` | `true` | 1px cell grid inside the well. |
 | `hud` | `true` | Top-left "ROWS CLEARED nn / 900+ APPS" + top-right NEXT preview. |
-| `seed` | `63` | Seeded PRNG — the same seed replays the same board. |
+| `seed` | `null` | Seeded PRNG. `null` picks a random seed per load; a number replays the same board. |
+| `slop` | `0.05` | Share of pieces the solver puts in a near-best spot instead of the best. |
+| `minClear` | `2` | Rows a piece must complete to enter the solver's open lane. |
 | `assetBase` | `basePrefix + '/'` | Prefix for every logo URL. |
 
 ---
 
 ## Behaviour spec
 
-**Piece generation.** Seven standard tetrominoes (I, O, T, S, Z, J, L), rotated 0–3 times, spawned
-in a random column that fits. A piece falls straight down its column at constant speed until the
+**Piece generation.** Seven standard tetrominoes (I, O, T, S, Z, J, L), drawn at random. Where
+each one lands is not random: `src/scripts/tetris-ai.js` tries every rotation and column, looking
+one piece ahead (the NEXT piece), and scores the result with Dellacherie's heuristic (landing
+height, holes, row/column transitions, wells). It keeps one edge column open per game and only
+enters it when that completes 2+ rows, and 5% of pieces take a near-best spot, so the stack grows
+tidily to `holdDepth` with the occasional hole and multi-row clear. A random column used to bury
+holes under the stack within ~7 pieces. A piece falls straight down its column at constant speed until the
 next row would collide, then locks. No lateral drift, ever — a piece changing column mid-fall was
 the thing that made an earlier physics-based attempt read wrong.
 

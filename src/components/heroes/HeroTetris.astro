@@ -17,7 +17,7 @@ interface Props extends HeroProps {
   tetris?: Partial<{
     cols: number; rows: number; size: number; radius: number;
     speed: number; gap: number; minMs: number;
-    holdDepth: number; holdMs: number; seed: number;
+    holdDepth: number; holdMs: number; seed: number | null;
     guides: boolean; hud: boolean;
     text: { cleared: string; apps: string; next: string };
   }>;
@@ -33,7 +33,7 @@ const options = {
   // it at 220 would keep short drops at their old timing while only the long
   // falls slowed down.
   speed: 1500, gap: 100, minMs: 293,
-  holdDepth: 8, holdMs: 2600, guides: true, hud: true, seed: 63,
+  holdDepth: 8, holdMs: 2600, guides: true, hud: true, seed: null,
   ...tetris,
 };
 ---

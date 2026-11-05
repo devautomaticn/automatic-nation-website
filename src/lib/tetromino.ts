@@ -27,9 +27,9 @@ export const SHAPES: Record<string, Cell[]> = {
 };
 
 /**
- * Indexed form for the well's bag shuffle. The ORDER IS LOAD-BEARING: the hero
- * runs off a fixed seed, so reordering this changes the sequence of pieces that
- * was tuned against.
+ * Indexed form for the well's bag shuffle. The hero seeds itself at random on
+ * every load, so the order no longer matters there — but a page that passes a
+ * fixed `seed` to replay a board gets a different board if this is reordered.
  */
 export const SHAPE_LIST: Cell[][] = [
   SHAPES.I, SHAPES.O, SHAPES.T, SHAPES.S, SHAPES.Z, SHAPES.J, SHAPES.L,

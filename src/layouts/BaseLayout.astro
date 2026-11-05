@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Seo from '../components/seo/Seo.astro';
 import Nav from '../components/chrome/Nav.astro';
 import Footer from '../components/chrome/Footer.astro';
+import WhatsAppButton from '../components/chrome/WhatsAppButton.astro';
 import { asset, pageUrl } from '../lib/url';
 import type { Cta, Translation } from '../lib/design';
 
@@ -107,6 +108,7 @@ const {
   {nav && <Nav links={navLinks} cta={navCta} {translation} />}
   <slot />
   {footer && <Footer links={footerLinks} {lang} />}
+  <WhatsAppButton {title} {path} {lang} />
 
   <!-- Smooth scrolling. Site-wide and deliberately separate from any hero
        script: bundling them together would make every page that has no well

@@ -225,8 +225,12 @@ board re-deals.
 - The tile list is `src/lib/hero-assets.ts`, used by both the engine and the preload tags.
   One list — adding an icon is a one-line change.
 - Palette, shapes and the fused-corner radius rule are `src/lib/tetromino.ts`, shared with
-  the static decorations in `ClosingCta`. The `SHAPE_LIST` **order is load-bearing**: the
-  hero runs off a fixed seed, so reordering it changes the tuned piece sequence.
+  the static decorations in `ClosingCta`.
+- **Every load is a new game** (`seed: null` → random seed), but the stack is always tidy:
+  `src/scripts/tetris-ai.js` picks each piece's column and rotation with a one-piece
+  lookahead. It keeps an edge lane open and only enters it to clear 2+ rows (`minClear`),
+  and places 5% of pieces in a near-best spot (`slop`), so the stack grows to `holdDepth`
+  and re-deals instead of clearing forever. Lower either and the board barely grows.
 - **`HeroTetris` cannot emit its own preload tags.** Astro doesn't hoist `<head>` content
   out of nested components, and a preload discovered in `<body>` has already lost the race.
   A page using `HeroTetris` must also pass `preloadImages={HERO_ASSETS}` to `BaseLayout` —

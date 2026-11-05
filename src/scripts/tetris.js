@@ -8,13 +8,8 @@
 // page, which is how the decorations drifted out of sync with the well.
 import { PALETTE, SHAPE_LIST as SHAPES, radii } from '../lib/tetromino';
 import { LOGOS, PHOTOS } from '../lib/hero-assets';
+import { rotate, choosePlacement } from './tetris-ai.js';
 export { LOGOS, PHOTOS };
-function rotate(cells) {
-  const maxY = Math.max.apply(null, cells.map(c => c[1]));
-  const r = cells.map(c => [maxY - c[1], c[0]]);
-  const mx = Math.min.apply(null, r.map(c => c[0])), my = Math.min.apply(null, r.map(c => c[1]));
-  return r.map(c => [c[0] - mx, c[1] - my]);
-}
 
 export class Tetris {
   constructor(root, opts) {
@@ -26,8 +21,13 @@ export class Tetris {
       // `speed`: leave it fixed and it silently caps every short drop, so
       // raising `speed` speeds up only the long falls.
       minMs: 220,
+      // Solver feel (tetris-ai.js). `slop`: share of pieces placed in a
+      // near-best spot instead of the best. `minClear`: rows a piece must
+      // complete to enter the open lane. Together they set how tall the stack
+      // grows before it holds: lower slop and minClear 1 play nearly forever.
+      slop: 0.05, minClear: 2,
       holdDepth: 5, holdMs: 2600, clearStyle: 'sweep', tile: 'tint',
-      guides: true, hud: true, seed: 63, assetBase: '', reduced: null,
+      guides: true, hud: true, seed: null, assetBase: '', reduced: null,
       // HUD strings, so a translated page can pass its own. Uppercased by CSS.
       text: { cleared: 'rows cleared', apps: '900+ apps', next: 'next' }
     }, opts || {});
@@ -37,7 +37,9 @@ export class Tetris {
     // force either branch; null auto-detects.
     this.reduced = this.o.reduced != null ? !!this.o.reduced
       : (typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches);
-    this.timers = []; this.seed = this.o.seed; this.dead = false;
+    // No seed means a fresh game on every page load. Pass one to replay a board.
+    this.timers = []; this.dead = false;
+    this.seed = this.o.seed != null ? this.o.seed : Math.floor(Math.random() * 4294967296);
     this.cols = this.o.cols; this.rows = this.o.rows;
     this.cell = Math.round(this.o.size / this.cols);
 
@@ -112,6 +114,8 @@ export class Tetris {
     Array.from(this.stage.querySelectorAll('.tt-cell')).forEach(el => el.remove());
     this.grid = Array.from({ length: this.rows }, () => Array(this.cols).fill(null));
     this.cleared = 0;
+    // A fresh open lane each game, on one edge or the other.
+    this.well = this.rnd() < 0.5 ? 0 : this.cols - 1;
     if (this.hudLeft) this.hudLeft.textContent = this.o.text.cleared + ' 00';
     this.dealBag();
     this.next = this.makeSpec();
@@ -209,16 +213,13 @@ export class Tetris {
     this.next = this.makeSpec();
     if (this.nextBox) this.drawNext(this.next);
 
-    const w = Math.max.apply(null, spec.cells.map(c => c[0])) + 1;
-    const col = Math.floor(this.rnd() * (this.cols - w + 1));
-    const fits = y => spec.cells.every(c => {
-      const gx = col + c[0], gy = y + c[1];
-      if (gy < 0) return true;
-      return gy < this.rows && !this.grid[gy][gx];
-    });
-    let y = -4;
-    if (!fits(y)) { this.after(600, () => this.softReset()); return; }
-    while (fits(y + 1)) y++;
+    // The solver picks column and rotation (tetris-ai.js). It used to be a
+    // random column, which buried holes under every stack within a few pieces.
+    const plan = choosePlacement(this.grid.map(r => r.map(Boolean)), spec.cells, this.next.cells,
+      { clear: !this.reduced, rnd: () => this.rnd(), well: this.well, slop: this.o.slop, minClear: this.o.minClear });
+    if (!plan) { this.after(600, () => this.softReset()); return; }
+    spec.cells = plan.cells;
+    const col = plan.col, y = plan.y;
 
     const c = this.cell;
     const minR = Math.min.apply(null, spec.cells.map(p => p[1]));

@@ -17,4 +17,4 @@ Current use case:\
 2\. Automation uses AI to extract Invoice Line Item Descriptions, Quantity and Totals.\
 3\. Automation creates corresponding records with precise information.\
 4\. My friend can now get all insights from the invoices his company receives (how much they’re spending, what they’re spending on, and a clear picture of overall finances).\
-If you need any assistance building this, [feel free to grab a slot using this link](/#book)!
+If you want this running on your real invoices, with validation and the files your accountant needs, that is what our [AI invoice processing](/lp/ai-document-processing/) work covers. You can also [grab a slot using this link](/#book)!

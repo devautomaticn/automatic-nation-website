@@ -34,7 +34,7 @@ It also decides the order of operations. Our WhatsApp agent answers customers fr
 
 n8n's cloud plans are priced on executions, and n8n defines an execution as "a single run of your entire workflow", however many steps it has. A 20 node workflow costs the same per run as a 2 node one. Zapier bills by task, and a task is counted for each action step that runs, so a long Zap multiplies its own cost on every trigger.
 
-For short, high volume jobs the gap is small. For the workflows we usually build, which spend more nodes translating IDs and statuses between systems than on the task itself, it is the difference that makes n8n the cheaper option. The self-hosted Community Edition has no licence fee at all. The server still costs money: on DigitalOcean it usually runs about $30 to $40 a month, in the same range as an n8n Cloud subscription. Someone's time comes on top of that.
+For short, high volume jobs the gap is small. For the workflows we usually build, which spend more nodes translating IDs and statuses between systems than on the task itself, it is the difference that makes n8n the cheaper option. The self-hosted Community Edition has no licence fee at all. The server still costs money: on DigitalOcean it usually runs about $30 to $40 a month, in the same range as an n8n Cloud subscription. Someone's time comes on top of that. If a Zapier bill is what started the question, our [Zapier consulting](/lp/zapier-consultant/) page covers how we decide which Zaps are worth moving.
 
 ## What goes wrong in production, and what it costs to fix
 

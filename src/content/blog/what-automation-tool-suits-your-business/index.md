@@ -15,7 +15,7 @@ When it comes to automating workflows and integrating various apps and services,
 
 [Zapier](http://zapier.com/) is often the first name that comes to mind when thinking about no-code automation. Its intuitive interface makes it accessible for beginners and those who need to set up simple workflows quickly. Zapier supports thousands of apps, making it a versatile choice for a wide range of automation tasks. Its drag-and-drop builder allows users to create “Zaps” (workflows) with minimal effort, making it an ideal choice for small businesses or individuals who need to automate routine tasks without getting into the technical details.
 
-However, Zapier has some limitations. It can become expensive as your automation needs grow, and its simplicity might restrict more complex workflows. Additionally, its reliance on pre-built templates can sometimes limit customization, making it less ideal for intricate, multi-step processes that require advanced logic.
+However, Zapier has some limitations. It can become expensive as your automation needs grow, and its simplicity might restrict more complex workflows. Additionally, its reliance on pre-built templates can sometimes limit customization, making it less ideal for intricate, multi-step processes that require advanced logic. If that is where your account is now, a [Zapier consultant](/lp/zapier-consultant/) can tell you which Zaps to keep and which to move.
 
 **Make: The Powerhouse for Complex Workflows**
 

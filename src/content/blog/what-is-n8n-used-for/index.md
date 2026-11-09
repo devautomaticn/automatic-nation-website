@@ -65,7 +65,7 @@ The work was in the order of operations. The agent verifies the customer before 
 
 ![Illustration of an n8n workflow for a WhatsApp agent: a WhatsApp trigger receives the customer's message, an Airtable node checks who the sender is, and an If node lets Claude write a reply from that customer's own records only after the sender is verified. An unverified sender never reaches Claude.](./04.webp)
 
-If one of these looks like your week, that is the quickest conversation to have. [Book a call](/book-a-call/) and tell us which one, and what your version of it involves.
+If one of these looks like your week, that is the quickest conversation to have. [Book a call](/book-a-call/) and tell us which one, and what your version of it involves, or see [how we work as an n8n agency](/lp/n8n-agency/) first.
 
 ## The pattern behind all four
 

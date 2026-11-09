@@ -100,7 +100,7 @@ The fixes, in the order we would apply them:
 
 ![Illustration of an Airtable Orders table where the fields an n8n workflow depends on are marked: their names start with a gear prefix, and an open field description reads: Read by n8n in the workflow Orders to accounting. Ask before renaming or changing the type. The other fields are the team's to change freely.](./04.webp)
 
-If you have a set of n8n workflows that nobody has looked at since launch, that is a good use of a call. [Book one](/book-a-call/) and we will tell you which of these four you have. If your workflows are three nodes each and only touch internal tools, you probably do not need us for it.
+If you have a set of n8n workflows that nobody has looked at since launch, that is a good use of a call. [Book one](/book-a-call/) and we will tell you which of these four you have. Taking over and hardening inherited workflows is a large part of our [n8n consulting](/lp/n8n-agency/) work. If your workflows are three nodes each and only touch internal tools, you probably do not need us for it.
 
 ### One more, on self-hosted instances: memory
 

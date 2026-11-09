@@ -1,6 +1,6 @@
 ---
-title: "How to Export Airtable to Excel (and What Breaks When You Do)"
-description: Export Airtable to Excel in three clicks, then fix what the CSV loses on the way out, from linked records and attachment links to dates and formulas.
+title: "How to Export Airtable to Excel in 3 Clicks (and What Breaks)"
+description: "Open a grid view, choose Download CSV from the view menu, save it as .xlsx. Then fix what the CSV loses: linked records, attachments, dates and formulas."
 published: 2025-10-27
 updated: 2026-09-29
 wpId: 1219
@@ -83,4 +83,4 @@ One export is a task. The same export every Monday is a process, and it is usual
 
 **You are backing the base up.** A weekly CSV of every table is a start, but it misses the links, the attachment files and the logic, which is most of what you would need to restore. Treat it as a copy of the data, not a backup of the base.
 
-If you export once a quarter for your accountant, keep doing exactly that. Three clicks four times a year does not need automating. If it is weekly and the same person does it every time, ask what the export is for.
+If you export once a quarter for your accountant, keep doing exactly that. Three clicks four times a year does not need automating. If it is weekly and the same person does it every time, ask what the export is for. When the answer is that a person is moving data between two systems by hand, that is the job our [n8n agency](/lp/n8n-agency/) work replaces.

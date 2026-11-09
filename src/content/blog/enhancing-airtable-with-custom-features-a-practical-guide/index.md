@@ -256,7 +256,7 @@ With a bit of JavaScript, you can easily **customize Airtable’s UI, and improv
 
 ****
 
-****Feel free to [grab a slot using this link](/#book), if you’d like to discuss specific needs of yours!
+****Feel free to [grab a slot using this link](/#book), if you’d like to discuss specific needs of yours! Custom scripts, extensions and interfaces are part of our [Airtable consulting](/lp/airtable-consulting/) work.
 
 ```javascript
 ```

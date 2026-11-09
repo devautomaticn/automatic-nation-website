@@ -88,4 +88,4 @@ Want to explore more Airtable automation tips? Visit our [Airtable automations g
 
 Happy automating! 🚀
 
-_Learn more about Airtable and automation at&#x20;_[_Automatic Nation_](/)_._
+If your base is close to its record limit and deleting old records is becoming a routine, our [Airtable consultants](/lp/airtable-consulting/) can help you decide what to archive, what to move and what to keep.

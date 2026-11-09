@@ -1,6 +1,6 @@
 ---
-title: "Airtable Rollups: The Field That Fixes Counting, and the Three Ways It Goes Wrong"
-description: How to set up an Airtable rollup, which formula to pick, and the three rollup mistakes we fix most in real bases, with the fix for each.
+title: "Airtable Rollup Field: Every Formula, From SUM(values) to ARRAYJOIN"
+description: "How to set up an Airtable rollup, what SUM(values), AVERAGE(values), COUNTALL, COUNTA and ARRAYJOIN each return, and the three rollup mistakes we fix most."
 published: 2025-02-13
 updated: 2026-09-29
 hero: ./hero.webp
@@ -133,3 +133,5 @@ Most rollups are a sign of a healthy relational base. A few point at a problem u
 - A rollup column that went blank overnight. If a field used in the rollup's conditions is deleted or changes to an incompatible type, Airtable blanks the cells. Check the conditions first.
 
 When a rollup gives a strange number, check the link field and the source field before you touch the formula.
+
+If you recognised more than one of these in your base, the fix is usually in the schema, not the formulas. That is what our [Airtable consulting](/lp/airtable-consulting/) audit looks at first.

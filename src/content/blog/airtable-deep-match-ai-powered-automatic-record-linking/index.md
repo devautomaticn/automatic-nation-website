@@ -67,4 +67,4 @@ To further optimize your Airtable setups, explore other AI field types and best 
 
 Using Airtable Deep Match unlocks smarter and faster data relationships across your bases. Whether managing projects, clients, inventory, or campaigns, this AI-powered tool transforms how you connect and manage data. Start implementing Deep Match today and elevate your Airtable workflows.
 
-Need help with your Airtable setup? [Book a free call with us!](/#book)
+Need help with your Airtable setup? Our [Airtable consultants](/lp/airtable-consulting/) start with a one-week audit, or you can [book a free call with us](/#book).

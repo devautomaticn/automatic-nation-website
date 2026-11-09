@@ -46,3 +46,5 @@ Have you ever wanted to organize your Airtable data visually, making it easier t
 **Conclusion**
 
 Airtable’s Group feature is a simple yet powerful way to organize and analyze your data. By clustering records based on shared values, you gain visual clarity, improve collaboration, and unlock insights that might otherwise be hard to see. Whether you’re managing tasks, tracking sales, or planning events, Groups help you make sense of your data at a glance. Try using the Group feature in your next project and see how it transforms your workflow!
+
+If your views need four levels of grouping before anyone can find anything, the base itself may need restructuring. That is the first thing our [Airtable consulting](/lp/airtable-consulting/) audit looks at.

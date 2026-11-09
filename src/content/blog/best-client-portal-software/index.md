@@ -111,7 +111,7 @@ The app is hosted on Vercel. Supabase holds the database and handles login, and 
 
 We fix the scope in writing before the build starts. The first version covers what a client needs to log in and see their own work: their projects, their documents, their requests, their invoices and the roles inside their company. Paying inside the portal, e-signature and extra integrations go on a written list for a later version, priced separately, once clients have used the first one and you can see what they actually ask for.
 
-If a portal like this is on your list, [book a call](/book-a-call/). We will scope it with you, and if a no-code portal on your base would do the job, we will tell you to build that first.
+If a portal like this is on your list, see [how we build Airtable client portals](/lp/client-portals/), or [book a call](/book-a-call/). We will scope it with you, and if a no-code portal on your base would do the job, we will tell you to build that first.
 
 ## What a custom portal costs over three years, compared with a SaaS portal
 

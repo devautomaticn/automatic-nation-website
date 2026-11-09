@@ -88,7 +88,7 @@ We are an agency, so weigh this accordingly.
 | **Agency** | You need several systems connected on a deadline, with data modelling, hosting and failure handling in scope, or something is breaking and nobody can say why | The job is one workflow. You pay for a scoping process a freelancer would skip |
 | **In-house** | Automation is continuous work and there will always be a queue | You need integration, data modelling and infrastructure skills and have budget for one salary |
 
-A freelancer is the right hire more often than agencies admit. If the work is contained and the six questions get good answers, that is a fine outcome. You need an agency when the project is really three jobs (modelling the data, building the workflows, running and watching them) and you want one party responsible for all of it. The longer comparison is in [what an n8n agency actually does](/n8n-marketing-agency/).
+A freelancer is the right hire more often than agencies admit. If the work is contained and the six questions get good answers, that is a fine outcome. You need an agency when the project is really three jobs (modelling the data, building the workflows, running and watching them) and you want one party responsible for all of it. That is the job our [n8n agency](/lp/n8n-agency/) takes on. The longer comparison is in [what an n8n agency actually does](/n8n-marketing-agency/).
 
 As for where to look: the n8n community forum has job posts, and the freelance marketplaces list plenty of n8n profiles. The six questions work the same on both. If your project is mostly on the Airtable side, we wrote that version in [how to hire an Airtable consultant](/how-to-hire-and-where-to-find-the-right-airtable-consultant/).
 

@@ -83,7 +83,7 @@ Four cases where hiring anyone is the wrong move:
 - **The real problem is your data.** If the underlying records are a mess, automation propagates the mess faster. Fix the model first. That is a different engagement, and a cheaper one.
 - **You want to learn n8n.** Then build it. Genuinely. The documentation is good and the community is active.
 
-If you are still reading and none of those fit, the useful next step is a conversation about what is actually breaking. [Book a call](/book-a-call/) and we will tell you if it is a job worth hiring for.
+If you are still reading and none of those fit, the useful next step is a conversation about what is actually breaking. [Book a call](/book-a-call/) and we will tell you if it is a job worth hiring for. If you want to see how we run an engagement first, our [n8n agency](/lp/n8n-agency/) page lays out the process and four systems we have built.
 
 ## The honest summary
 
